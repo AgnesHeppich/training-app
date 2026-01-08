@@ -1,66 +1,81 @@
+'use client';
+
+import { PROGRAM } from "@/data/program";
+import { useWorkoutHistory } from "@/hooks/useWorkoutHistory";
+import { WeekOverview } from "@/components/WeekOverview";
+import { motion } from "framer-motion";
 import Image from "next/image";
-import styles from "./page.module.css";
 
 export default function Home() {
+  const { completedWorkouts, isLoaded } = useWorkoutHistory();
+
+  if (!isLoaded) {
+    return (
+      <div className="min-h-screen flex items-center justify-center text-[#ff477e] font-bold text-xl animate-pulse">
+        Loading your gains...
+      </div>
+    );
+  }
+
+  const weeks = [1, 2, 3, 4];
+
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className={styles.intro}>
-          <h1>To get started, edit the page.tsx file.</h1>
-          <p>
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
+    <div className="container mx-auto px-4 py-8 max-w-6xl">
+      <motion.header
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="mb-12 text-center flex flex-col items-center overflow-visible"
+      >
+        <motion.div
+          animate={{ y: [0, -10, 0] }}
+          transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+          className="mb-6 relative w-48 h-48 md:w-64 md:h-64 filter drop-shadow-xl"
+        >
+          {/* Using mix-blend-mode-multiply to make white background transparent-ish if needed, 
+               but ideally the image is cleaner. Also rounded-full to clip corners if it has a box. */}
+          <div className="w-full h-full relative rounded-full overflow-hidden mix-blend-multiply">
             <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
+              src="/header-illustration.png"
+              alt="Funny 3D Workout Illustration"
+              fill
+              className="object-contain scale-90" // Scale down slightly to ensure no edges touch
+              priority
             />
-            Deploy Now
-          </a>
-          <a
-            className={styles.secondary}
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+          </div>
+        </motion.div>
+
+        <div className="inline-block py-1 px-4 rounded-full bg-white/40 border border-white/60 text-xs font-bold tracking-widest text-[#ff477e] mb-4 shadow-sm backdrop-blur-md">
+          ZERO TO HERO
         </div>
-      </main>
+        <h1 className="text-4xl md:text-6xl font-extrabold mb-4 tracking-tight drop-shadow-sm">
+          <span className="text-[#5c2b2b]">Pull-Up</span>{" "}
+          <span className="title-gradient filter drop-shadow-lg">Mastery</span>
+        </h1>
+        <p className="text-[#8e5e5e] text-lg max-w-2xl mx-auto leading-relaxed font-medium">
+          From assisted reps to unassisted dominance in 4 weeks. Track your weights, perfect your form.
+        </p>
+      </motion.header>
+
+      <div className="space-y-8">
+        {weeks.map((weekNum, idx) => (
+          <motion.div
+            key={weekNum}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: idx * 0.1 }}
+          >
+            <WeekOverview
+              weekNumber={weekNum}
+              days={PROGRAM.filter(d => d.week === weekNum)}
+              completedIds={completedWorkouts}
+            />
+          </motion.div>
+        ))}
+      </div>
+
+      <footer className="mt-20 text-center text-[#8e5e5e]/60 text-sm pb-8 font-medium">
+        <p>Your Journey Starts Here</p>
+      </footer>
     </div>
   );
 }
