@@ -92,15 +92,15 @@ export const PROGRAM: WorkoutDay[] = [
     focus: "Increase volume, improve negative control",
     exercises: [
       { name: "Warm-up", sets: 1, reps: "5-10 min", note: "Light cardio + band pull-aparts (2x15)", isWarmup: true },
-        { name: "Assisted Pull-ups (band)", sets: 5, reps: "5-6" },
-        { name: "Negative Pull-ups", sets: 4, reps: "3-4", note: "6-second descent" },
-        { name: "Inverted Rows", sets: 4, reps: "10-12" },
-        { name: "Lat Pulldowns", sets: 3, reps: "8-10", note: "Increase weight" },
-        { name: "Face Pulls", sets: 3, reps: "15" },
-        { name: "Dead Hangs", sets: 3, reps: "30-40s" }
+      { name: "Assisted Pull-ups (band)", sets: 5, reps: "5-6" },
+      { name: "Negative Pull-ups", sets: 4, reps: "3-4", note: "6-second descent" },
+      { name: "Inverted Rows", sets: 4, reps: "10-12" },
+      { name: "Lat Pulldowns", sets: 3, reps: "8-10", note: "Increase weight" },
+      { name: "Face Pulls", sets: 3, reps: "15" },
+      { name: "Dead Hangs", sets: 3, reps: "30-40s" }
     ]
   },
-    {
+  {
     id: "w2-d2",
     week: 2,
     dayLabel: "Tuesday",
@@ -160,7 +160,7 @@ export const PROGRAM: WorkoutDay[] = [
     exercises: [
       { name: "Warm-up", sets: 1, reps: "5-10 min", note: "Band pull-aparts (2x20)", isWarmup: true },
       { name: "Unassisted Pull-up Attempts", sets: 3, reps: "1-2 attempts", note: "Max effort" },
-      { name: "Assisted Pull-ups", sets: 4, reps: "5-6", note: "Lighter band if available" },
+      { name: "Assisted Pull-ups (band)", sets: 4, reps: "5-6", note: "Lighter band if available" },
       { name: "Negative Pull-ups", sets: 4, reps: "3-4", note: "8-second descent" },
       { name: "Weighted Inverted Rows", sets: 4, reps: "8-10" },
       { name: "Weighted Lat Pulldowns", sets: 4, reps: "8-10" },
@@ -228,7 +228,7 @@ export const PROGRAM: WorkoutDay[] = [
     exercises: [
       { name: "Warm-up", sets: 1, reps: "10 min", note: "Thorough warm-up + mobility", isWarmup: true },
       { name: "Unassisted Pull-up Max Attempt", sets: 1, reps: "1", note: "Test with 5 min rest between attempts" },
-      { name: "Assisted Pull-ups (minimal band)", sets: 4, reps: "4-6" },
+      { name: "Assisted Pull-ups (band)", sets: 4, reps: "4-6", note: "Minimal band" },
       { name: "Negative Pull-ups", sets: 3, reps: "3-5", note: "10-second descent" },
       { name: "Inverted Rows", sets: 4, reps: "10-12" },
       { name: "Lat Pulldowns", sets: 3, reps: "8-10" },
@@ -260,8 +260,8 @@ export const PROGRAM: WorkoutDay[] = [
     focus: "Technique perfection",
     exercises: [
       { name: "Warm-up", sets: 1, reps: "5-10 min", note: "Scapular work", isWarmup: true },
-        // Prompt says "Unassisted Pull-ups: Practice your technique".
-        // I will map this to sets.
+      // Prompt says "Unassisted Pull-ups: Practice your technique".
+      // I will map this to sets.
       { name: "Unassisted Pull-ups", sets: 3, reps: "Practice", note: "Quality over quantity" },
       { name: "Assisted Pull-ups (band)", sets: 3, reps: "5-6", note: "Controlled" },
       { name: "Flexed Arm Hold", sets: 3, reps: "Max time" },

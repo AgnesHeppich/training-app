@@ -1,9 +1,9 @@
 @import "tailwindcss";
 
 :root {
-  /* Pink & White / Soft Glass Palette */
-  --bg-dark: #ffe6ea;
-  --bg-gradient: linear-gradient(135deg, #ffe6ea 0%, #ffc2d1 50%, #ff8fa3 100%);
+  /* Light Teal & Cyan Palette - Complements Pink Accents */
+  --bg-dark: #a8d5d8;
+  --bg-gradient: linear-gradient(135deg, #a8d5d8 0%, #7ec8cc 50%, #5ebdc4 100%);
 
   --glass-bg: rgba(255, 255, 255, 0.3);
   --glass-border: rgba(255, 255, 255, 0.5);
@@ -36,6 +36,10 @@ body {
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
   background-attachment: fixed;
+  /* Subtle dot pattern */
+  background-image:
+    radial-gradient(circle, rgba(255, 255, 255, 0.15) 1px, transparent 1px);
+  background-size: 20px 20px;
 }
 
 /* Background wrapper to apply gradient */
@@ -46,6 +50,10 @@ body {
   width: 100vw;
   height: 100vh;
   background: var(--bg-gradient);
+  /* Subtle dot pattern overlay */
+  background-image:
+    radial-gradient(circle, rgba(255, 255, 255, 0.15) 1px, transparent 1px);
+  background-size: 20px 20px;
   z-index: -1;
   pointer-events: none;
 }
@@ -56,4 +64,53 @@ body {
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
+}
+
+/* Floating animations for background elements */
+@keyframes float {
+
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+@keyframes float-slow {
+
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-30px);
+  }
+}
+
+@keyframes float-slower {
+
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-15px);
+  }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+.animate-float-slow {
+  animation: float-slow 8s ease-in-out infinite;
+}
+
+.animate-float-slower {
+  animation: float-slower 10s ease-in-out infinite;
 }

@@ -29,16 +29,15 @@ export default function Home() {
         <motion.div
           animate={{ y: [0, -10, 0] }}
           transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-          className="mb-6 relative w-48 h-48 md:w-64 md:h-64 filter drop-shadow-xl"
+          className="mb-6 relative w-48 h-48 md:w-64 md:h-64"
         >
-          {/* Using mix-blend-mode-multiply to make white background transparent-ish if needed, 
-               but ideally the image is cleaner. Also rounded-full to clip corners if it has a box. */}
-          <div className="w-full h-full relative rounded-full overflow-hidden mix-blend-multiply">
+          {/* Container with theme-consistent pink gradient and shadow */}
+          <div className="w-full h-full relative rounded-full overflow-hidden bg-gradient-to-br from-[#ff477e]/20 to-[#ff9eb5]/10 shadow-[0_15px_35px_rgba(255,71,126,0.25)] border border-white/20">
             <Image
               src="/header-illustration.png"
               alt="Funny 3D Workout Illustration"
               fill
-              className="object-contain scale-90" // Scale down slightly to ensure no edges touch
+              className="object-cover"
               priority
             />
           </div>

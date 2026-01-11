@@ -14,6 +14,8 @@ export default function WorkoutPage() {
     const router = useRouter();
     const { isLoaded, getPreviousStats, saveWorkoutLog, completedWorkouts, getLogForWorkout } = useWorkoutHistory();
     const [currentLogs, setCurrentLogs] = useState<WorkoutLog>({});
+    const [showButton, setShowButton] = useState(true);
+    const lastScrollY = useRef(0);
 
     const workoutId = params.slug as string;
     const workout = PROGRAM.find(d => d.id === workoutId);
@@ -37,6 +39,29 @@ export default function WorkoutPage() {
             saveWorkoutLog(workoutId, currentLogs, false);
         }
     }, [currentLogs, workoutId]);
+
+    // Scroll direction detection for button visibility
+    useEffect(() => {
+        const handleScroll = () => {
+            const currentScrollY = window.scrollY;
+
+            if (currentScrollY > lastScrollY.current && currentScrollY > 10) {
+                // Scrolling down - hide button
+                setShowButton(false);
+            } else if (currentScrollY < lastScrollY.current) {
+                // Scrolling up - show button
+                setShowButton(true);
+            }
+
+            lastScrollY.current = currentScrollY;
+        };
+
+        window.addEventListener('scroll', handleScroll, { passive: true });
+
+        return () => {
+            window.removeEventListener('scroll', handleScroll);
+        };
+    }, []);
 
     if (!isLoaded) return null;
 
@@ -107,7 +132,8 @@ export default function WorkoutPage() {
                 ))}
             </div>
 
-            <div className="mt-12 mb-20 sticky bottom-6 z-20">
+            <div className={`mt-12 mb-20 sticky bottom-6 z-20 transition-all duration-300 ${showButton ? 'translate-y-0 opacity-100' : 'translate-y-24 opacity-0 pointer-events-none'
+                }`}>
                 <button
                     onClick={handleFinish}
                     className="w-full bg-gradient-to-r from-[#ff477e] to-[#ff9eb5] text-white py-4 rounded-2xl font-bold text-lg shadow-xl shadow-pink-500/30 hover:shadow-pink-500/50 hover:scale-[1.02] active:scale-[0.98] transition-all"
