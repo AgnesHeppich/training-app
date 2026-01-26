@@ -41,6 +41,45 @@ export default function Home() {
         </p>
       </motion.header>
 
+      {/* Global Progress Summary */}
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.2 }}
+        className="mb-16 p-8 rounded-3xl bg-slate-900/40 border border-slate-800/60 backdrop-blur-xl"
+      >
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+          <div className="flex-1">
+            <div className="flex items-center justify-between mb-3 px-1">
+              <span className="text-[10px] text-slate-500 font-black uppercase tracking-[0.2em]">Overall Program Mastery</span>
+              <span className="text-sm font-black text-[#ff477e] pink-glow">
+                {Math.round((completedWorkouts.length / PROGRAM.length) * 100)}%
+              </span>
+            </div>
+            <div className="h-2 bg-slate-950/50 rounded-full overflow-hidden border border-slate-800/50">
+              <motion.div
+                initial={{ width: 0 }}
+                animate={{ width: `${(completedWorkouts.length / PROGRAM.length) * 100}%` }}
+                transition={{ duration: 1, ease: "easeOut" }}
+                className="h-full bg-gradient-to-r from-[#ff477e] to-[#ff9eb5] shadow-[0_0_15px_rgba(255,71,126,0.3)]"
+              />
+            </div>
+          </div>
+          <div className="flex gap-8 md:pl-8 md:border-l border-slate-800">
+            <div>
+              <span className="text-[10px] text-slate-500 font-black uppercase tracking-widest block mb-1">Sessions Done</span>
+              <span className="text-3xl font-black text-white">{completedWorkouts.length}</span>
+            </div>
+            <div>
+              <span className="text-[10px] text-slate-500 font-black uppercase tracking-widest block mb-1">Weeks Mastered</span>
+              <span className="text-3xl font-black text-white">
+                {allWeeks.filter(w => PROGRAM.filter(d => d.week === w).every(d => completedWorkouts.includes(d.id))).length}
+              </span>
+            </div>
+          </div>
+        </div>
+      </motion.div>
+
       <div className="space-y-8">
         {allWeeks.map((weekNum, idx) => (
           <motion.div
