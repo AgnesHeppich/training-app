@@ -48,41 +48,41 @@ export const ExerciseItem = ({ exercise, history, onLogChange, initialLogs }: Ex
     const isSetComplete = (log: SetLog) => log.weight !== "" && log.reps !== "";
 
     return (
-        <div className="backdrop-blur-xl border border-white/50 shadow-lg rounded-3xl bg-white/40 p-6 mb-6">
+        <div className="backdrop-blur-xl border border-slate-800/60 shadow-2xl rounded-3xl bg-slate-900/60 p-8 mb-8 transition-all">
             <div
-                className="flex justify-between items-start mb-4 cursor-pointer select-none"
+                className="flex justify-between items-start mb-6 cursor-pointer select-none"
                 onClick={() => setIsCollapsed(!isCollapsed)}
             >
-                <div className="flex items-start gap-3 flex-1">
+                <div className="flex items-start gap-4 flex-1">
                     {/* Checkbox */}
                     <div className={clsx(
-                        "flex-shrink-0 w-6 h-6 rounded-lg border-2 flex items-center justify-center transition-all mt-1",
+                        "flex-shrink-0 w-7 h-7 rounded-xl border-2 flex items-center justify-center transition-all mt-1",
                         isCollapsed
-                            ? "bg-[#ff477e] border-[#ff477e]"
-                            : "bg-white/50 border-white/80 hover:border-[#ff477e]"
+                            ? "bg-[#ff477e] border-[#ff477e] shadow-[0_0_15px_rgba(255,71,126,0.4)]"
+                            : "bg-slate-950/50 border-slate-700 hover:border-[#ff477e]"
                     )}>
                         {isCollapsed && (
-                            <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
                             </svg>
                         )}
                     </div>
 
                     <div>
-                        <h3 className="text-xl font-bold text-[#5c2b2b] mb-1">{exercise.name}</h3>
+                        <h3 className="text-2xl font-black text-white mb-2">{exercise.name}</h3>
                         {!isCollapsed && (
-                            <div className="flex items-center gap-3 text-sm">
-                                <span className="text-[#ff477e] bg-white/50 px-2 py-0.5 rounded-lg border border-white/50 font-semibold">
+                            <div className="flex items-center gap-4 text-xs">
+                                <span className="text-[#ff477e] bg-pink-500/10 px-3 py-1 rounded-lg border border-pink-500/20 font-bold uppercase tracking-wider">
                                     {exercise.sets} Sets
                                 </span>
-                                <span className="text-[#8e5e5e]">Target: {exercise.reps} reps</span>
+                                <span className="text-slate-400 font-medium">Target: <span className="text-slate-200">{exercise.reps}</span> reps</span>
                             </div>
                         )}
                     </div>
                 </div>
                 {!isCollapsed && history && history.length > 0 && (
-                    <div className="text-right text-xs text-[#ff477e] font-medium bg-white/50 px-3 py-1 rounded-full">
-                        History Available
+                    <div className="text-right text-[10px] text-[#ff477e] font-black tracking-widest uppercase bg-[#ff477e]/10 px-3 py-1.5 rounded-full border border-[#ff477e]/20">
+                        Past Stats Found
                     </div>
                 )}
             </div>
@@ -90,76 +90,61 @@ export const ExerciseItem = ({ exercise, history, onLogChange, initialLogs }: Ex
             {!isCollapsed && (
                 <>
                     {exercise.note && (
-                        <div className="mb-4 text-sm text-[#8e5e5e] italic bg-white/30 p-3 rounded-xl border-l-4 border-[#ff477e]">
-                            Memo: {exercise.note}
+                        <div className="mb-6 text-sm text-slate-400 leading-relaxed bg-slate-950/40 p-4 rounded-2xl border-l-2 border-[#ff477e]">
+                            <span className="text-[#ff477e] font-bold uppercase text-[10px] block mb-1 tracking-widest">Coach's Note</span>
+                            {exercise.note}
                         </div>
                     )}
 
-                    <div className="space-y-3">
+                    <div className="space-y-4">
                         {currentLogs.map((log, idx) => {
-                            // Get specific history for this set index
-                            // Fallback to index 0 if specific set history missing (e.g. if we added more sets this week)
                             const prevSet = history?.[idx] || history?.[history.length - 1];
 
                             return (
-                                <div key={idx} className="flex flex-col gap-1">
-                                    <div className="flex items-center gap-3">
-                                        <span className="flex-shrink-0 w-8 h-8 rounded-full bg-white/50 flex items-center justify-center text-sm text-[#5c2b2b] font-bold shadow-sm">
+                                <div key={idx} className="flex flex-col gap-2">
+                                    <div className="flex items-center gap-4">
+                                        <span className="flex-shrink-0 w-10 h-10 rounded-2xl bg-slate-950/50 border border-slate-800 flex items-center justify-center text-sm text-slate-400 font-bold">
                                             {idx + 1}
                                         </span>
 
-                                        <div className="flex-1 grid grid-cols-2 gap-3">
+                                        <div className="flex-1 grid grid-cols-2 gap-4">
                                             <div className="relative group">
-                                                {/* Floating Label / Suggestion */}
-                                                {prevSet && prevSet.weight && (
-                                                    <div className="absolute -top-3 left-2 bg-[#ff477e] text-white text-[10px] px-1.5 rounded-md opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10 shadow-sm">
-                                                        Prev: {prevSet.weight}kg
-                                                    </div>
-                                                )}
                                                 <input
                                                     type="text"
-                                                    placeholder={prevSet?.weight || "kg"}
+                                                    placeholder={prevSet?.weight || "0"}
                                                     value={log.weight}
                                                     onChange={(e) => handleChange(idx, 'weight', e.target.value)}
                                                     className={clsx(
-                                                        "w-full text-center font-mono !bg-white/60 !border-white/50 !text-[#5c2b2b] rounded-xl p-3 outline-none transition-all placeholder:text-[#b08d8d]/50 focus:!border-[#ff477e] focus:ring-2 focus:ring-[#ff477e]/20 shadow-inner",
-                                                        isSetComplete(log) ? "!bg-[#ff477e]/5 !border-[#ff477e]/30 !text-[#5c2b2b]" : ""
+                                                        "w-full text-center font-bold bg-slate-950/50 border border-slate-800 text-white rounded-2xl p-4 outline-none transition-all placeholder:text-slate-700 focus:border-[#ff477e] focus:ring-4 focus:ring-[#ff477e]/10",
+                                                        isSetComplete(log) ? "border-[#ff477e]/40 bg-[#ff477e]/5 shadow-[0_0_20px_rgba(255,71,126,0.05)]" : ""
                                                     )}
                                                 />
-                                                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-[#8e5e5e]/60 pointer-events-none">
+                                                <span className="absolute right-4 top-1/2 -translate-y-1/2 text-[10px] text-slate-500 font-bold uppercase tracking-widest pointer-events-none">
                                                     kg
                                                 </span>
                                             </div>
 
                                             <div className="relative group">
-                                                {/* Floating Label / Suggestion */}
-                                                {prevSet && prevSet.reps && (
-                                                    <div className="absolute -top-3 left-2 bg-[#ff477e] text-white text-[10px] px-1.5 rounded-md opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10 shadow-sm">
-                                                        Prev: {prevSet.reps} reps
-                                                    </div>
-                                                )}
                                                 <input
                                                     type="number"
-                                                    placeholder={prevSet?.reps || exercise.reps}
+                                                    placeholder={prevSet?.reps || "0"}
                                                     value={log.reps}
                                                     onChange={(e) => handleChange(idx, 'reps', e.target.value)}
                                                     className={clsx(
-                                                        "w-full text-center font-mono !bg-white/60 !border-white/50 !text-[#5c2b2b] rounded-xl p-3 outline-none transition-all placeholder:text-[#b08d8d]/50 focus:!border-[#ff477e] focus:ring-2 focus:ring-[#ff477e]/20 shadow-inner",
-                                                        isSetComplete(log) ? "!bg-[#ff477e]/5 !border-[#ff477e]/30 !text-[#5c2b2b]" : ""
+                                                        "w-full text-center font-bold bg-slate-950/50 border border-slate-800 text-white rounded-2xl p-4 outline-none transition-all placeholder:text-slate-700 focus:border-[#ff477e] focus:ring-4 focus:ring-[#ff477e]/10",
+                                                        isSetComplete(log) ? "border-[#ff477e]/40 bg-[#ff477e]/5 shadow-[0_0_20px_rgba(255,71,126,0.05)]" : ""
                                                     )}
                                                 />
-                                                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-[#8e5e5e]/60 pointer-events-none">
+                                                <span className="absolute right-4 top-1/2 -translate-y-1/2 text-[10px] text-slate-500 font-bold uppercase tracking-widest pointer-events-none">
                                                     reps
                                                 </span>
                                             </div>
                                         </div>
                                     </div>
 
-                                    {/* Visible text suggestion below inputs for easier reading without hover? 
-                          User said "easier to know". Hover is hidden. Let's make it always visible but subtle. */}
                                     {prevSet && (prevSet.weight || prevSet.reps) && (
-                                        <div className="text-[10px] text-[#ff477e] text-right pr-4 font-mono">
-                                            Prev: {prevSet.weight}kg x {prevSet.reps}
+                                        <div className="text-[10px] text-slate-500 text-right pr-6 font-bold uppercase tracking-widest">
+                                            Last Time: <span className="text-[#ff477e]">{prevSet.weight}kg</span> × <span className="text-[#ff477e]">{prevSet.reps}</span>
                                         </div>
                                     )}
                                 </div>

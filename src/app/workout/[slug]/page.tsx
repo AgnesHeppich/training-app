@@ -68,7 +68,7 @@ export default function WorkoutPage() {
     if (!workout) {
         return (
             <div className="min-h-screen flex flex-col items-center justify-center p-4">
-                <h1 className="text-2xl text-[#5c2b2b] mb-4">Workout not found</h1>
+                <h1 className="text-2xl text-white mb-4 font-bold">Workout not found</h1>
                 <Link href="/" className="text-[#ff477e] hover:underline">Return Home</Link>
             </div>
         );
@@ -91,25 +91,31 @@ export default function WorkoutPage() {
     };
 
     return (
-        <div className="container mx-auto px-4 py-8 max-w-2xl">
-            <header className="mb-8">
-                <Link href="/" className="text-sm text-[#8e5e5e] hover:text-[#ff477e] transition-colors mb-4 inline-block font-medium">
-                    ← Back to Dashboard
+        <div className="container mx-auto px-4 py-12 max-w-2xl">
+            <header className="mb-12">
+                <Link href="/" className="inline-flex items-center text-xs text-slate-500 hover:text-[#ff477e] transition-colors mb-8 font-bold uppercase tracking-widest">
+                    <span className="mr-2 text-lg">←</span> Dashboard
                 </Link>
-                <div className="flex items-end justify-between">
+                <div className="flex items-end justify-between mb-4">
                     <div>
-                        <h2 className="text-sm text-[#ff477e] font-bold uppercase tracking-wider mb-1">
+                        <h2 className="text-[10px] text-[#ff477e] font-black uppercase tracking-[0.2em] mb-2 px-1">
                             {workout.dayLabel} • Week {workout.week}
                         </h2>
-                        <h1 className="text-4xl font-bold text-[#5c2b2b]">{workout.title}</h1>
+                        <h1 className="text-5xl font-black text-white leading-tight tracking-tight">{workout.title}</h1>
                     </div>
                 </div>
-                <p className="mt-2 text-[#8e5e5e] border-l-4 border-[#ff477e] pl-4 italic bg-white/30 py-2 rounded-r-xl">
-                    Focus: {workout.focus}
-                </p>
+                <div className="mt-6 flex items-start gap-4 bg-slate-900/40 p-5 rounded-2xl border border-slate-800/60 shadow-inner">
+                    <div className="w-1 h-full bg-[#ff477e] rounded-full" />
+                    <div>
+                        <span className="text-[10px] text-slate-500 font-black uppercase tracking-widest block mb-1">Workout Focus</span>
+                        <p className="text-slate-300 font-medium italic">
+                            {workout.focus}
+                        </p>
+                    </div>
+                </div>
             </header>
 
-            <div className="space-y-4">
+            <div className="space-y-6">
                 {workout.exercises.map((exercise, idx) => (
                     <motion.div
                         key={idx}
@@ -132,13 +138,13 @@ export default function WorkoutPage() {
                 ))}
             </div>
 
-            <div className={`mt-12 mb-20 sticky bottom-6 z-20 transition-all duration-300 ${showButton ? 'translate-y-0 opacity-100' : 'translate-y-24 opacity-0 pointer-events-none'
+            <div className={`mt-16 mb-24 sticky bottom-8 z-20 transition-all duration-500 ${showButton ? 'translate-y-0 opacity-100' : 'translate-y-24 opacity-0 pointer-events-none'
                 }`}>
                 <button
                     onClick={handleFinish}
-                    className="w-full bg-gradient-to-r from-[#ff477e] to-[#ff9eb5] text-white py-4 rounded-2xl font-bold text-lg shadow-xl shadow-pink-500/30 hover:shadow-pink-500/50 hover:scale-[1.02] active:scale-[0.98] transition-all"
+                    className="w-full bg-[#ff477e] text-white py-5 rounded-2xl font-black text-lg tracking-widest uppercase shadow-[0_0_30px_rgba(255,71,126,0.4)] hover:shadow-[0_0_40px_rgba(255,71,126,0.6)] hover:scale-[1.02] active:scale-[0.98] transition-all"
                 >
-                    Finish Workout
+                    Complete Session
                 </button>
             </div>
         </div>

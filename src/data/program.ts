@@ -15,7 +15,7 @@ export type WorkoutDay = {
   exercises: Exercise[];
 };
 
-export const PROGRAM: WorkoutDay[] = [
+export const PROGRAM_OLD: WorkoutDay[] = [
   // Week 1
   {
     id: "w1-d1",
@@ -288,3 +288,215 @@ export const PROGRAM: WorkoutDay[] = [
     ]
   }
 ];
+
+export const PROGRAM_NEXT: WorkoutDay[] = [
+  // Week 5
+  {
+    id: "w5-d1",
+    week: 5,
+    dayLabel: "Monday",
+    title: "Upper Pull – Initiation Focus",
+    focus: "Clean scapular initiation & transition",
+    exercises: [
+      { name: "Warm-up", sets: 1, reps: "5-10 min", note: "Light cardio + band pull-aparts (2x20)", isWarmup: true },
+      { name: "Scapular Pull-ups (pause)", sets: 4, reps: "6-8", note: "2s hold at top, long neck" },
+      { name: "Assisted Pull-ups (band)", sets: 4, reps: "4-5", note: "Pause 1s before elbow bend" },
+      { name: "Transition Pulls", sets: 3, reps: "5", note: "Scap pull → tiny elbow bend → reset" },
+      { name: "Chest-Supported Rows", sets: 3, reps: "10-12" },
+      { name: "Straight Arm Pulldowns", sets: 3, reps: "12-15" },
+      { name: "Dead Hangs", sets: 3, reps: "30-40s", note: "Active shoulders" }
+    ]
+  },
+  {
+    id: "w5-d2",
+    week: 5,
+    dayLabel: "Tuesday",
+    title: "Lower Body + Core",
+    focus: "Maintain strength",
+    exercises: [
+      { name: "Warm-up", sets: 1, reps: "5-10 min", note: "Bike + dynamic stretches", isWarmup: true },
+      { name: "Squats", sets: 4, reps: "8-10" },
+      { name: "Romanian Deadlifts", sets: 3, reps: "10-12" },
+      { name: "Walking Lunges", sets: 3, reps: "10/leg" },
+      { name: "Plank", sets: 3, reps: "45-60s" },
+      { name: "Dead Bug", sets: 3, reps: "10/side" },
+      { name: "Cardio", sets: 1, reps: "12-15 min", note: "Moderate" }
+    ]
+  },
+  {
+    id: "w5-d4",
+    week: 5,
+    dayLabel: "Thursday",
+    title: "Upper Pull – Assisted Strength",
+    focus: "Near-bodyweight reps",
+    exercises: [
+      { name: "Warm-up", sets: 1, reps: "5-10 min", note: "Scapular pull-ups (2x10)", isWarmup: true },
+      { name: "Assisted Pull-ups (minimal band)", sets: 5, reps: "3-4", note: "Perfect reps only" },
+      { name: "Flexed Arm Hang", sets: 4, reps: "15-25s" },
+      { name: "Single-arm Dumbbell Rows", sets: 3, reps: "10-12/arm" },
+      { name: "Face Pulls", sets: 3, reps: "15-20" },
+      { name: "Band Pull-aparts", sets: 3, reps: "20-25" }
+    ]
+  },
+  {
+    id: "w5-d5",
+    week: 5,
+    dayLabel: "Friday",
+    title: "Full Body + Posture",
+    focus: "Recovery & balance",
+    exercises: [
+      { name: "Warm-up", sets: 1, reps: "5-10 min", note: "Thoracic mobility", isWarmup: true },
+      { name: "Push-ups", sets: 3, reps: "10-12" },
+      { name: "Goblet Squats", sets: 3, reps: "12-15" },
+      { name: "Dumbbell Shoulder Press", sets: 3, reps: "10-12" },
+      { name: "Wall Angels", sets: 3, reps: "12-15" },
+      { name: "Y-T-W Raises", sets: 3, reps: "8 each" },
+      { name: "Easy Cardio", sets: 1, reps: "15-20 min" }
+    ]
+  },
+
+  // Week 6
+  {
+    id: "w6-d1",
+    week: 6,
+    dayLabel: "Monday",
+    title: "Upper Pull – Unassisted Exposure",
+    focus: "Low-fatigue attempts",
+    exercises: [
+      { name: "Warm-up", sets: 1, reps: "5-10 min", note: "Bands + scap work", isWarmup: true },
+      { name: "Unassisted Pull-up Attempts", sets: 4, reps: "1", note: "Stop before grind" },
+      { name: "Assisted Pull-ups (band)", sets: 4, reps: "4-5" },
+      { name: "Negative Pull-ups", sets: 3, reps: "3", note: "8s descent" },
+      { name: "Inverted Rows", sets: 3, reps: "10-12" },
+      { name: "Dead Hangs", sets: 3, reps: "40-50s" }
+    ]
+  },
+  {
+    id: "w6-d2",
+    week: 6,
+    dayLabel: "Tuesday",
+    title: "Lower Body + Core",
+    focus: "Strength",
+    exercises: [
+      { name: "Warm-up", sets: 1, reps: "5-10 min", note: "Bike + dynamic stretches", isWarmup: true },
+      { name: "Squats", sets: 4, reps: "8-10" },
+      { name: "Romanian Deadlifts", sets: 4, reps: "10-12" },
+      { name: "Bulgarian Split Squats", sets: 3, reps: "8-10/leg" },
+      { name: "Side Planks", sets: 3, reps: "30-40s/side" },
+      { name: "Hanging Knee Raises", sets: 3, reps: "10-12" },
+      { name: "Cardio", sets: 1, reps: "12-15 min" }
+    ]
+  },
+  {
+    id: "w6-d4",
+    week: 6,
+    dayLabel: "Thursday",
+    title: "Upper Pull – Volume Control",
+    focus: "Technique under fatigue",
+    exercises: [
+      { name: "Warm-up", sets: 1, reps: "5-10 min", note: "Scapular pull-ups (2x10)", isWarmup: true },
+      { name: "Assisted Pull-ups (band)", sets: 5, reps: "4", note: "Slow & strict" },
+      { name: "Flexed Arm Hang", sets: 4, reps: "20-30s" },
+      { name: "Chest-Supported Rows", sets: 3, reps: "10-12" },
+      { name: "Straight Arm Pulldowns", sets: 3, reps: "12-15" },
+      { name: "Band Pull-aparts", sets: 3, reps: "25" }
+    ]
+  },
+  {
+    id: "w6-d5",
+    week: 6,
+    dayLabel: "Friday",
+    title: "Full Body + Posture",
+    focus: "Structural balance",
+    exercises: [
+      { name: "Warm-up", sets: 1, reps: "5-10 min", note: "Mobility", isWarmup: true },
+      { name: "Push-ups", sets: 4, reps: "10-15" },
+      { name: "Goblet Squats", sets: 3, reps: "15" },
+      { name: "Arnold Press", sets: 3, reps: "10-12" },
+      { name: "Wall Angels", sets: 4, reps: "15" },
+      { name: "Prone Y-T-I Raises", sets: 3, reps: "10 each" },
+      { name: "Easy Cardio", sets: 1, reps: "20 min" }
+    ]
+  },
+
+  // Week 7
+  {
+    id: "w7-d1",
+    week: 7,
+    dayLabel: "Monday",
+    title: "Upper Pull – First Rep Focus",
+    focus: "Fresh nervous system",
+    exercises: [
+      { name: "Warm-up", sets: 1, reps: "8-10 min", note: "Extra scap prep", isWarmup: true },
+      { name: "Unassisted Pull-up Attempts", sets: 5, reps: "1", note: "5 min rest, pristine setup" },
+      { name: "Assisted Pull-ups (band)", sets: 3, reps: "4-5" },
+      { name: "Flexed Arm Hang", sets: 3, reps: "20-30s" },
+      { name: "Straight Arm Pulldowns", sets: 3, reps: "12-15" },
+      { name: "Face Pulls", sets: 3, reps: "20" }
+    ]
+  },
+  {
+    id: "w7-d2",
+    week: 7,
+    dayLabel: "Tuesday",
+    title: "Lower Body + Core",
+    focus: "Maintain",
+    exercises: [
+      { name: "Warm-up", sets: 1, reps: "5-10 min", note: "Bike + mobility", isWarmup: true },
+      { name: "Squats", sets: 4, reps: "8" },
+      { name: "Deadlifts", sets: 3, reps: "6-8" },
+      { name: "Walking Lunges", sets: 3, reps: "12/leg" },
+      { name: "Weighted Plank", sets: 3, reps: "45-60s" },
+      { name: "Hanging Knee Raises", sets: 3, reps: "10-12" }
+    ]
+  },
+  {
+    id: "w7-d4",
+    week: 7,
+    dayLabel: "Thursday",
+    title: "Upper Pull – Confidence Builder",
+    focus: "Near-misses become reps",
+    exercises: [
+      { name: "Warm-up", sets: 1, reps: "5-10 min", note: "Scapular focus", isWarmup: true },
+      { name: "Unassisted Pull-up Attempts", sets: 4, reps: "1", note: "Strong setup" },
+      { name: "Assisted Pull-ups (band)", sets: 4, reps: "4" },
+      { name: "Negative Pull-ups", sets: 3, reps: "2", note: "Very slow" },
+      { name: "Chest-Supported Rows", sets: 3, reps: "10-12" },
+      { name: "Band Pull-aparts", sets: 3, reps: "25" }
+    ]
+  },
+  {
+    id: "w7-d5",
+    week: 7,
+    dayLabel: "Friday",
+    title: "Full Body + Posture",
+    focus: "Deload-ish",
+    exercises: [
+      { name: "Warm-up", sets: 1, reps: "10 min", note: "Mobility", isWarmup: true },
+      { name: "Push-ups", sets: 3, reps: "10" },
+      { name: "Bodyweight Squats", sets: 3, reps: "20" },
+      { name: "Dumbbell Shoulder Press", sets: 3, reps: "10", note: "Light" },
+      { name: "Wall Angels", sets: 4, reps: "20" },
+      { name: "Stretching", sets: 1, reps: "15 min" }
+    ]
+  },
+
+  // Week 8
+  {
+    id: "w8-d1",
+    week: 8,
+    dayLabel: "Monday",
+    title: "Upper Pull – Test Day",
+    focus: "Convert strength to reps",
+    exercises: [
+      { name: "Warm-up", sets: 1, reps: "10 min", note: "Thorough, calm", isWarmup: true },
+      { name: "Unassisted Pull-ups", sets: 3, reps: "Max quality reps", note: "Stop before form breaks" },
+      { name: "Assisted Pull-ups (band)", sets: 3, reps: "5" },
+      { name: "Negative Pull-ups", sets: 2, reps: "3", note: "Slow" },
+      { name: "Dead Hangs", sets: 2, reps: "45-60s" }
+    ]
+  }
+];
+
+
+export const PROGRAM: WorkoutDay[] = [...PROGRAM_OLD, ...PROGRAM_NEXT]

@@ -15,18 +15,18 @@ export const WeekOverview = ({
     const progress = (completedCount / days.length) * 100;
 
     return (
-        <div className="mb-8">
-            <div className="flex items-end justify-between mb-3 px-2">
-                <h2 className="text-2xl font-bold text-[#5c2b2b]">Week {weekNumber}</h2>
-                <div className="text-sm text-[#8e5e5e] font-semibold">
-                    {completedCount}/{days.length} Completed
+        <div className="mb-12">
+            <div className="flex items-end justify-between mb-4 px-1">
+                <h2 className="text-3xl font-black text-white tracking-tight">Week {weekNumber}</h2>
+                <div className="text-xs text-[#94a3b8] font-bold tracking-widest uppercase">
+                    {completedCount} / {days.length} Complete
                 </div>
             </div>
 
             {/* Progress Bar */}
-            <div className="h-3 bg-white/50 rounded-full mb-4 overflow-hidden border border-white/50 shadow-inner">
+            <div className="h-1.5 bg-slate-800/50 rounded-full mb-6 overflow-hidden border border-slate-700/30">
                 <div
-                    className="h-full bg-gradient-to-r from-[#ff477e] to-[#ff9eb5] transition-all duration-500 ease-out shadow-lg"
+                    className="h-full bg-gradient-to-r from-[#ff477e] to-[#ff9eb5] transition-all duration-700 ease-in-out shadow-[0_0_10px_rgba(255,71,126,0.5)]"
                     style={{ width: `${progress}%` }}
                 />
             </div>

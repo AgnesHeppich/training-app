@@ -4,7 +4,6 @@ import { PROGRAM } from "@/data/program";
 import { useWorkoutHistory } from "@/hooks/useWorkoutHistory";
 import { WeekOverview } from "@/components/WeekOverview";
 import { motion } from "framer-motion";
-import Image from "next/image";
 
 export default function Home() {
   const { completedWorkouts, isLoaded } = useWorkoutHistory();
@@ -17,46 +16,33 @@ export default function Home() {
     );
   }
 
-  const weeks = [1, 2, 3, 4];
+  const allWeeks = Array.from(new Set(PROGRAM.map(d => d.week))).sort((a, b) => a - b);
+  const totalWeeks = allWeeks.length;
 
   return (
-    <div className="container mx-auto px-4 py-8 max-w-6xl">
+    <div className="container mx-auto px-4 py-16 max-w-5xl">
       <motion.header
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="mb-12 text-center flex flex-col items-center overflow-visible"
+        className="mb-16 text-left"
       >
-        <motion.div
-          animate={{ y: [0, -10, 0] }}
-          transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-          className="mb-6 relative w-48 h-48 md:w-64 md:h-64"
-        >
-          {/* Container with theme-consistent pink gradient and shadow */}
-          <div className="w-full h-full relative rounded-full overflow-hidden bg-gradient-to-br from-[#ff477e]/20 to-[#ff9eb5]/10 shadow-[0_15px_35px_rgba(255,71,126,0.25)] border border-white/20">
-            <Image
-              src="/header-illustration.png"
-              alt="Funny 3D Workout Illustration"
-              fill
-              className="object-cover"
-              priority
-            />
-          </div>
-        </motion.div>
-
-        <div className="inline-block py-1 px-4 rounded-full bg-white/40 border border-white/60 text-xs font-bold tracking-widest text-[#ff477e] mb-4 shadow-sm backdrop-blur-md">
-          ZERO TO HERO
+        <div className="inline-flex items-center gap-2 py-1 px-3 rounded-lg bg-pink-500/10 border border-pink-500/20 text-[10px] font-bold tracking-[0.2em] text-[#ff477e] mb-6 uppercase">
+          <span className="w-1.5 h-1.5 rounded-full bg-[#ff477e] animate-pulse" />
+          Zero to Hero
         </div>
-        <h1 className="text-4xl md:text-6xl font-extrabold mb-4 tracking-tight drop-shadow-sm">
-          <span className="text-[#5c2b2b]">Pull-Up</span>{" "}
-          <span className="title-gradient filter drop-shadow-lg">Mastery</span>
+
+        <h1 className="text-5xl md:text-7xl font-black mb-6 tracking-tight leading-none">
+          <span className="title-gradient">Pull-Up</span><br />
+          <span className="text-[#ff477e] pink-glow">Mastery</span>
         </h1>
-        <p className="text-[#8e5e5e] text-lg max-w-2xl mx-auto leading-relaxed font-medium">
-          From assisted reps to unassisted dominance in 4 weeks. Track your weights, perfect your form.
+
+        <p className="text-[#94a3b8] text-xl max-w-xl leading-relaxed font-medium">
+          A definitive {totalWeeks}-week progression from assisted reps to unassisted dominance.
         </p>
       </motion.header>
 
       <div className="space-y-8">
-        {weeks.map((weekNum, idx) => (
+        {allWeeks.map((weekNum, idx) => (
           <motion.div
             key={weekNum}
             initial={{ opacity: 0, y: 20 }}
@@ -72,7 +58,7 @@ export default function Home() {
         ))}
       </div>
 
-      <footer className="mt-20 text-center text-[#8e5e5e]/60 text-sm pb-8 font-medium">
+      <footer className="mt-24 text-center text-slate-600 text-[10px] pb-12 font-black uppercase tracking-[0.3em]">
         <p>Your Journey Starts Here</p>
       </footer>
     </div>

@@ -135,7 +135,7 @@ export function useWorkoutHistory() {
     };
 
     const getOverallProgress = () => {
-        const total = 16;
+        const total = PROGRAM.length;
         const completed = data.completedWorkouts.length;
         return Math.min(100, Math.round((completed / total) * 100));
     };
