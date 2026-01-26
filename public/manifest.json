@@ -1,0 +1,23 @@
+{
+    "name": "Pull-Up Mastery",
+    "short_name": "Pull-Up",
+    "description": "8-Week Pull-Up Training Program - From Zero to Hero",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#0f172a",
+    "theme_color": "#ff477e",
+    "orientation": "portrait",
+    "icons": [
+        {
+            "src": "/icon.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any maskable"
+        },
+        {
+            "src": "/apple-touch-icon.png",
+            "sizes": "180x180",
+            "type": "image/png"
+        }
+    ]
+}

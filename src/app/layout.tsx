@@ -3,15 +3,15 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Pull-Up Mastery",
-  description: "4-Week Pull-Up Training Program",
+  description: "8-Week Pull-Up Training Program",
   icons: {
-    icon: "/header-illustration.png",
-    apple: "/header-illustration.png",
+    icon: "/icon.png",
+    apple: "/apple-touch-icon.png",
   },
   appleWebApp: {
     capable: true,
-    statusBarStyle: "default",
-    title: "Zero to Hero",
+    statusBarStyle: "black-translucent",
+    title: "Pull-Up Mastery",
   },
 };
 
@@ -22,6 +22,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <link rel="manifest" href="/manifest.json" />
+        <meta name="theme-color" content="#0f172a" />
+      </head>
       <body>
         <div className="app-background" />
 
