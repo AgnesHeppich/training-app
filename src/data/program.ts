@@ -40,6 +40,7 @@ export const PROGRAM_NEXT: WorkoutDay[] = [
       { name: "Cardio finisher", sets: 1, reps: "15 min", note: "Steady state moderate intensity" }
     ]
   },
+
   {
     id: "w1-d4",
     week: 1,
@@ -56,6 +57,7 @@ export const PROGRAM_NEXT: WorkoutDay[] = [
       { name: "Dead Hangs", sets: 3, reps: "30-40s", note: "Active shoulders" }
     ]
   },
+
   {
     id: "w1-d5",
     week: 1,
@@ -72,6 +74,7 @@ export const PROGRAM_NEXT: WorkoutDay[] = [
       { name: "Cardio", sets: 1, reps: "20 min", note: "Steady state easy pace" }
     ]
   },
+
   {
     id: "w1-d1",
     week: 1,
@@ -106,6 +109,7 @@ export const PROGRAM_NEXT: WorkoutDay[] = [
       { name: "Cardio finisher", sets: 1, reps: "15 min", note: "Intervals: 30s hard / 90s easy" }
     ]
   },
+
   {
     id: "w2-d4",
     week: 2,
@@ -122,6 +126,7 @@ export const PROGRAM_NEXT: WorkoutDay[] = [
       { name: "Dead Hangs", sets: 3, reps: "35-45s" }
     ]
   },
+
   {
     id: "w2-d5",
     week: 2,
@@ -138,19 +143,21 @@ export const PROGRAM_NEXT: WorkoutDay[] = [
       { name: "Cardio", sets: 1, reps: "20 min", note: "Easy steady state" }
     ]
   },
+
   {
-    id: "w2-d1",
-    week: 2,
+    id: "w3-d1",
+    week: 3,
     dayLabel: "Monday",
     title: "Upper Pull",
-    focus: "Dead-hang doubles with better recovery",
+    focus: "Brief pause at bottom, don't fully hang off",
     exercises: [
-      { name: "Warm-up", sets: 1, reps: "8-10 min", note: "Light cardio + band pull-aparts (2x20) + scap pull-ups (2x10)", isWarmup: true },
-      { name: "2-Rep Attempt Pull-ups", sets: 6, reps: "1-2", note: "5 min rest between sets. Rep 1 should feel easier than week 1." },
+      { name: "Warm-up", sets: 1, reps: "8-10 min", note: "Full scap prep + band pull-aparts (2x20)", isWarmup: true },
+      { name: "Touch-and-Go Pull-ups", sets: 5, reps: "1-2", note: "Don't fully relax at the bottom. Brief pause only. Stop if rep 1 feels ugly." },
+      { name: "2-Rep Attempt Pull-ups (dead hang)", sets: 3, reps: "1-2", note: "Fallback if touch-and-go isn't there yet" },
       { name: "Assisted Pull-ups (light band)", sets: 3, reps: "5" },
-      { name: "Negative Pull-ups", sets: 3, reps: "3", note: "8s descent" },
-      { name: "Inverted Rows", sets: 3, reps: "10-12" },
-      { name: "Dead Hangs", sets: 3, reps: "40-50s" }
+      { name: "Negative Pull-ups", sets: 3, reps: "3", note: "8-10s descent" },
+      { name: "Chest-Supported Rows", sets: 3, reps: "10-12" },
+      { name: "Dead Hangs", sets: 3, reps: "45s" }
     ]
   },
 
@@ -171,6 +178,7 @@ export const PROGRAM_NEXT: WorkoutDay[] = [
       { name: "Cardio finisher", sets: 1, reps: "15 min", note: "HIIT: 20s sprint / 40s rest" }
     ]
   },
+
   {
     id: "w3-d4",
     week: 3,
@@ -187,6 +195,7 @@ export const PROGRAM_NEXT: WorkoutDay[] = [
       { name: "Dead Hangs", sets: 3, reps: "40-50s" }
     ]
   },
+
   {
     id: "w3-d5",
     week: 3,
@@ -203,20 +212,20 @@ export const PROGRAM_NEXT: WorkoutDay[] = [
       { name: "Cardio", sets: 1, reps: "20 min", note: "Steady state" }
     ]
   },
+
   {
-    id: "w3-d1",
-    week: 3,
+    id: "w4-d1",
+    week: 4,
     dayLabel: "Monday",
     title: "Upper Pull",
-    focus: "Brief pause at bottom, don't fully hang off",
+    focus: "Are the doubles reliable yet?",
     exercises: [
       { name: "Warm-up", sets: 1, reps: "8-10 min", note: "Full scap prep + band pull-aparts (2x20)", isWarmup: true },
-      { name: "Touch-and-Go Pull-ups", sets: 5, reps: "1-2", note: "Don't fully relax at the bottom. Brief pause only. Stop if rep 1 feels ugly." },
-      { name: "2-Rep Attempt Pull-ups (dead hang)", sets: 3, reps: "1-2", note: "Fallback if touch-and-go isn't there yet" },
+      { name: "Unassisted Pull-ups", sets: 6, reps: "1-2", note: "5 min rest. Count how many sets you get 2 reps. Note it down." },
       { name: "Assisted Pull-ups (light band)", sets: 3, reps: "5" },
-      { name: "Negative Pull-ups", sets: 3, reps: "3", note: "8-10s descent" },
-      { name: "Chest-Supported Rows", sets: 3, reps: "10-12" },
-      { name: "Dead Hangs", sets: 3, reps: "45s" }
+      { name: "Negative Pull-ups", sets: 3, reps: "3", note: "10s descent" },
+      { name: "Inverted Rows", sets: 3, reps: "10-12" },
+      { name: "Dead Hangs", sets: 3, reps: "50-60s" }
     ]
   },
 
@@ -237,6 +246,7 @@ export const PROGRAM_NEXT: WorkoutDay[] = [
       { name: "Cardio finisher", sets: 1, reps: "15 min", note: "Intervals" }
     ]
   },
+
   {
     id: "w4-d4",
     week: 4,
@@ -253,11 +263,12 @@ export const PROGRAM_NEXT: WorkoutDay[] = [
       { name: "Dead Hangs", sets: 3, reps: "45-55s" }
     ]
   },
+
   {
     id: "w4-d5",
     week: 4,
     dayLabel: "Friday",
-    title: "Full Body + Posture (Deload)",
+    title: "Full Body + Posture",
     focus: "Active recovery before Phase 2",
     exercises: [
       { name: "Warm-up", sets: 1, reps: "10 min", note: "Thoracic mobility", isWarmup: true },
@@ -270,19 +281,20 @@ export const PROGRAM_NEXT: WorkoutDay[] = [
       { name: "Light cardio", sets: 1, reps: "20 min", note: "Easy pace" }
     ]
   },
+
   {
-    id: "w4-d1",
-    week: 4,
+    id: "w5-d1",
+    week: 5,
     dayLabel: "Monday",
     title: "Upper Pull",
-    focus: "Are the doubles reliable yet?",
+    focus: "Make doubles feel routine",
     exercises: [
       { name: "Warm-up", sets: 1, reps: "8-10 min", note: "Full scap prep + band pull-aparts (2x20)", isWarmup: true },
-      { name: "Unassisted Pull-ups", sets: 6, reps: "1-2", note: "5 min rest. Count how many sets you get 2 reps. Note it down." },
-      { name: "Assisted Pull-ups (light band)", sets: 3, reps: "5" },
+      { name: "Unassisted Pull-ups", sets: 6, reps: "2", note: "5 min rest. All sets. If you can't hit 2, use lightest band for that set." },
+      { name: "Assisted Pull-ups (light band)", sets: 3, reps: "4-5" },
       { name: "Negative Pull-ups", sets: 3, reps: "3", note: "10s descent" },
-      { name: "Inverted Rows", sets: 3, reps: "10-12" },
-      { name: "Dead Hangs", sets: 3, reps: "50-60s" }
+      { name: "Straight Arm Pulldowns", sets: 3, reps: "12-15" },
+      { name: "Dead Hangs", sets: 3, reps: "45s" }
     ]
   },
 
@@ -307,6 +319,7 @@ export const PROGRAM_NEXT: WorkoutDay[] = [
       { name: "Cardio finisher", sets: 1, reps: "15 min", note: "Intervals: 30s hard / 90s easy" }
     ]
   },
+
   {
     id: "w5-d4",
     week: 5,
@@ -322,6 +335,7 @@ export const PROGRAM_NEXT: WorkoutDay[] = [
       { name: "Band Pull-aparts", sets: 3, reps: "25" }
     ]
   },
+
   {
     id: "w5-d5",
     week: 5,
@@ -338,19 +352,19 @@ export const PROGRAM_NEXT: WorkoutDay[] = [
       { name: "Cardio", sets: 1, reps: "20 min", note: "Easy steady state" }
     ]
   },
+
   {
-    id: "w5-d1",
-    week: 5,
+    id: "w6-d1",
+    week: 6,
     dayLabel: "Monday",
     title: "Upper Pull",
-    focus: "Make doubles feel routine",
+    focus: "Accumulate reps at 2",
     exercises: [
-      { name: "Warm-up", sets: 1, reps: "8-10 min", note: "Full scap prep + band pull-aparts (2x20)", isWarmup: true },
-      { name: "Unassisted Pull-ups", sets: 6, reps: "2", note: "5 min rest. All sets. If you can't hit 2, use lightest band for that set." },
-      { name: "Assisted Pull-ups (light band)", sets: 3, reps: "4-5" },
-      { name: "Negative Pull-ups", sets: 3, reps: "3", note: "10s descent" },
-      { name: "Straight Arm Pulldowns", sets: 3, reps: "12-15" },
-      { name: "Dead Hangs", sets: 3, reps: "45s" }
+      { name: "Warm-up", sets: 1, reps: "8-10 min", note: "Light cardio + band pull-aparts (2x20) + scap pull-ups (2x10)", isWarmup: true },
+      { name: "Unassisted Pull-ups", sets: 8, reps: "2", note: "4 min rest. All sets should be clean. No grinding." },
+      { name: "Assisted Pull-ups (light band)", sets: 3, reps: "5" },
+      { name: "Negative Pull-ups", sets: 3, reps: "3", note: "10-12s descent" },
+      { name: "Dead Hangs", sets: 3, reps: "50-60s" }
     ]
   },
 
@@ -371,6 +385,7 @@ export const PROGRAM_NEXT: WorkoutDay[] = [
       { name: "Cardio finisher", sets: 1, reps: "15 min", note: "HIIT: 20s sprint / 40s rest" }
     ]
   },
+
   {
     id: "w6-d4",
     week: 6,
@@ -386,6 +401,7 @@ export const PROGRAM_NEXT: WorkoutDay[] = [
       { name: "Band Pull-aparts", sets: 3, reps: "25-30" }
     ]
   },
+
   {
     id: "w6-d5",
     week: 6,
@@ -402,18 +418,20 @@ export const PROGRAM_NEXT: WorkoutDay[] = [
       { name: "Cardio", sets: 1, reps: "20 min", note: "Steady state" }
     ]
   },
+
   {
-    id: "w6-d1",
-    week: 6,
+    id: "w7-d1",
+    week: 7,
     dayLabel: "Monday",
     title: "Upper Pull",
-    focus: "Accumulate reps at 2",
+    focus: "Reach beyond 3",
     exercises: [
-      { name: "Warm-up", sets: 1, reps: "8-10 min", note: "Light cardio + band pull-aparts (2x20) + scap pull-ups (2x10)", isWarmup: true },
-      { name: "Unassisted Pull-ups", sets: 8, reps: "2", note: "4 min rest. All sets should be clean. No grinding." },
-      { name: "Assisted Pull-ups (light band)", sets: 3, reps: "5" },
-      { name: "Negative Pull-ups", sets: 3, reps: "3", note: "10-12s descent" },
-      { name: "Dead Hangs", sets: 3, reps: "50-60s" }
+      { name: "Warm-up", sets: 1, reps: "8-10 min", note: "Scapular focus + band pull-aparts", isWarmup: true },
+      { name: "Unassisted Pull-ups (max attempt)", sets: 4, reps: "3-4", note: "5 min rest. Go for 4 on your freshest set." },
+      { name: "Assisted Pull-ups (minimal band)", sets: 3, reps: "4" },
+      { name: "Flexed Arm Hang", sets: 3, reps: "40-50s" },
+      { name: "Dumbbell Rows", sets: 3, reps: "10-12/arm" },
+      { name: "Band Pull-aparts", sets: 3, reps: "25-30" }
     ]
   },
 
@@ -438,6 +456,7 @@ export const PROGRAM_NEXT: WorkoutDay[] = [
       { name: "Cardio finisher", sets: 1, reps: "15 min", note: "Intervals" }
     ]
   },
+
   {
     id: "w7-d4",
     week: 7,
@@ -454,6 +473,7 @@ export const PROGRAM_NEXT: WorkoutDay[] = [
       { name: "Dead Hangs", sets: 3, reps: "50-60s" }
     ]
   },
+
   {
     id: "w7-d5",
     week: 7,
@@ -470,19 +490,20 @@ export const PROGRAM_NEXT: WorkoutDay[] = [
       { name: "Cardio", sets: 1, reps: "20 min", note: "Easy pace" }
     ]
   },
+
   {
-    id: "w7-d1",
-    week: 7,
+    id: "w8-d1",
+    week: 8,
     dayLabel: "Monday",
     title: "Upper Pull",
-    focus: "Reach beyond 3",
+    focus: "More total reps at 3",
     exercises: [
-      { name: "Warm-up", sets: 1, reps: "8-10 min", note: "Scapular focus + band pull-aparts", isWarmup: true },
-      { name: "Unassisted Pull-ups (max attempt)", sets: 4, reps: "3-4", note: "5 min rest. Go for 4 on your freshest set." },
-      { name: "Assisted Pull-ups (minimal band)", sets: 3, reps: "4" },
-      { name: "Flexed Arm Hang", sets: 3, reps: "40-50s" },
-      { name: "Dumbbell Rows", sets: 3, reps: "10-12/arm" },
-      { name: "Band Pull-aparts", sets: 3, reps: "25-30" }
+      { name: "Warm-up", sets: 1, reps: "8-10 min", note: "Light cardio + band pull-aparts (2x20) + scap pull-ups (2x10)", isWarmup: true },
+      { name: "Unassisted Pull-ups", sets: 7, reps: "3", note: "4 min rest. Consistency across all sets." },
+      { name: "Assisted Pull-ups (light band)", sets: 3, reps: "4" },
+      { name: "Negative Pull-ups", sets: 3, reps: "3", note: "10-12s descent" },
+      { name: "Straight Arm Pulldowns", sets: 3, reps: "12-15" },
+      { name: "Dead Hangs", sets: 3, reps: "55-60s" }
     ]
   },
 
@@ -503,6 +524,7 @@ export const PROGRAM_NEXT: WorkoutDay[] = [
       { name: "Cardio finisher", sets: 1, reps: "15 min", note: "HIIT: 20s sprint / 40s rest" }
     ]
   },
+
   {
     id: "w8-d4",
     week: 8,
@@ -518,6 +540,7 @@ export const PROGRAM_NEXT: WorkoutDay[] = [
       { name: "Band Pull-aparts", sets: 3, reps: "25-30" }
     ]
   },
+
   {
     id: "w8-d5",
     week: 8,
@@ -534,19 +557,20 @@ export const PROGRAM_NEXT: WorkoutDay[] = [
       { name: "Cardio", sets: 1, reps: "20 min", note: "Easy pace" }
     ]
   },
+
   {
-    id: "w8-d1",
-    week: 8,
+    id: "w9-d1",
+    week: 9,
     dayLabel: "Monday",
     title: "Upper Pull",
-    focus: "More total reps at 3",
+    focus: "Lock in the fourth rep",
     exercises: [
-      { name: "Warm-up", sets: 1, reps: "8-10 min", note: "Light cardio + band pull-aparts (2x20) + scap pull-ups (2x10)", isWarmup: true },
-      { name: "Unassisted Pull-ups", sets: 7, reps: "3", note: "4 min rest. Consistency across all sets." },
-      { name: "Assisted Pull-ups (light band)", sets: 3, reps: "4" },
-      { name: "Negative Pull-ups", sets: 3, reps: "3", note: "10-12s descent" },
-      { name: "Straight Arm Pulldowns", sets: 3, reps: "12-15" },
-      { name: "Dead Hangs", sets: 3, reps: "55-60s" }
+      { name: "Warm-up", sets: 1, reps: "8-10 min", note: "Scapular focus + band work", isWarmup: true },
+      { name: "Unassisted Pull-ups", sets: 6, reps: "4", note: "4-5 min rest. Consistent quality sets." },
+      { name: "Assisted Pull-ups (minimal band)", sets: 3, reps: "3-4" },
+      { name: "Flexed Arm Hang", sets: 3, reps: "45-55s" },
+      { name: "Dumbbell Rows", sets: 3, reps: "10-12/arm" },
+      { name: "Band Pull-aparts", sets: 3, reps: "25-30" }
     ]
   },
 
@@ -571,6 +595,7 @@ export const PROGRAM_NEXT: WorkoutDay[] = [
       { name: "Cardio finisher", sets: 1, reps: "15 min", note: "Intervals" }
     ]
   },
+
   {
     id: "w9-d4",
     week: 9,
@@ -586,6 +611,7 @@ export const PROGRAM_NEXT: WorkoutDay[] = [
       { name: "Dead Hangs", sets: 3, reps: "55-60s" }
     ]
   },
+
   {
     id: "w9-d5",
     week: 9,
@@ -602,19 +628,20 @@ export const PROGRAM_NEXT: WorkoutDay[] = [
       { name: "Cardio", sets: 1, reps: "20 min", note: "Steady state" }
     ]
   },
+
   {
-    id: "w9-d1",
-    week: 9,
+    id: "w10-d1",
+    week: 10,
     dayLabel: "Monday",
     title: "Upper Pull",
-    focus: "Lock in the fourth rep",
+    focus: "Max consecutive reps",
     exercises: [
-      { name: "Warm-up", sets: 1, reps: "8-10 min", note: "Scapular focus + band work", isWarmup: true },
-      { name: "Unassisted Pull-ups", sets: 6, reps: "4", note: "4-5 min rest. Consistent quality sets." },
-      { name: "Assisted Pull-ups (minimal band)", sets: 3, reps: "3-4" },
-      { name: "Flexed Arm Hang", sets: 3, reps: "45-55s" },
-      { name: "Dumbbell Rows", sets: 3, reps: "10-12/arm" },
-      { name: "Band Pull-aparts", sets: 3, reps: "25-30" }
+      { name: "Warm-up", sets: 1, reps: "10-12 min", note: "Thorough & calm – light cardio, scap pull-ups (2x8), band pull-aparts (2x15)", isWarmup: true },
+      { name: "Unassisted Pull-ups (max set)", sets: 1, reps: "Max", note: "Full effort. 8 min rest after." },
+      { name: "Unassisted Pull-ups (2nd attempt)", sets: 1, reps: "Max", note: "Second all-out effort after full rest" },
+      { name: "Unassisted Pull-ups (3rd attempt)", sets: 1, reps: "Max", note: "Optional – only if feeling strong" },
+      { name: "Assisted Pull-ups (light band)", sets: 3, reps: "5", note: "Pump-out after max attempts" },
+      { name: "Dead Hangs", sets: 2, reps: "45-60s" }
     ]
   },
 
@@ -635,6 +662,7 @@ export const PROGRAM_NEXT: WorkoutDay[] = [
       { name: "Cardio finisher", sets: 1, reps: "15 min", note: "Moderate intervals" }
     ]
   },
+
   {
     id: "w10-d4",
     week: 10,
@@ -650,11 +678,12 @@ export const PROGRAM_NEXT: WorkoutDay[] = [
       { name: "Band Pull-aparts", sets: 3, reps: "25" }
     ]
   },
+
   {
     id: "w10-d5",
     week: 10,
     dayLabel: "Friday",
-    title: "Full Body + Posture (Deload)",
+    title: "Full Body + Posture",
     focus: "Fresh legs for Monday test",
     exercises: [
       { name: "Warm-up", sets: 1, reps: "10 min", note: "Thoracic mobility", isWarmup: true },
@@ -667,21 +696,7 @@ export const PROGRAM_NEXT: WorkoutDay[] = [
       { name: "Light cardio", sets: 1, reps: "20 min", note: "Easy pace" }
     ]
   },
-  {
-    id: "w10-d1",
-    week: 10,
-    dayLabel: "Monday",
-    title: "Upper Pull",
-    focus: "Max consecutive reps",
-    exercises: [
-      { name: "Warm-up", sets: 1, reps: "10-12 min", note: "Thorough & calm – light cardio, scap pull-ups (2x8), band pull-aparts (2x15)", isWarmup: true },
-      { name: "Unassisted Pull-ups (max set)", sets: 1, reps: "Max", note: "Full effort. 8 min rest after." },
-      { name: "Unassisted Pull-ups (2nd attempt)", sets: 1, reps: "Max", note: "Second all-out effort after full rest" },
-      { name: "Unassisted Pull-ups (3rd attempt)", sets: 1, reps: "Max", note: "Optional – only if feeling strong" },
-      { name: "Assisted Pull-ups (light band)", sets: 3, reps: "5", note: "Pump-out after max attempts" },
-      { name: "Dead Hangs", sets: 2, reps: "45-60s" }
-    ]
-  }
+
 ];
 
 
