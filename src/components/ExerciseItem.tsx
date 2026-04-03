@@ -1,5 +1,5 @@
 import { Exercise } from "@/data/program";
-import { SetLog } from "@/hooks/useWorkoutHistory";
+import { AdaptedTarget, SetLog } from "@/hooks/useWorkoutHistory";
 import { useEffect, useState } from "react";
 import clsx from "clsx";
 
@@ -8,9 +8,10 @@ interface ExerciseItemProps {
     history?: SetLog[];
     onLogChange: (logs: SetLog[]) => void;
     initialLogs?: SetLog[];
+    adaptation?: AdaptedTarget;
 }
 
-export const ExerciseItem = ({ exercise, history, onLogChange, initialLogs }: ExerciseItemProps) => {
+export const ExerciseItem = ({ exercise, history, onLogChange, initialLogs, adaptation }: ExerciseItemProps) => {
     // Controlled component pattern: derive state from props
     // If no logs exist yet, we'll create a temporary array for rendering
     // and trigger an initialization effect to populate parent state with history defaults.
@@ -71,11 +72,21 @@ export const ExerciseItem = ({ exercise, history, onLogChange, initialLogs }: Ex
                     <div>
                         <h3 className="text-2xl font-black text-white mb-2">{exercise.name}</h3>
                         {!isCollapsed && (
-                            <div className="flex items-center gap-4 text-xs">
-                                <span className="text-[#ff477e] bg-pink-500/10 px-3 py-1 rounded-lg border border-pink-500/20 font-bold uppercase tracking-wider">
-                                    {exercise.sets} Sets
-                                </span>
-                                <span className="text-slate-400 font-medium">Target: <span className="text-slate-200">{exercise.reps}</span> reps</span>
+                            <div className="flex flex-col gap-1.5">
+                                <div className="flex items-center gap-4 text-xs">
+                                    <span className="text-[#ff477e] bg-pink-500/10 px-3 py-1 rounded-lg border border-pink-500/20 font-bold uppercase tracking-wider">
+                                        {exercise.sets} Sets
+                                    </span>
+                                    <span className="text-slate-400 font-medium">Target: <span className="text-slate-200">{adaptation?.adaptedReps ?? exercise.reps}</span> reps</span>
+                                </div>
+                                {adaptation?.isAdapted && (
+                                    <div className="flex items-center gap-1.5">
+                                        <span className="w-1.5 h-1.5 rounded-full bg-amber-400 shrink-0" />
+                                        <span className="text-[10px] text-amber-400 font-bold uppercase tracking-wider">
+                                            Adapted for your progress
+                                        </span>
+                                    </div>
+                                )}
                             </div>
                         )}
                     </div>

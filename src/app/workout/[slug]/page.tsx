@@ -12,7 +12,7 @@ import { motion } from "framer-motion";
 export default function WorkoutPage() {
     const params = useParams();
     const router = useRouter();
-    const { isLoaded, getPreviousStats, saveWorkoutLog, completedWorkouts, getLogForWorkout } = useWorkoutHistory();
+    const { isLoaded, getPreviousStats, getAdaptedTarget, saveWorkoutLog, completedWorkouts, getLogForWorkout } = useWorkoutHistory();
     const [currentLogs, setCurrentLogs] = useState<WorkoutLog>({});
     const [showButton, setShowButton] = useState(true);
     const lastScrollY = useRef(0);
@@ -127,6 +127,7 @@ export default function WorkoutPage() {
                             exercise={exercise}
                             history={getPreviousStats(exercise.name, workoutId) || undefined}
                             initialLogs={currentLogs[exercise.name]}
+                            adaptation={getAdaptedTarget(exercise.name, exercise.reps, workoutId)}
                             onLogChange={(logs) => {
                                 setCurrentLogs(prev => ({
                                     ...prev,
