@@ -53,7 +53,7 @@ export function useProgram() {
 
     const applyUpdates = (updates: ProgramUpdate[]) => {
         const newStoredUpdates: StoredUpdates = JSON.parse(JSON.stringify(storedUpdates));
-
+        
         for (const update of updates) {
             if (!newStoredUpdates[update.workoutId]) {
                 newStoredUpdates[update.workoutId] = {};
@@ -78,10 +78,15 @@ export function useProgram() {
 
     const hasStoredUpdates = Object.keys(storedUpdates).length > 0;
 
+    const isAICoachUpdated = (workoutId: string, exerciseName: string): boolean => {
+        return !!(storedUpdates[workoutId]?.[exerciseName]);
+    };
+
     return {
         isLoaded,
         getEffectiveProgram,
         applyUpdates,
         hasStoredUpdates,
+        isAICoachUpdated,
     };
 }

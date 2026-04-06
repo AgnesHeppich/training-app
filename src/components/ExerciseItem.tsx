@@ -9,9 +9,10 @@ interface ExerciseItemProps {
     onLogChange: (logs: SetLog[]) => void;
     initialLogs?: SetLog[];
     adaptation?: AdaptedTarget;
+    isAIAdapted?: boolean;
 }
 
-export const ExerciseItem = ({ exercise, history, onLogChange, initialLogs, adaptation }: ExerciseItemProps) => {
+export const ExerciseItem = ({ exercise, history, onLogChange, initialLogs, adaptation, isAIAdapted }: ExerciseItemProps) => {
     // Controlled component pattern: derive state from props
     // If no logs exist yet, we'll create a temporary array for rendering
     // and trigger an initialization effect to populate parent state with history defaults.
@@ -79,7 +80,7 @@ export const ExerciseItem = ({ exercise, history, onLogChange, initialLogs, adap
                                     </span>
                                     <span className="text-slate-400 font-medium">Target: <span className="text-slate-200">{adaptation?.adaptedReps ?? exercise.reps}</span> reps</span>
                                 </div>
-                                {adaptation?.isAdapted && (
+                                {(adaptation?.isAdapted || isAIAdapted) && (
                                     <div className="flex items-center gap-1.5">
                                         <span className="w-1.5 h-1.5 rounded-full bg-amber-400 shrink-0" />
                                         <span className="text-[10px] text-amber-400 font-bold uppercase tracking-wider">

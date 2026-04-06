@@ -22,12 +22,13 @@ export type AdaptedTarget = {
 export type PerformanceSummary = {
     totalCompleted: number;
     totalInProgram: number;
-    pullUpTrend: Array<{
+    performanceTrend: Array<{
         workoutId: string;
         week: number;
         exerciseName: string;
         programTarget: string;
         avgReps: number | null;
+        avgWeight: number | null;
     }>;
 };
 
@@ -145,26 +146,30 @@ export function useWorkoutHistory() {
             data.completedWorkouts.includes(d.id)
         );
 
-        const pullUpTrend = completedDays.flatMap(day => {
+        const performanceTrend = completedDays.flatMap(day => {
             const dayLog = data.logs[day.id];
             if (!dayLog) return [];
             return day.exercises
-                .filter(ex => isPullUpExercise(ex.name))
+                .filter(ex => !ex.isWarmup)
                 .map(ex => {
                     const sets = dayLog[ex.name];
                     let avgReps: number | null = null;
+                    let avgWeight: number | null = null;
                     if (sets) {
-                        const nums = sets.map(s => parseInt(s.reps)).filter(n => !isNaN(n) && n > 0);
-                        if (nums.length > 0) {
-                            avgReps = Math.round((nums.reduce((a, b) => a + b, 0) / nums.length) * 10) / 10;
-                        }
+                        const repNums = sets.map(s => parseInt(s.reps)).filter(n => !isNaN(n) && n > 0);
+                        if (repNums.length > 0)
+                            avgReps = Math.round((repNums.reduce((a, b) => a + b, 0) / repNums.length) * 10) / 10;
+                        const weightNums = sets.map(s => parseFloat(s.weight)).filter(n => !isNaN(n) && n > 0);
+                        if (weightNums.length > 0)
+                            avgWeight = Math.round((weightNums.reduce((a, b) => a + b, 0) / weightNums.length) * 10) / 10;
                     }
                     return {
                         workoutId: day.id,
                         week: day.week,
                         exerciseName: ex.name,
                         programTarget: ex.reps,
-                        avgReps
+                        avgReps,
+                        avgWeight
                     };
                 });
         });
@@ -172,7 +177,7 @@ export function useWorkoutHistory() {
         return {
             totalCompleted: data.completedWorkouts.length,
             totalInProgram: PROGRAM.length,
-            pullUpTrend
+            performanceTrend
         };
     };
 

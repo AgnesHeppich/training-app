@@ -11,7 +11,7 @@ export async function POST(req: NextRequest) {
     const prompt = `You are a personal pull-up strength coach analyzing an athlete's performance data.
 
 Program progress: ${summary.totalCompleted}/${summary.totalInProgram} sessions completed.
-Goal: Increase unassisted pull-up reps over a 10-week program.
+Goal: Increase unassisted pull-up reps over a 10-week program. The program also includes lower body, core, and accessory work — analyse all of it.
 
 ## Last 10 Completed Sessions (actual logged performance, chronological)
 ${lastSessions ? JSON.stringify(lastSessions, null, 2) : 'No sessions completed yet'}
@@ -19,8 +19,8 @@ ${lastSessions ? JSON.stringify(lastSessions, null, 2) : 'No sessions completed 
 ## Next 10 Upcoming Sessions (not yet completed, these can receive program updates)
 ${upcomingSessions && upcomingSessions.length > 0 ? JSON.stringify(upcomingSessions, null, 2) : 'Program is complete'}
 
-## Full Pull-up Performance Trend (chronological, avgReps = actual average vs programTarget)
-${JSON.stringify(summary.pullUpTrend, null, 2)}
+## Full Performance Trend — all exercises, chronological (avgReps = actual average per set vs programTarget, avgWeight = kg)
+${JSON.stringify(summary.performanceTrend, null, 2)}
 
 Based on this data:
 1. Write a coaching response referencing the actual numbers from the recent sessions

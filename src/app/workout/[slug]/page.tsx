@@ -1,8 +1,8 @@
 'use client';
 
 import { useParams, useRouter } from "next/navigation";
-import { PROGRAM } from "@/data/program";
 import { useWorkoutHistory, WorkoutLog } from "@/hooks/useWorkoutHistory";
+import { useProgram } from "@/hooks/useProgram";
 import { ExerciseItem } from "@/components/ExerciseItem";
 import { useState, useEffect, useRef } from "react";
 import confetti from "canvas-confetti";
@@ -13,12 +13,13 @@ export default function WorkoutPage() {
     const params = useParams();
     const router = useRouter();
     const { isLoaded, getPreviousStats, getAdaptedTarget, saveWorkoutLog, completedWorkouts, getLogForWorkout } = useWorkoutHistory();
+    const { getEffectiveProgram, isAICoachUpdated } = useProgram();
     const [currentLogs, setCurrentLogs] = useState<WorkoutLog>({});
     const [showButton, setShowButton] = useState(true);
     const lastScrollY = useRef(0);
 
     const workoutId = params.slug as string;
-    const workout = PROGRAM.find(d => d.id === workoutId);
+    const workout = getEffectiveProgram().find(d => d.id === workoutId);
     const isMounted = useRef(false);
 
     // Initialize logs on load
@@ -128,6 +129,7 @@ export default function WorkoutPage() {
                             history={getPreviousStats(exercise.name, workoutId) || undefined}
                             initialLogs={currentLogs[exercise.name]}
                             adaptation={getAdaptedTarget(exercise.name, exercise.reps, workoutId)}
+                            isAIAdapted={isAICoachUpdated(workoutId, exercise.name)}
                             onLogChange={(logs) => {
                                 setCurrentLogs(prev => ({
                                     ...prev,

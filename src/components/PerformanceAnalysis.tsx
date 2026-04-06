@@ -68,80 +68,114 @@ export const PerformanceAnalysis = ({ summary, lastSessions, upcomingSessions, o
     const hasUpdates = (result?.programUpdates?.length ?? 0) > 0;
 
     return (
-        <div className="mb-16 p-8 rounded-3xl bg-slate-900/40 border border-slate-800/60 backdrop-blur-xl">
-            <div className="flex items-center justify-between mb-6">
+        <div className="mb-16 rounded-3xl bg-slate-900/40 border border-slate-800/60 backdrop-blur-xl overflow-hidden">
+            {/* Header */}
+            <div className="px-6 py-5 flex items-center justify-between gap-4 border-b border-slate-800/60">
                 <div>
-                    <h2 className="text-xl font-black text-white tracking-tight">AI Coaching</h2>
-                    <p className="text-xs text-slate-500 font-medium mt-1">Analysis of your pull-up progression</p>
+                    <h2 className="text-base font-black text-white tracking-tight">AI Coaching</h2>
+                    <p className="text-[11px] text-slate-500 font-medium mt-0.5">Analyzes your sessions and adjusts the program</p>
                 </div>
                 <button
                     onClick={handleGetAnalysis}
                     disabled={isLoading}
-                    className="bg-[#ff477e] text-white px-5 py-2.5 rounded-xl font-black text-xs tracking-widest uppercase shadow-[0_0_20px_rgba(255,71,126,0.3)] hover:shadow-[0_0_30px_rgba(255,71,126,0.5)] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="shrink-0 bg-[#ff477e] text-white px-4 py-2 rounded-xl font-black text-[11px] tracking-widest uppercase shadow-[0_0_20px_rgba(255,71,126,0.3)] hover:shadow-[0_0_30px_rgba(255,71,126,0.5)] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                    {isLoading ? 'Analyzing...' : hasRequested ? 'Refresh' : 'Get Coaching'}
+                    {isLoading ? 'Analyzing…' : hasRequested ? 'Refresh' : 'Analyze'}
                 </button>
             </div>
 
+            {/* Loading */}
             {isLoading && (
-                <p className="text-sm text-slate-400 animate-pulse font-medium">Analyzing your performance...</p>
+                <div className="px-6 py-5">
+                    <p className="text-sm text-slate-400 animate-pulse font-medium">Analyzing your performance…</p>
+                </div>
             )}
 
+            {/* Error */}
             {error && (
-                <p className="text-xs text-red-400 font-medium">Could not load analysis: {error}</p>
+                <div className="px-6 py-5">
+                    <p className="text-xs text-red-400 font-medium">Could not load analysis: {error}</p>
+                </div>
             )}
 
             {result && !isLoading && (
-                <div className="space-y-6">
+                <div>
                     {/* Coaching response */}
-                    <div className="text-slate-300 text-sm leading-relaxed whitespace-pre-wrap">
+                    <div className="px-6 py-5 text-slate-300 text-sm leading-relaxed whitespace-pre-wrap">
                         {result.coachingResponse}
                     </div>
 
-                    {/* Program updates */}
+                    {/* Program updates diff */}
                     {hasUpdates && (
-                        <div className="border border-slate-700/60 rounded-2xl overflow-hidden">
-                            <div className="px-5 py-3 bg-slate-800/50 flex items-center justify-between">
-                                <div>
-                                    <p className="text-xs font-black text-white uppercase tracking-widest">Suggested Program Changes</p>
-                                    <p className="text-[11px] text-slate-500 mt-0.5">{result.updateReasons}</p>
-                                </div>
-                                {!applied ? (
-                                    <button
-                                        onClick={handleApply}
-                                        className="ml-4 shrink-0 bg-[#ff477e]/10 border border-[#ff477e]/30 text-[#ff477e] px-4 py-1.5 rounded-lg font-black text-[10px] tracking-widest uppercase hover:bg-[#ff477e]/20 transition-all"
-                                    >
-                                        Apply Changes
-                                    </button>
-                                ) : (
-                                    <span className="ml-4 shrink-0 text-[10px] font-black uppercase tracking-widest text-emerald-400">
-                                        ✓ Applied
-                                    </span>
-                                )}
+                        <div className="border-t border-slate-800/60">
+                            {/* Section header */}
+                            <div className="px-6 py-4 bg-slate-800/30">
+                                <p className="text-[11px] font-black text-white uppercase tracking-widest mb-1">
+                                    Suggested Changes
+                                </p>
+                                <p className="text-[11px] text-slate-500 leading-relaxed">
+                                    {result.updateReasons}
+                                </p>
                             </div>
 
-                            <div className="divide-y divide-slate-800/60">
+                            {/* Diff rows */}
+                            <div className="divide-y divide-slate-800/40">
                                 {result.programUpdates!.map((update, i) => (
-                                    <div key={i} className="px-5 py-3 flex items-center gap-4 text-xs">
-                                        <div className="flex-1 min-w-0">
-                                            <p className="text-white font-semibold truncate">{update.exerciseName}</p>
-                                            <p className="text-slate-500 text-[11px]">
-                                                {update.workoutId} · {update.field}
+                                    <div key={i} className="px-6 py-4">
+                                        <div className="flex items-start justify-between gap-3 mb-2">
+                                            <p className="text-sm font-semibold text-white leading-snug">
+                                                {update.exerciseName}
                                             </p>
+                                            <span className="shrink-0 text-[10px] font-black uppercase tracking-wider text-slate-500 bg-slate-800/60 px-2 py-0.5 rounded-md">
+                                                {update.field}
+                                            </span>
                                         </div>
-                                        <div className="flex items-center gap-2 shrink-0 font-mono">
-                                            <span className="text-slate-400 line-through">{update.currentValue}</span>
-                                            <span className="text-slate-600">→</span>
-                                            <span className="text-[#ff477e] font-bold">{update.suggestedValue}</span>
+                                        <p className="text-[11px] text-slate-600 mb-3">
+                                            {update.workoutId}
+                                        </p>
+                                        {/* Value diff */}
+                                        <div className="flex items-center gap-3">
+                                            <div className="flex-1 bg-slate-950/50 rounded-xl px-4 py-2.5 text-center border border-slate-800/40">
+                                                <p className="text-[10px] text-slate-600 uppercase tracking-wider mb-1 font-bold">Current</p>
+                                                <p className="text-base font-black text-slate-400 line-through decoration-slate-600">
+                                                    {update.currentValue}
+                                                </p>
+                                            </div>
+                                            <span className="text-slate-600 text-lg">→</span>
+                                            <div className="flex-1 bg-[#ff477e]/5 rounded-xl px-4 py-2.5 text-center border border-[#ff477e]/20">
+                                                <p className="text-[10px] text-[#ff477e]/60 uppercase tracking-wider mb-1 font-bold">New</p>
+                                                <p className="text-base font-black text-[#ff477e]">
+                                                    {update.suggestedValue}
+                                                </p>
+                                            </div>
                                         </div>
                                     </div>
                                 ))}
                             </div>
+
+                            {/* Apply button */}
+                            <div className="px-6 py-4 bg-slate-800/20 border-t border-slate-800/40">
+                                {!applied ? (
+                                    <button
+                                        onClick={handleApply}
+                                        className="w-full bg-[#ff477e] text-white py-3 rounded-xl font-black text-xs tracking-widest uppercase shadow-[0_0_20px_rgba(255,71,126,0.25)] hover:shadow-[0_0_30px_rgba(255,71,126,0.45)] transition-all active:scale-[0.98]"
+                                    >
+                                        Apply {result.programUpdates!.length} Change{result.programUpdates!.length !== 1 ? 's' : ''}
+                                    </button>
+                                ) : (
+                                    <p className="text-center text-xs font-black uppercase tracking-widest text-emerald-400">
+                                        ✓ Changes Applied
+                                    </p>
+                                )}
+                            </div>
                         </div>
                     )}
 
+                    {/* No updates reason */}
                     {!hasUpdates && result.updateReasons && (
-                        <p className="text-[11px] text-slate-500 italic">{result.updateReasons}</p>
+                        <div className="border-t border-slate-800/60 px-6 py-4">
+                            <p className="text-[11px] text-slate-500 italic">{result.updateReasons}</p>
+                        </div>
                     )}
                 </div>
             )}
