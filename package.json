@@ -10,14 +10,18 @@
     "test": "vitest run"
   },
   "dependencies": {
+    "@ai-sdk/openai": "^3.0.50",
+    "@ai-sdk/react": "^3.0.147",
     "@tailwindcss/postcss": "^4.1.18",
     "@types/canvas-confetti": "^1.9.0",
+    "ai": "^6.0.145",
     "canvas-confetti": "^1.9.4",
     "clsx": "^2.1.1",
     "framer-motion": "^12.24.11",
     "next": "16.1.1",
     "react": "19.2.3",
-    "react-dom": "19.2.3"
+    "react-dom": "19.2.3",
+    "zod": "^4.3.6"
   },
   "devDependencies": {
     "@testing-library/dom": "^10.4.1",

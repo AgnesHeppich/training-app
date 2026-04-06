@@ -1,14 +1,17 @@
 'use client';
 
-import { PROGRAM } from "@/data/program";
 import { useWorkoutHistory } from "@/hooks/useWorkoutHistory";
+import { useProgram } from "@/hooks/useProgram";
 import { WeekOverview } from "@/components/WeekOverview";
+import { PerformanceAnalysis } from "@/components/PerformanceAnalysis";
 import { motion } from "framer-motion";
 
 export default function Home() {
-  const { completedWorkouts, isLoaded } = useWorkoutHistory();
+  const { completedWorkouts, isLoaded, getPerformanceSummary, getLastSessions, getUpcomingSessions } = useWorkoutHistory();
+  const { getEffectiveProgram, applyUpdates, isLoaded: programLoaded } = useProgram();
+  const effectiveProgram = getEffectiveProgram();
 
-  if (!isLoaded) {
+  if (!isLoaded || !programLoaded) {
     return (
       <div className="min-h-screen flex items-center justify-center text-[#ff477e] font-bold text-xl animate-pulse">
         Loading your gains...
@@ -16,7 +19,10 @@ export default function Home() {
     );
   }
 
-  const allWeeks = Array.from(new Set(PROGRAM.map(d => d.week))).sort((a, b) => a - b);
+  const summary = getPerformanceSummary();
+  const lastSessions = getLastSessions();
+  const upcomingSessions = getUpcomingSessions();
+  const allWeeks = Array.from(new Set(effectiveProgram.map(d => d.week))).sort((a, b) => a - b);
   const totalWeeks = allWeeks.length;
 
   return (
@@ -53,13 +59,13 @@ export default function Home() {
             <div className="flex items-center justify-between mb-3 px-1">
               <span className="text-[10px] text-slate-500 font-black uppercase tracking-[0.2em]">Overall Program Mastery</span>
               <span className="text-sm font-black text-[#ff477e] pink-glow">
-                {Math.round((completedWorkouts.length / PROGRAM.length) * 100)}%
+                {Math.round((completedWorkouts.length / effectiveProgram.length) * 100)}%
               </span>
             </div>
             <div className="h-2 bg-slate-950/50 rounded-full overflow-hidden border border-slate-800/50">
               <motion.div
                 initial={{ width: 0 }}
-                animate={{ width: `${(completedWorkouts.length / PROGRAM.length) * 100}%` }}
+                animate={{ width: `${(completedWorkouts.length / effectiveProgram.length) * 100}%` }}
                 transition={{ duration: 1, ease: "easeOut" }}
                 className="h-full bg-gradient-to-r from-[#ff477e] to-[#ff9eb5] shadow-[0_0_15px_rgba(255,71,126,0.3)]"
               />
@@ -73,12 +79,19 @@ export default function Home() {
             <div>
               <span className="text-[10px] text-slate-500 font-black uppercase tracking-widest block mb-1">Weeks Mastered</span>
               <span className="text-3xl font-black text-white">
-                {allWeeks.filter(w => PROGRAM.filter(d => d.week === w).every(d => completedWorkouts.includes(d.id))).length}
+                {allWeeks.filter(w => effectiveProgram.filter(d => d.week === w).every(d => completedWorkouts.includes(d.id))).length}
               </span>
             </div>
           </div>
         </div>
       </motion.div>
+
+      <PerformanceAnalysis
+        summary={summary}
+        lastSessions={lastSessions}
+        upcomingSessions={upcomingSessions}
+        onApplyUpdates={applyUpdates}
+      />
 
       <div className="space-y-8">
         {allWeeks.map((weekNum, idx) => (
@@ -90,7 +103,7 @@ export default function Home() {
           >
             <WeekOverview
               weekNumber={weekNum}
-              days={PROGRAM.filter(d => d.week === weekNum)}
+              days={effectiveProgram.filter(d => d.week === weekNum)}
               completedIds={completedWorkouts}
             />
           </motion.div>

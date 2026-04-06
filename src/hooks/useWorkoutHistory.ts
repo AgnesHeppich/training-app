@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { PROGRAM } from '@/data/program';
+import { isPullUpExercise, parseRepTarget } from '@/lib/repsUtils';
 
 export type SetLog = {
     weight: string;
@@ -10,6 +11,25 @@ export type SetLog = {
 
 export type WorkoutLog = {
     [exerciseName: string]: SetLog[];
+};
+
+export type AdaptedTarget = {
+    adaptedReps: string;
+    isAdapted: boolean;
+    reason?: string;
+};
+
+export type PerformanceSummary = {
+    totalCompleted: number;
+    totalInProgram: number;
+    performanceTrend: Array<{
+        workoutId: string;
+        week: number;
+        exerciseName: string;
+        programTarget: string;
+        avgReps: number | null;
+        avgWeight: number | null;
+    }>;
 };
 
 type HistoryData = {
@@ -48,58 +68,22 @@ export function useWorkoutHistory() {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(newData));
     };
 
-    // Find the "latest" performed data for an exercise based on the program order
-    // relative to the current workout (we want previous relative to NOW, or absolute latest?)
-    // Prompt: "latest data as recommendations for the NEXT session".
-    // Usually this means "The most recent session I did".
-    // If I am doing W4D1, I want to see what I did in W3D1 (or whenever I last did logs).
-    // So we scan backwards from *current* workout index? Or just absolute latest?
-    // User: "Note that I only want to save the updated reps/weights on the latest workout session"
-    // ... "I always want to use the latest data as recommendations".
-    // If I am viewing W1D1 (old), I probably want to see what I did *Before* W1D1? No, that's empty.
-    // If I am viewing W4D1, and I edited W1D1 yesterday. I want to see W3D1 stats, not W1D1.
-    // So yes, strictly "Previous relative to this workout" logic?
-    // OR "Absolute latest data available in the system"?
-    // "recommendations for the next session" -> usually means "Last time I did THIS exercise".
-    // Let's assume absolute latest for now, unless we are in the context of a specific workout.
-    // Actually, usually suggestions are "What did I do last time?".
-    // If I open W1D1 (past), show me what I did IN W1D1 (logs) or empty?
-    // `getPreviousStats` is used for "Last Time: ..." display.
-    // On W1D1 page, it should probably show nothing (since it's the start).
-    // On W1D4 page, it should show W1D1 stats.
-    // So we need `getPreviousStats(exerciseName, currentWorkoutId)`.
-    // If `currentWorkoutId` is not provided, we return absolute latest.
-
-    // Wait, `ExerciseItem` calls `getPreviousStats(exercise.name)`. It doesn't pass ID.
-    // I should update `ExerciseItem` to not need ID? 
-    // Or update `WorkoutPage` to pass the correct stats.
-    // In `WorkoutPage`: `history={getPreviousStats(exercise.name) || undefined}`.
-    // I should change `getPreviousStats` to take `currentWorkoutId`.
-
     const getPreviousStats = (exerciseName: string, currentWorkoutId?: string): SetLog[] | null => {
-        let searchWorkouts = PROGRAM;
-
-        // If we have a current reference, we only look at workouts BEFORE this one
-        // to find the "previous" session for THIS day's context.
         if (currentWorkoutId) {
             const currentIndex = PROGRAM.findIndex(w => w.id === currentWorkoutId);
             if (currentIndex > 0) {
-                // Check workouts before this one in reverse order
-                // Slice 0 to currentIndex, then reverse
                 const priorWorkouts = PROGRAM.slice(0, currentIndex).reverse();
                 for (const day of priorWorkouts) {
                     const dayLog = data.logs[day.id];
                     if (dayLog && dayLog[exerciseName]) {
-                        // Check if it has actual data
                         const hasData = dayLog[exerciseName].some(s => s.weight !== "" || s.reps !== "");
                         if (hasData) return dayLog[exerciseName];
                     }
                 }
             }
-            return null; // No previous history found before this workout
+            return null;
         }
 
-        // If no context (absolute latest), scan from end reverse
         const allReverse = [...PROGRAM].reverse();
         for (const day of allReverse) {
             const dayLog = data.logs[day.id];
@@ -109,6 +93,135 @@ export function useWorkoutHistory() {
             }
         }
         return null;
+    };
+
+    const getAdaptedTarget = (
+        exerciseName: string,
+        programTarget: string,
+        currentWorkoutId: string
+    ): AdaptedTarget => {
+        if (!isPullUpExercise(exerciseName))
+            return { adaptedReps: programTarget, isAdapted: false };
+
+        const numericTarget = parseRepTarget(programTarget);
+        if (numericTarget === null)
+            return { adaptedReps: programTarget, isAdapted: false };
+
+        const currentIndex = PROGRAM.findIndex(w => w.id === currentWorkoutId);
+        if (currentIndex <= 0) return { adaptedReps: programTarget, isAdapted: false };
+
+        const priorWorkouts = PROGRAM.slice(0, currentIndex).reverse();
+        const sessionAverages: number[] = [];
+
+        for (const day of priorWorkouts) {
+            if (sessionAverages.length >= 3) break;
+            const dayLog = data.logs[day.id];
+            if (!dayLog?.[exerciseName]) continue;
+            const repNums = dayLog[exerciseName]
+                .map(s => parseInt(s.reps))
+                .filter(n => !isNaN(n) && n > 0);
+            if (repNums.length === 0) continue;
+            sessionAverages.push(repNums.reduce((a, b) => a + b, 0) / repNums.length);
+        }
+
+        if (sessionAverages.length === 0)
+            return { adaptedReps: programTarget, isAdapted: false };
+
+        const overallAvg = sessionAverages.reduce((a, b) => a + b, 0) / sessionAverages.length;
+        const ratio = overallAvg / numericTarget;
+
+        if (ratio < 0.75) {
+            return {
+                adaptedReps: String(Math.max(1, Math.round(overallAvg))),
+                isAdapted: true,
+                reason: "Adjusted to match your recent performance"
+            };
+        }
+
+        return { adaptedReps: programTarget, isAdapted: false };
+    };
+
+    const getPerformanceSummary = (): PerformanceSummary => {
+        const completedDays = PROGRAM.filter(d =>
+            data.completedWorkouts.includes(d.id)
+        );
+
+        const performanceTrend = completedDays.flatMap(day => {
+            const dayLog = data.logs[day.id];
+            if (!dayLog) return [];
+            return day.exercises
+                .filter(ex => !ex.isWarmup)
+                .map(ex => {
+                    const sets = dayLog[ex.name];
+                    let avgReps: number | null = null;
+                    let avgWeight: number | null = null;
+                    if (sets) {
+                        const repNums = sets.map(s => parseInt(s.reps)).filter(n => !isNaN(n) && n > 0);
+                        if (repNums.length > 0)
+                            avgReps = Math.round((repNums.reduce((a, b) => a + b, 0) / repNums.length) * 10) / 10;
+                        const weightNums = sets.map(s => parseFloat(s.weight)).filter(n => !isNaN(n) && n > 0);
+                        if (weightNums.length > 0)
+                            avgWeight = Math.round((weightNums.reduce((a, b) => a + b, 0) / weightNums.length) * 10) / 10;
+                    }
+                    return {
+                        workoutId: day.id,
+                        week: day.week,
+                        exerciseName: ex.name,
+                        programTarget: ex.reps,
+                        avgReps,
+                        avgWeight
+                    };
+                });
+        });
+
+        return {
+            totalCompleted: data.completedWorkouts.length,
+            totalInProgram: PROGRAM.length,
+            performanceTrend
+        };
+    };
+
+    const getLastSessions = (limit = 10) => {
+        const completedInOrder = PROGRAM.filter(d => data.completedWorkouts.includes(d.id));
+        if (completedInOrder.length === 0) return null;
+
+        const recent = completedInOrder.slice(-limit);
+        return recent.map(day => ({
+            id: day.id,
+            week: day.week,
+            dayLabel: day.dayLabel,
+            title: day.title,
+            exercises: day.exercises.map(ex => {
+                const log = data.logs[day.id]?.[ex.name] ?? [];
+                return {
+                    name: ex.name,
+                    programSets: ex.sets,
+                    programTarget: ex.reps,
+                    actualSets: log.map(s => ({ weight: s.weight || '—', reps: s.reps || '—' })),
+                };
+            }),
+        }));
+    };
+
+    const getUpcomingSessions = (limit = 10) => {
+        const lastCompletedIndex = PROGRAM.reduce(
+            (last, day, idx) => (data.completedWorkouts.includes(day.id) ? idx : last),
+            -1
+        );
+        const upcoming = PROGRAM.slice(lastCompletedIndex + 1).filter(
+            d => !data.completedWorkouts.includes(d.id)
+        );
+        return upcoming.slice(0, limit).map(day => ({
+            id: day.id,
+            week: day.week,
+            dayLabel: day.dayLabel,
+            title: day.title,
+            exercises: day.exercises.map(ex => ({
+                name: ex.name,
+                programSets: ex.sets,
+                programTarget: ex.reps,
+            })),
+        }));
     };
 
     const getLogForWorkout = (workoutId: string): WorkoutLog | null => {
@@ -121,10 +234,6 @@ export function useWorkoutHistory() {
 
     const saveWorkoutLog = (workoutId: string, log: WorkoutLog, markComplete: boolean = true) => {
         const newData = { ...data };
-
-        // Save the log for this specific workout
-        // We do NOT update a separate 'lastPerformed' cache anymore.
-        // The source of truth is the log itself.
         newData.logs[workoutId] = log;
 
         if (markComplete && !newData.completedWorkouts.includes(workoutId)) {
@@ -144,6 +253,10 @@ export function useWorkoutHistory() {
         isLoaded,
         completedWorkouts: data.completedWorkouts,
         getPreviousStats,
+        getAdaptedTarget,
+        getPerformanceSummary,
+        getLastSessions,
+        getUpcomingSessions,
         getLogForWorkout,
         isWorkoutCompleted,
         saveWorkoutLog,
