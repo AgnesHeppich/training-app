@@ -17,8 +17,8 @@ describe('useWorkoutHistory', () => {
         // We can check isLoaded if we want to be safe
 
         const exerciseName = "Assisted Pull-ups (band)";
-        const workout1Id = "w1-d1";
-        const workout2Id = "w1-d4"; // Happens after w1-d1 in PROGRAM
+        const workout1Id = "w1-d2";
+        const workout2Id = "w1-d4"; // Happens after w1-d2 in PROGRAM
 
         const log1 = {
             [exerciseName]: [
@@ -42,9 +42,9 @@ describe('useWorkoutHistory', () => {
         const { result } = renderHook(() => useWorkoutHistory());
 
         const exerciseName = "Assisted Pull-ups (band)";
-        const workout1Id = "w1-d1";
+        const workout1Id = "w1-d2";
         const workout2Id = "w1-d4";
-        const workout3Id = "w2-d1"; // Happens after w1-d4
+        const workout3Id = "w1-d5"; // Happens after w1-d4 in PROGRAM
 
         const log1 = {
             [exerciseName]: [{ weight: "10", reps: "8" }]
@@ -85,7 +85,7 @@ describe('useWorkoutHistory', () => {
         const { result } = renderHook(() => useWorkoutHistory());
 
         const exerciseName = "Assisted Pull-ups (band)";
-        const workout1Id = "w1-d1";
+        const workout1Id = "w1-d2";
         const workout2Id = "w1-d4";
 
         const log2 = {
