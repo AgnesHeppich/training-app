@@ -29,7 +29,7 @@ Based on this data:
 4. Explain your reasoning for any changes or for keeping the program as-is`;
 
     const result = await generateText({
-          model: openai('gpt-5.4-nano'),
+          model: openai('gpt-5.4'),
         output: Output.object({ schema: AnalysisSchema }),
         prompt,
         maxRetries: 0,
