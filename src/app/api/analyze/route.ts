@@ -32,7 +32,7 @@ Based on this data:
           model: openai('gpt-5.4'),
         output: Output.object({ schema: AnalysisSchema }),
         prompt,
-        maxRetries: 0,
+        maxRetries: 2,
     });
 
     return Response.json(result.output);
