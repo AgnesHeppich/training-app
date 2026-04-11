@@ -12,9 +12,10 @@ import { motion } from "framer-motion";
 export default function WorkoutPage() {
     const params = useParams();
     const router = useRouter();
-    const { isLoaded, getPreviousStats, getAdaptedTarget, saveWorkoutLog, completedWorkouts, getLogForWorkout } = useWorkoutHistory();
+    const { isLoaded, getPreviousStats, getPreviousNote, getAdaptedTarget, saveWorkoutLog, getLogForWorkout, getNotesForWorkout } = useWorkoutHistory();
     const { getEffectiveProgram, isAICoachUpdated } = useProgram();
     const [currentLogs, setCurrentLogs] = useState<WorkoutLog>({});
+    const [currentNotes, setCurrentNotes] = useState<{ [exerciseName: string]: string }>({});
     const [showButton, setShowButton] = useState(true);
     const lastScrollY = useRef(0);
 
@@ -26,20 +27,19 @@ export default function WorkoutPage() {
     useEffect(() => {
         if (isLoaded && workoutId) {
             const existingLog = getLogForWorkout(workoutId);
-            if (existingLog) {
-                setCurrentLogs(existingLog);
-            }
+            if (existingLog) setCurrentLogs(existingLog);
+            const existingNotes = getNotesForWorkout(workoutId);
+            if (existingNotes) setCurrentNotes(existingNotes);
             isMounted.current = true;
         }
-    }, [isLoaded, workoutId]); // Removing getLogForWorkout from dependency as it's stable-ish or could cause loops
+    }, [isLoaded, workoutId]);
 
     // Auto-save effect
     useEffect(() => {
         if (isMounted.current && workoutId && Object.keys(currentLogs).length > 0) {
-            // Save without marking as complete
-            saveWorkoutLog(workoutId, currentLogs, false);
+            saveWorkoutLog(workoutId, currentLogs, false, currentNotes);
         }
-    }, [currentLogs, workoutId]);
+    }, [currentLogs, currentNotes, workoutId]);
 
     // Scroll direction detection for button visibility
     useEffect(() => {
@@ -77,7 +77,7 @@ export default function WorkoutPage() {
 
     const handleFinish = () => {
         // Save AND mark complete
-        saveWorkoutLog(workoutId, currentLogs, true);
+        saveWorkoutLog(workoutId, currentLogs, true, currentNotes);
 
         confetti({
             particleCount: 150,
@@ -130,11 +130,13 @@ export default function WorkoutPage() {
                             initialLogs={currentLogs[exercise.name]}
                             adaptation={getAdaptedTarget(exercise.name, exercise.reps, workoutId)}
                             isAIAdapted={isAICoachUpdated(workoutId, exercise.name)}
+                            previousNote={getPreviousNote(exercise.name, workoutId) || undefined}
+                            initialNote={currentNotes[exercise.name]}
                             onLogChange={(logs) => {
-                                setCurrentLogs(prev => ({
-                                    ...prev,
-                                    [exercise.name]: logs
-                                }));
+                                setCurrentLogs(prev => ({ ...prev, [exercise.name]: logs }));
+                            }}
+                            onNoteChange={(note) => {
+                                setCurrentNotes(prev => ({ ...prev, [exercise.name]: note }));
                             }}
                         />
                     </motion.div>

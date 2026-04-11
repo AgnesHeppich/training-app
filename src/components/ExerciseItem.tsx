@@ -10,9 +10,12 @@ interface ExerciseItemProps {
     initialLogs?: SetLog[];
     adaptation?: AdaptedTarget;
     isAIAdapted?: boolean;
+    previousNote?: string;
+    initialNote?: string;
+    onNoteChange: (note: string) => void;
 }
 
-export const ExerciseItem = ({ exercise, history, onLogChange, initialLogs, adaptation, isAIAdapted }: ExerciseItemProps) => {
+export const ExerciseItem = ({ exercise, history, onLogChange, initialLogs, adaptation, isAIAdapted, previousNote, initialNote, onNoteChange }: ExerciseItemProps) => {
     // Controlled component pattern: derive state from props
     // If no logs exist yet, we'll create a temporary array for rendering
     // and trigger an initialization effect to populate parent state with history defaults.
@@ -162,6 +165,23 @@ export const ExerciseItem = ({ exercise, history, onLogChange, initialLogs, adap
                                 </div>
                             );
                         })}
+                    </div>
+
+                    {previousNote && (
+                        <div className="mt-6 text-sm text-slate-400 leading-relaxed bg-slate-950/40 p-4 rounded-2xl border-l-2 border-slate-600">
+                            <span className="text-slate-500 font-bold uppercase text-[10px] block mb-1 tracking-widest">Last Session Note</span>
+                            {previousNote}
+                        </div>
+                    )}
+
+                    <div className="mt-4">
+                        <textarea
+                            placeholder="Add a note for this exercise... (e.g. swapped machine, used different grip)"
+                            value={initialNote || ""}
+                            onChange={(e) => onNoteChange(e.target.value)}
+                            rows={2}
+                            className="w-full text-sm bg-slate-950/50 border border-slate-800 text-white rounded-2xl px-4 py-3 outline-none transition-all placeholder:text-slate-700 focus:border-slate-600 focus:ring-4 focus:ring-slate-600/10 resize-none"
+                        />
                     </div>
                 </>
             )}

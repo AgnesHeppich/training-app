@@ -35,6 +35,7 @@ export type PerformanceSummary = {
 type HistoryData = {
     completedWorkouts: string[];
     logs: { [workoutId: string]: WorkoutLog };
+    notes: { [workoutId: string]: { [exerciseName: string]: string } };
 };
 
 const STORAGE_KEY = 'pullup-mastery-data';
@@ -42,7 +43,8 @@ const STORAGE_KEY = 'pullup-mastery-data';
 export function useWorkoutHistory() {
     const [data, setData] = useState<HistoryData>({
         completedWorkouts: [],
-        logs: {}
+        logs: {},
+        notes: {}
     });
     const [isLoaded, setIsLoaded] = useState(false);
 
@@ -54,7 +56,8 @@ export function useWorkoutHistory() {
                 // Migration: If old format with lastPerformed exists, just ignore/strip it
                 setData({
                     completedWorkouts: parsed.completedWorkouts || [],
-                    logs: parsed.logs || {}
+                    logs: parsed.logs || {},
+                    notes: parsed.notes || {}
                 });
             } catch (e) {
                 console.error("Failed to parse workout history", e);
@@ -228,13 +231,32 @@ export function useWorkoutHistory() {
         return data.logs[workoutId] || null;
     };
 
+    const getNotesForWorkout = (workoutId: string): { [exerciseName: string]: string } | null => {
+        return data.notes[workoutId] || null;
+    };
+
+    const getPreviousNote = (exerciseName: string, currentWorkoutId: string): string | null => {
+        const currentIndex = PROGRAM.findIndex(w => w.id === currentWorkoutId);
+        if (currentIndex <= 0) return null;
+        const priorWorkouts = PROGRAM.slice(0, currentIndex).reverse();
+        for (const day of priorWorkouts) {
+            const note = data.notes[day.id]?.[exerciseName];
+            if (note) return note;
+        }
+        return null;
+    };
+
     const isWorkoutCompleted = (workoutId: string) => {
         return data.completedWorkouts.includes(workoutId);
     };
 
-    const saveWorkoutLog = (workoutId: string, log: WorkoutLog, markComplete: boolean = true) => {
+    const saveWorkoutLog = (workoutId: string, log: WorkoutLog, markComplete: boolean = true, exerciseNotes?: { [exerciseName: string]: string }) => {
         const newData = { ...data };
         newData.logs[workoutId] = log;
+
+        if (exerciseNotes) {
+            newData.notes = { ...newData.notes, [workoutId]: exerciseNotes };
+        }
 
         if (markComplete && !newData.completedWorkouts.includes(workoutId)) {
             newData.completedWorkouts.push(workoutId);
@@ -253,11 +275,13 @@ export function useWorkoutHistory() {
         isLoaded,
         completedWorkouts: data.completedWorkouts,
         getPreviousStats,
+        getPreviousNote,
         getAdaptedTarget,
         getPerformanceSummary,
         getLastSessions,
         getUpcomingSessions,
         getLogForWorkout,
+        getNotesForWorkout,
         isWorkoutCompleted,
         saveWorkoutLog,
         getOverallProgress
