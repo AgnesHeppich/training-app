@@ -112,6 +112,27 @@ export default function Home() {
 
       <footer className="mt-24 text-center text-slate-600 text-[10px] pb-12 font-black uppercase tracking-[0.3em]">
         <p>Your Journey Starts Here</p>
+        <button
+          onClick={() => {
+            const historyData = localStorage.getItem('pullup-mastery-data');
+            const programData = localStorage.getItem('pullup-mastery-program');
+            const exportData = {
+              exportedAt: new Date().toISOString(),
+              workoutHistory: historyData ? JSON.parse(historyData) : null,
+              programCustomizations: programData ? JSON.parse(programData) : null,
+            };
+            const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `pullup-mastery-${new Date().toISOString().split('T')[0]}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+          }}
+          className="mt-6 inline-block text-slate-700 hover:text-slate-500 transition-colors cursor-pointer"
+        >
+          Export Data
+        </button>
       </footer>
     </div>
   );
