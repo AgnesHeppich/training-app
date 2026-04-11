@@ -16,6 +16,9 @@ export default function WorkoutPage() {
     const { getEffectiveProgram, isAICoachUpdated } = useProgram();
     const [currentLogs, setCurrentLogs] = useState<WorkoutLog>({});
     const [currentNotes, setCurrentNotes] = useState<{ [exerciseName: string]: string }>({});
+    const [sessionNote, setSessionNote] = useState('');
+    const [sessionSummary, setSessionSummary] = useState<string | null>(null);
+    const [loadingSummary, setLoadingSummary] = useState(false);
     const [showButton, setShowButton] = useState(true);
     const lastScrollY = useRef(0);
 
@@ -74,6 +77,35 @@ export default function WorkoutPage() {
             </div>
         );
     }
+
+    const handleGetSessionSummary = async () => {
+        if (!workout) return;
+        setLoadingSummary(true);
+        try {
+            const exercises = workout.exercises.map((exercise) => ({
+                name: exercise.name,
+                sets: exercise.sets,
+                targetReps: getAdaptedTarget(exercise.name, exercise.reps, workoutId).adaptedReps ?? exercise.reps,
+                actualLogs: currentLogs[exercise.name] ?? [],
+                exerciseNote: currentNotes[exercise.name] || undefined,
+                previousLogs: getPreviousStats(exercise.name, workoutId) || undefined,
+            }));
+            const res = await fetch('/api/section-summary', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    workoutTitle: workout.title,
+                    workoutFocus: workout.focus,
+                    exercises,
+                    sessionNote: sessionNote || undefined,
+                }),
+            });
+            const data = await res.json();
+            setSessionSummary(data.summary);
+        } finally {
+            setLoadingSummary(false);
+        }
+    };
 
     const handleFinish = () => {
         // Save AND mark complete
@@ -143,8 +175,34 @@ export default function WorkoutPage() {
                 ))}
             </div>
 
-            <div className={`mt-16 mb-24 sticky bottom-8 z-20 transition-all duration-500 ${showButton ? 'translate-y-0 opacity-100' : 'translate-y-24 opacity-0 pointer-events-none'
-                }`}>
+            <div className="mt-16 bg-slate-900/60 border border-slate-800/60 rounded-3xl p-6 backdrop-blur-xl shadow-2xl">
+                <span className="text-[10px] text-slate-500 font-black uppercase tracking-widest block mb-3">Session Notes</span>
+                <textarea
+                    placeholder="Any notes on this session overall... (e.g. felt tired, new PR, gym was crowded)"
+                    value={sessionNote}
+                    onChange={(e) => setSessionNote(e.target.value)}
+                    rows={3}
+                    className="w-full text-sm bg-slate-950/50 border border-slate-800 text-white rounded-2xl px-4 py-3 outline-none transition-all placeholder:text-slate-700 focus:border-slate-600 focus:ring-4 focus:ring-slate-600/10 resize-none"
+                />
+            </div>
+
+            {sessionSummary && (
+                <div className="mt-6 bg-slate-900/60 border border-[#ff477e]/20 rounded-3xl p-6 backdrop-blur-xl shadow-2xl">
+                    <span className="text-[10px] text-[#ff477e] font-black uppercase tracking-widest block mb-3">AI Coach</span>
+                    <p className="text-sm text-slate-300 leading-relaxed">{sessionSummary}</p>
+                </div>
+            )}
+
+            <div className={`mt-6 mb-24 sticky bottom-8 z-20 transition-all duration-500 ${showButton ? 'translate-y-0 opacity-100' : 'translate-y-24 opacity-0 pointer-events-none'}`}>
+                {!sessionSummary && (
+                    <button
+                        onClick={handleGetSessionSummary}
+                        disabled={loadingSummary}
+                        className="w-full mb-3 text-xs font-bold uppercase tracking-widest text-[#ff477e] border border-[#ff477e]/30 bg-slate-950/80 backdrop-blur-xl hover:bg-[#ff477e]/10 rounded-2xl py-4 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
+                    >
+                        {loadingSummary ? 'Analysing...' : 'Get AI Session Summary'}
+                    </button>
+                )}
                 <button
                     onClick={handleFinish}
                     className="w-full bg-[#ff477e] text-white py-5 rounded-2xl font-black text-lg tracking-widest uppercase shadow-[0_0_30px_rgba(255,71,126,0.4)] hover:shadow-[0_0_40px_rgba(255,71,126,0.6)] hover:scale-[1.02] active:scale-[0.98] transition-all"

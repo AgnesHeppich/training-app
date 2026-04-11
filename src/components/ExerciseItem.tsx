@@ -183,6 +183,7 @@ export const ExerciseItem = ({ exercise, history, onLogChange, initialLogs, adap
                             className="w-full text-sm bg-slate-950/50 border border-slate-800 text-white rounded-2xl px-4 py-3 outline-none transition-all placeholder:text-slate-700 focus:border-slate-600 focus:ring-4 focus:ring-slate-600/10 resize-none"
                         />
                     </div>
+
                 </>
             )}
         </div>
