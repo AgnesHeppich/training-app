@@ -18,25 +18,51 @@ type StoredUpdates = {
 };
 
 export function useProgram() {
+    const [baseProgram, setBaseProgram] = useState<WorkoutDay[]>(PROGRAM);
     const [storedUpdates, setStoredUpdates] = useState<StoredUpdates>({});
     const [isLoaded, setIsLoaded] = useState(false);
 
     useEffect(() => {
-        const stored = localStorage.getItem(PROGRAM_STORAGE_KEY);
-        if (stored) {
+        (async () => {
             try {
-                setStoredUpdates(JSON.parse(stored));
+                const [programRes, overridesRes] = await Promise.all([
+                    fetch('/api/programs/active'),
+                    fetch('/api/program'),
+                ]);
+                const programData: WorkoutDay[] = await programRes.json();
+                const overridesData = await overridesRes.json();
+
+                if (programData.length > 0) {
+                    setBaseProgram(programData);
+                }
+
+                const hasOverrides = Object.keys(overridesData.overrides ?? {}).length > 0;
+                if (!hasOverrides) {
+                    const stored = localStorage.getItem(PROGRAM_STORAGE_KEY);
+                    if (stored) {
+                        const parsed = JSON.parse(stored);
+                        await fetch('/api/program', {
+                            method: 'PUT',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ overrides: parsed }),
+                        });
+                        setStoredUpdates(parsed);
+                        localStorage.removeItem(PROGRAM_STORAGE_KEY);
+                    }
+                } else {
+                    setStoredUpdates(overridesData.overrides);
+                }
             } catch (e) {
-                console.error('Failed to parse program updates', e);
+                console.error('Failed to load program updates', e);
             }
-        }
-        setIsLoaded(true);
+            setIsLoaded(true);
+        })();
     }, []);
 
     const getEffectiveProgram = (): WorkoutDay[] => {
-        if (Object.keys(storedUpdates).length === 0) return PROGRAM;
+        if (Object.keys(storedUpdates).length === 0) return baseProgram;
 
-        return PROGRAM.map(day => {
+        return baseProgram.map(day => {
             const dayUpdates = storedUpdates[day.id];
             if (!dayUpdates) return day;
 
@@ -53,7 +79,7 @@ export function useProgram() {
 
     const applyUpdates = (updates: ProgramUpdate[]) => {
         const newStoredUpdates: StoredUpdates = JSON.parse(JSON.stringify(storedUpdates));
-        
+
         for (const update of updates) {
             if (!newStoredUpdates[update.workoutId]) {
                 newStoredUpdates[update.workoutId] = {};
@@ -73,7 +99,11 @@ export function useProgram() {
         }
 
         setStoredUpdates(newStoredUpdates);
-        localStorage.setItem(PROGRAM_STORAGE_KEY, JSON.stringify(newStoredUpdates));
+        fetch('/api/program', {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ overrides: newStoredUpdates }),
+        }).catch(e => console.error('Failed to save program updates', e));
     };
 
     const hasStoredUpdates = Object.keys(storedUpdates).length > 0;

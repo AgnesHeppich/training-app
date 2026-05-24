@@ -12,6 +12,8 @@
   "dependencies": {
     "@ai-sdk/openai": "^3.0.50",
     "@ai-sdk/react": "^3.0.147",
+    "@neondatabase/auth": "0.4.1-beta",
+    "@neondatabase/serverless": "^1.1.0",
     "@tailwindcss/postcss": "^4.1.18",
     "@types/canvas-confetti": "^1.9.0",
     "ai": "^6.0.145",

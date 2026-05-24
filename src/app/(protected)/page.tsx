@@ -4,12 +4,13 @@ import { useWorkoutHistory } from "@/hooks/useWorkoutHistory";
 import { useProgram } from "@/hooks/useProgram";
 import { WeekOverview } from "@/components/WeekOverview";
 import { PerformanceAnalysis } from "@/components/PerformanceAnalysis";
+import { SignOutButton } from "@/components/SignOutButton";
 import { motion } from "framer-motion";
 
 export default function Home() {
-  const { completedWorkouts, isLoaded, getPerformanceSummary, getLastSessions, getUpcomingSessions } = useWorkoutHistory();
   const { getEffectiveProgram, applyUpdates, isLoaded: programLoaded } = useProgram();
   const effectiveProgram = getEffectiveProgram();
+  const { completedWorkouts, isLoaded, getPerformanceSummary, getLastSessions, getUpcomingSessions } = useWorkoutHistory(effectiveProgram);
 
   if (!isLoaded || !programLoaded) {
     return (
@@ -112,14 +113,16 @@ export default function Home() {
 
       <footer className="mt-24 text-center text-slate-600 text-[10px] pb-12 font-black uppercase tracking-[0.3em]">
         <p>Your Journey Starts Here</p>
+        <SignOutButton />
         <button
-          onClick={() => {
-            const historyData = localStorage.getItem('pullup-mastery-data');
-            const programData = localStorage.getItem('pullup-mastery-program');
+          onClick={async () => {
+            const [histRes, progRes] = await Promise.all([fetch('/api/history'), fetch('/api/program')]);
+            const historyData = await histRes.json();
+            const programData = await progRes.json();
             const exportData = {
               exportedAt: new Date().toISOString(),
-              workoutHistory: historyData ? JSON.parse(historyData) : null,
-              programCustomizations: programData ? JSON.parse(programData) : null,
+              workoutHistory: historyData,
+              programCustomizations: programData.overrides,
             };
             const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
             const url = URL.createObjectURL(blob);

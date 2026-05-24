@@ -12,8 +12,8 @@ import { motion } from "framer-motion";
 export default function WorkoutPage() {
     const params = useParams();
     const router = useRouter();
-    const { isLoaded, getPreviousStats, getPreviousNote, getAdaptedTarget, saveWorkoutLog, getLogForWorkout, getNotesForWorkout } = useWorkoutHistory();
     const { getEffectiveProgram, isAICoachUpdated } = useProgram();
+    const { isLoaded, getPreviousStats, getPreviousNote, getAdaptedTarget, saveWorkoutLog, getLogForWorkout, getNotesForWorkout } = useWorkoutHistory(getEffectiveProgram());
     const [currentLogs, setCurrentLogs] = useState<WorkoutLog>({});
     const [currentNotes, setCurrentNotes] = useState<{ [exerciseName: string]: string }>({});
     const [sessionNote, setSessionNote] = useState('');
