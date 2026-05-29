@@ -2,16 +2,16 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Pull-Up Mastery",
-  description: "8-Week Pull-Up Training Program",
+  title: "Antigravity",
+  description: "Your strength training tracker",
   icons: {
     icon: "/icon.png",
     apple: "/apple-touch-icon.png",
   },
   appleWebApp: {
     capable: true,
-    statusBarStyle: "black-translucent",
-    title: "Pull-Up Mastery",
+    statusBarStyle: "default",
+    title: "Antigravity",
   },
 };
 
@@ -24,7 +24,7 @@ export default function RootLayout({
     <html lang="en">
       <head>
         <link rel="manifest" href="/manifest.json" />
-        <meta name="theme-color" content="#0f172a" />
+        <meta name="theme-color" content="#16a34a" />
       </head>
       <body>
         <div className="app-background" />

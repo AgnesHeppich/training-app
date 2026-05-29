@@ -1,11 +1,11 @@
 {
-    "name": "Pull-Up Mastery",
-    "short_name": "Pull-Up",
-    "description": "8-Week Pull-Up Training Program - progression",
+    "name": "Antigravity",
+    "short_name": "Antigravity",
+    "description": "Your strength training tracker",
     "start_url": "/",
     "display": "standalone",
-    "background_color": "#0f172a",
-    "theme_color": "#ff477e",
+    "background_color": "#f0fdf4",
+    "theme_color": "#16a34a",
     "orientation": "portrait",
     "icons": [
         {

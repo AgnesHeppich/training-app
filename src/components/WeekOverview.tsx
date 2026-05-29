@@ -16,7 +16,6 @@ export const WeekOverview = ({
     const isFullyCompleted = completedCount === days.length;
     const progress = (completedCount / days.length) * 100;
 
-    // Auto-collapse if fully completed
     const [isCollapsed, setIsCollapsed] = useState(isFullyCompleted);
 
     return (
@@ -26,20 +25,20 @@ export const WeekOverview = ({
                 onClick={() => setIsCollapsed(!isCollapsed)}
             >
                 <div className="flex items-center gap-4">
-                    <h2 className="text-3xl font-black text-white tracking-tight">Week {weekNumber}</h2>
+                    <h2 className="text-3xl font-black text-gray-900 tracking-tight">Week {weekNumber}</h2>
                     {isFullyCompleted && (
-                        <span className="text-[10px] bg-pink-500/10 text-[#ff477e] border border-pink-500/20 px-2 py-0.5 rounded-md font-black uppercase tracking-widest shadow-[0_0_10px_rgba(255,71,126,0.1)]">
+                        <span className="text-[10px] bg-green-500/10 text-green-700 border border-green-500/20 px-2 py-0.5 rounded-md font-black uppercase tracking-widest">
                             Completed
                         </span>
                     )}
                 </div>
                 <div className="flex items-center gap-3">
-                    <div className="text-xs text-[#94a3b8] font-bold tracking-widest uppercase group-hover:text-white transition-colors">
+                    <div className="text-xs text-gray-500 font-bold tracking-widest uppercase group-hover:text-gray-900 transition-colors">
                         {completedCount} / {days.length} Complete
                     </div>
                     <motion.svg
                         animate={{ rotate: isCollapsed ? 0 : 180 }}
-                        className="w-4 h-4 text-slate-500 group-hover:text-[#ff477e] transition-colors"
+                        className="w-4 h-4 text-gray-400 group-hover:text-green-600 transition-colors"
                         fill="none"
                         viewBox="0 0 24 24"
                         stroke="currentColor"
@@ -51,11 +50,11 @@ export const WeekOverview = ({
 
             {/* Progress Bar */}
             <div
-                className="h-1.5 bg-slate-800/50 rounded-full mb-6 overflow-hidden border border-slate-700/30 cursor-pointer"
+                className="h-1.5 bg-gray-200 rounded-full mb-6 overflow-hidden cursor-pointer"
                 onClick={() => setIsCollapsed(!isCollapsed)}
             >
                 <div
-                    className="h-full bg-gradient-to-r from-[#ff477e] to-[#ff9eb5] transition-all duration-700 ease-in-out shadow-[0_0_10px_rgba(255,71,126,0.5)]"
+                    className="h-full bg-linear-to-r from-green-600 to-green-400 transition-all duration-700 ease-in-out"
                     style={{ width: `${progress}%` }}
                 />
             </div>
@@ -86,7 +85,7 @@ export const WeekOverview = ({
                 <motion.p
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    className="text-xs text-slate-500 font-medium italic mt-1 px-1"
+                    className="text-xs text-gray-400 font-medium italic mt-1 px-1"
                 >
                     Target matched. Mastery achieved.
                 </motion.p>

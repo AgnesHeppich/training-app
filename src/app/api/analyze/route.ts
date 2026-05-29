@@ -8,10 +8,10 @@ export const maxDuration = 30;
 export async function POST(req: NextRequest) {
     const { summary, lastSessions, upcomingSessions } = await req.json();
 
-    const prompt = `You are a personal pull-up strength coach analyzing an athlete's performance data.
+    const prompt = `You are a personal strength coach analyzing an athlete's performance data.
 
 Program progress: ${summary.totalCompleted}/${summary.totalInProgram} sessions completed.
-Goal: Increase unassisted pull-up reps over a 10-week program. The program also includes lower body, core, and accessory work — analyse all of it.
+Goal: Help the athlete progress through their training program. The program includes various exercises across upper body, lower body, core, and accessory work — analyse all of it.
 
 ## Last 10 Completed Sessions (actual logged performance, chronological)
 ${lastSessions ? JSON.stringify(lastSessions, null, 2) : 'No sessions completed yet'}

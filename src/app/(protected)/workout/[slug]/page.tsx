@@ -26,7 +26,6 @@ export default function WorkoutPage() {
     const workout = getEffectiveProgram().find(d => d.id === workoutId);
     const isMounted = useRef(false);
 
-    // Initialize logs on load
     useEffect(() => {
         if (isLoaded && workoutId) {
             const existingLog = getLogForWorkout(workoutId);
@@ -37,34 +36,25 @@ export default function WorkoutPage() {
         }
     }, [isLoaded, workoutId]);
 
-    // Auto-save effect
     useEffect(() => {
         if (isMounted.current && workoutId && Object.keys(currentLogs).length > 0) {
             saveWorkoutLog(workoutId, currentLogs, false, currentNotes);
         }
     }, [currentLogs, currentNotes, workoutId]);
 
-    // Scroll direction detection for button visibility
     useEffect(() => {
         const handleScroll = () => {
             const currentScrollY = window.scrollY;
-
             if (currentScrollY > lastScrollY.current && currentScrollY > 10) {
-                // Scrolling down - hide button
                 setShowButton(false);
             } else if (currentScrollY < lastScrollY.current) {
-                // Scrolling up - show button
                 setShowButton(true);
             }
-
             lastScrollY.current = currentScrollY;
         };
 
         window.addEventListener('scroll', handleScroll, { passive: true });
-
-        return () => {
-            window.removeEventListener('scroll', handleScroll);
-        };
+        return () => { window.removeEventListener('scroll', handleScroll); };
     }, []);
 
     if (!isLoaded) return null;
@@ -72,8 +62,8 @@ export default function WorkoutPage() {
     if (!workout) {
         return (
             <div className="min-h-screen flex flex-col items-center justify-center p-4">
-                <h1 className="text-2xl text-white mb-4 font-bold">Workout not found</h1>
-                <Link href="/" className="text-[#ff477e] hover:underline">Return Home</Link>
+                <h1 className="text-2xl text-gray-900 mb-4 font-bold">Workout not found</h1>
+                <Link href="/" className="text-green-700 hover:underline">Return Home</Link>
             </div>
         );
     }
@@ -108,14 +98,13 @@ export default function WorkoutPage() {
     };
 
     const handleFinish = () => {
-        // Save AND mark complete
         saveWorkoutLog(workoutId, currentLogs, true, currentNotes);
 
         confetti({
             particleCount: 150,
             spread: 70,
             origin: { y: 0.6 },
-            colors: ['#ff477e', '#ffffff', '#ff9eb5']
+            colors: ['#16a34a', '#ffffff', '#86efac']
         });
 
         setTimeout(() => {
@@ -126,22 +115,22 @@ export default function WorkoutPage() {
     return (
         <div className="container mx-auto px-4 py-12 max-w-2xl">
             <header className="mb-12">
-                <Link href="/" className="inline-flex items-center text-xs text-slate-500 hover:text-[#ff477e] transition-colors mb-8 font-bold uppercase tracking-widest">
+                <Link href="/" className="inline-flex items-center text-xs text-gray-500 hover:text-green-700 transition-colors mb-8 font-bold uppercase tracking-widest">
                     <span className="mr-2 text-lg">←</span> Dashboard
                 </Link>
                 <div className="flex items-end justify-between mb-4">
                     <div>
-                        <h2 className="text-[10px] text-[#ff477e] font-black uppercase tracking-[0.2em] mb-2 px-1">
+                        <h2 className="text-[10px] text-green-700 font-black uppercase tracking-[0.2em] mb-2 px-1">
                             {workout.dayLabel} • Week {workout.week}
                         </h2>
-                        <h1 className="text-5xl font-black text-white leading-tight tracking-tight">{workout.title}</h1>
+                        <h1 className="text-5xl font-black text-gray-900 leading-tight tracking-tight">{workout.title}</h1>
                     </div>
                 </div>
-                <div className="mt-6 flex items-start gap-4 bg-slate-900/40 p-5 rounded-2xl border border-slate-800/60 shadow-inner">
-                    <div className="w-1 h-full bg-[#ff477e] rounded-full" />
+                <div className="mt-6 flex items-start gap-4 bg-white p-5 rounded-2xl border border-gray-200 shadow-sm">
+                    <div className="w-1 self-stretch bg-green-500 rounded-full" />
                     <div>
-                        <span className="text-[10px] text-slate-500 font-black uppercase tracking-widest block mb-1">Workout Focus</span>
-                        <p className="text-slate-300 font-medium italic">
+                        <span className="text-[10px] text-gray-500 font-black uppercase tracking-widest block mb-1">Workout Focus</span>
+                        <p className="text-gray-700 font-medium italic">
                             {workout.focus}
                         </p>
                     </div>
@@ -175,21 +164,21 @@ export default function WorkoutPage() {
                 ))}
             </div>
 
-            <div className="mt-16 bg-slate-900/60 border border-slate-800/60 rounded-3xl p-6 backdrop-blur-xl shadow-2xl">
-                <span className="text-[10px] text-slate-500 font-black uppercase tracking-widest block mb-3">Session Notes</span>
+            <div className="mt-16 bg-white border border-gray-200 rounded-3xl p-6 shadow-sm">
+                <span className="text-[10px] text-gray-500 font-black uppercase tracking-widest block mb-3">Session Notes</span>
                 <textarea
                     placeholder="Any notes on this session overall... (e.g. felt tired, new PR, gym was crowded)"
                     value={sessionNote}
                     onChange={(e) => setSessionNote(e.target.value)}
                     rows={3}
-                    className="w-full text-sm bg-slate-950/50 border border-slate-800 text-white rounded-2xl px-4 py-3 outline-none transition-all placeholder:text-slate-700 focus:border-slate-600 focus:ring-4 focus:ring-slate-600/10 resize-none"
+                    className="w-full text-sm bg-gray-50 border border-gray-200 text-gray-900 rounded-2xl px-4 py-3 outline-none transition-all placeholder:text-gray-400 focus:border-gray-300 focus:ring-4 focus:ring-gray-200/50 resize-none"
                 />
             </div>
 
             {sessionSummary && (
-                <div className="mt-6 bg-slate-900/60 border border-[#ff477e]/20 rounded-3xl p-6 backdrop-blur-xl shadow-2xl">
-                    <span className="text-[10px] text-[#ff477e] font-black uppercase tracking-widest block mb-3">AI Coach</span>
-                    <p className="text-sm text-slate-300 leading-relaxed">{sessionSummary}</p>
+                <div className="mt-6 bg-white border border-green-200 rounded-3xl p-6 shadow-sm">
+                    <span className="text-[10px] text-green-700 font-black uppercase tracking-widest block mb-3">AI Coach</span>
+                    <p className="text-sm text-gray-700 leading-relaxed">{sessionSummary}</p>
                 </div>
             )}
 
@@ -198,14 +187,14 @@ export default function WorkoutPage() {
                     <button
                         onClick={handleGetSessionSummary}
                         disabled={loadingSummary}
-                        className="w-full mb-3 text-xs font-bold uppercase tracking-widest text-[#ff477e] border border-[#ff477e]/30 bg-slate-950/80 backdrop-blur-xl hover:bg-[#ff477e]/10 rounded-2xl py-4 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
+                        className="w-full mb-3 text-xs font-bold uppercase tracking-widest text-green-700 border border-green-200 bg-white/90 backdrop-blur-xl hover:bg-green-50 rounded-2xl py-4 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
                     >
                         {loadingSummary ? 'Analysing...' : 'Get AI Session Summary'}
                     </button>
                 )}
                 <button
                     onClick={handleFinish}
-                    className="w-full bg-[#ff477e] text-white py-5 rounded-2xl font-black text-lg tracking-widest uppercase shadow-[0_0_30px_rgba(255,71,126,0.4)] hover:shadow-[0_0_40px_rgba(255,71,126,0.6)] hover:scale-[1.02] active:scale-[0.98] transition-all"
+                    className="w-full bg-green-600 text-white py-5 rounded-2xl font-black text-lg tracking-widest uppercase shadow-lg hover:bg-green-700 hover:scale-[1.02] active:scale-[0.98] transition-all"
                 >
                     Complete Session
                 </button>

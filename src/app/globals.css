@@ -1,34 +1,25 @@
 @import "tailwindcss";
 
 :root {
-  /* Dark Noir Palette */
-  --bg-dark: #0f172a;
-  /* Slate 900 */
-  --bg-gradient: linear-gradient(180deg, #0f172a 0%, #020617 100%);
+  --bg-light: #f0fdf4;
+  --bg-gradient: linear-gradient(180deg, #f0fdf4 0%, #f9fafb 60%, #f0fdf4 100%);
 
-  --glass-bg: rgba(30, 41, 59, 0.4);
-  /* Slate 800 with opacity */
-  --glass-border: rgba(51, 65, 85, 0.5);
-  /* Slate 700 */
-  --glass-highlight: rgba(71, 85, 105, 0.3);
+  --glass-bg: rgba(255, 255, 255, 0.85);
+  --glass-border: rgba(22, 163, 74, 0.15);
+  --glass-highlight: rgba(22, 163, 74, 0.08);
 
-  --text-primary: #f8fafc;
-  /* Slate 50 */
-  --text-secondary: #94a3b8;
-  /* Slate 400 */
-  --text-tertiary: #64748b;
-  /* Slate 500 */
+  --text-primary: #111827;
+  --text-secondary: #6b7280;
+  --text-tertiary: #9ca3af;
 
-  --accent-primary: #ff477e;
-  /* Hot Pink */
-  --accent-secondary: #f472b6;
-  /* Pink 400 */
-  --accent-glow: rgba(255, 71, 126, 0.4);
+  --accent-primary: #16a34a;
+  --accent-secondary: #86efac;
+  --accent-glow: rgba(22, 163, 74, 0.2);
 
-  --success: #10b981;
+  --success: #16a34a;
   --error: #ef4444;
 
-  --font-main: 'Outfit', sans-serif;
+  --font-main: system-ui, -apple-system, sans-serif;
 
   --radius-sm: 12px;
   --radius-md: 20px;
@@ -36,15 +27,14 @@
 }
 
 body {
-  background: var(--bg-dark);
+  background: #f0fdf4;
   color: var(--text-primary);
   font-family: var(--font-main);
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
   background-attachment: fixed;
-  /* Very subtle dot pattern */
   background-image:
-    radial-gradient(circle, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    radial-gradient(circle, rgba(22, 163, 74, 0.04) 1px, transparent 1px);
   background-size: 24px 24px;
 }
 
@@ -59,14 +49,13 @@ body {
   pointer-events: none;
 }
 
-/* Updated Text Effects */
 .title-gradient {
-  background: linear-gradient(to bottom right, #ffffff, #94a3b8);
+  background: linear-gradient(to bottom right, #111827, #374151);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
 }
 
-.pink-glow {
-  text-shadow: 0 0 20px rgba(255, 71, 126, 0.5);
+.green-glow {
+  text-shadow: 0 0 20px rgba(22, 163, 74, 0.3);
 }
