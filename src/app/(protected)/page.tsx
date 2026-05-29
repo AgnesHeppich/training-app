@@ -7,6 +7,7 @@ import { PerformanceAnalysis } from "@/components/PerformanceAnalysis";
 import { SignOutButton } from "@/components/SignOutButton";
 import { ProgramSwitcher } from "@/components/ProgramSwitcher";
 import { motion } from "framer-motion";
+import Link from "next/link";
 
 export default function Home() {
   const { getEffectiveProgram, applyUpdates, isLoaded: programLoaded, allPrograms, activeProgramId, switchProgram } = useProgram();
@@ -44,15 +45,27 @@ export default function Home() {
             Zero to Hero
           </div>
 
-          {allPrograms.length > 1 && (
-            <ProgramSwitcher
-              programs={allPrograms}
-              activeProgramId={activeProgramId}
-              completedWorkoutIds={completedWorkoutIds}
-              currentProgramWorkoutIds={currentProgramWorkoutIds}
-              onSwitch={switchProgram}
-            />
-          )}
+          <div className="flex items-center gap-3">
+            {allPrograms.length > 1 && (
+              <ProgramSwitcher
+                programs={allPrograms}
+                activeProgramId={activeProgramId}
+                completedWorkoutIds={completedWorkoutIds}
+                currentProgramWorkoutIds={currentProgramWorkoutIds}
+                onSwitch={switchProgram}
+              />
+            )}
+            <Link
+              href="/profile"
+              className="w-8 h-8 rounded-full bg-slate-800/60 border border-slate-700/50 flex items-center justify-center text-slate-400 hover:text-white hover:border-slate-600 transition-colors"
+              title="Profile"
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="8" r="4" />
+                <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" />
+              </svg>
+            </Link>
+          </div>
         </div>
 
         <h1 className="text-5xl md:text-7xl font-black mb-6 tracking-tight leading-none">
