@@ -38,8 +38,6 @@ type HistoryData = {
     notes: { [workoutId: string]: { [exerciseName: string]: string } };
 };
 
-const STORAGE_KEY = 'pullup-mastery-data';
-
 export function useWorkoutHistory(program: WorkoutDay[] = PROGRAM) {
     const [data, setData] = useState<HistoryData>({
         completedWorkouts: [],
@@ -53,26 +51,7 @@ export function useWorkoutHistory(program: WorkoutDay[] = PROGRAM) {
             try {
                 const res = await fetch('/api/history');
                 const dbData = await res.json();
-                const hasData = dbData.completedWorkouts.length > 0 || Object.keys(dbData.logs).length > 0;
-                if (!hasData) {
-                    const stored = localStorage.getItem(STORAGE_KEY);
-                    if (stored) {
-                        const parsed = JSON.parse(stored);
-                        await fetch('/api/history', {
-                            method: 'PUT',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: stored,
-                        });
-                        setData({
-                            completedWorkouts: parsed.completedWorkouts || [],
-                            logs: parsed.logs || {},
-                            notes: parsed.notes || {},
-                        });
-                        localStorage.removeItem(STORAGE_KEY);
-                    }
-                } else {
-                    setData(dbData);
-                }
+                setData(dbData);
             } catch (e) {
                 console.error('Failed to load workout history', e);
             }

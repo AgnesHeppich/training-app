@@ -4,8 +4,6 @@ import { useState, useEffect } from 'react';
 import { PROGRAM, WorkoutDay } from '@/data/program';
 import { ProgramUpdate } from '@/lib/analysisSchema';
 
-const PROGRAM_STORAGE_KEY = 'pullup-mastery-program';
-
 type ExerciseOverride = {
     reps?: string;
     sets?: number;
@@ -36,20 +34,7 @@ export function useProgram() {
                     setBaseProgram(programData);
                 }
 
-                const hasOverrides = Object.keys(overridesData.overrides ?? {}).length > 0;
-                if (!hasOverrides) {
-                    const stored = localStorage.getItem(PROGRAM_STORAGE_KEY);
-                    if (stored) {
-                        const parsed = JSON.parse(stored);
-                        await fetch('/api/program', {
-                            method: 'PUT',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ overrides: parsed }),
-                        });
-                        setStoredUpdates(parsed);
-                        localStorage.removeItem(PROGRAM_STORAGE_KEY);
-                    }
-                } else {
+                if (overridesData.overrides) {
                     setStoredUpdates(overridesData.overrides);
                 }
             } catch (e) {
