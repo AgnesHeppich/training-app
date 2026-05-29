@@ -13,6 +13,11 @@ export type WorkoutLog = {
     [exerciseName: string]: SetLog[];
 };
 
+export type CompletedWorkout = {
+    id: string;
+    completedAt: string;
+};
+
 export type AdaptedTarget = {
     adaptedReps: string;
     isAdapted: boolean;
@@ -33,63 +38,73 @@ export type PerformanceSummary = {
 };
 
 type HistoryData = {
-    completedWorkouts: string[];
+    completedWorkouts: CompletedWorkout[];
     logs: { [workoutId: string]: WorkoutLog };
     notes: { [workoutId: string]: { [exerciseName: string]: string } };
 };
 
-export function useWorkoutHistory(program: WorkoutDay[] = PROGRAM) {
-    const [data, setData] = useState<HistoryData>({
-        completedWorkouts: [],
-        logs: {},
-        notes: {}
-    });
+const EMPTY: HistoryData = { completedWorkouts: [], logs: {}, notes: {} };
+
+export function useWorkoutHistory(program: WorkoutDay[] = PROGRAM, programId: number | null = null) {
+    const [data, setData] = useState<HistoryData>(EMPTY);
     const [isLoaded, setIsLoaded] = useState(false);
 
     useEffect(() => {
         (async () => {
             try {
-                const res = await fetch('/api/history');
+                const url = programId ? `/api/history?programId=${programId}` : '/api/history';
+                const res = await fetch(url);
                 const dbData = await res.json();
-                setData(dbData);
+                // Normalise: handle both old string[] and new {id, completedAt}[] shapes
+                const raw = dbData.completedWorkouts ?? [];
+                const completedWorkouts: CompletedWorkout[] = raw.map((entry: unknown) =>
+                    typeof entry === 'string'
+                        ? { id: entry, completedAt: new Date().toISOString() }
+                        : (entry as CompletedWorkout)
+                );
+                setData({ ...dbData, completedWorkouts });
             } catch (e) {
                 console.error('Failed to load workout history', e);
             }
             setIsLoaded(true);
         })();
+    // Page reloads on program switch, so programId is stable for the lifetime of this hook.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const saveHistory = (newData: HistoryData) => {
         setData(newData);
+        if (!programId) {
+            console.warn('Cannot persist history: programId not yet available');
+            return;
+        }
         fetch('/api/history', {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(newData),
+            body: JSON.stringify({ programId, ...newData }),
         }).catch(e => console.error('Failed to save workout history', e));
     };
+
+    // Flat list of IDs for quick .includes() checks
+    const completedWorkoutIds = data.completedWorkouts.map(w => w.id);
 
     const getPreviousStats = (exerciseName: string, currentWorkoutId?: string): SetLog[] | null => {
         if (currentWorkoutId) {
             const currentIndex = program.findIndex(w => w.id === currentWorkoutId);
             if (currentIndex > 0) {
-                const priorWorkouts = program.slice(0, currentIndex).reverse();
-                for (const day of priorWorkouts) {
+                for (const day of program.slice(0, currentIndex).reverse()) {
                     const dayLog = data.logs[day.id];
-                    if (dayLog && dayLog[exerciseName]) {
-                        const hasData = dayLog[exerciseName].some(s => s.weight !== "" || s.reps !== "");
-                        if (hasData) return dayLog[exerciseName];
+                    if (dayLog?.[exerciseName]?.some(s => s.weight !== '' || s.reps !== '')) {
+                        return dayLog[exerciseName];
                     }
                 }
             }
             return null;
         }
-
-        const allReverse = [...program].reverse();
-        for (const day of allReverse) {
+        for (const day of [...program].reverse()) {
             const dayLog = data.logs[day.id];
-            if (dayLog && dayLog[exerciseName]) {
-                const hasData = dayLog[exerciseName].some(s => s.weight !== "" || s.reps !== "");
-                if (hasData) return dayLog[exerciseName];
+            if (dayLog?.[exerciseName]?.some(s => s.weight !== '' || s.reps !== '')) {
+                return dayLog[exerciseName];
             }
         }
         return null;
@@ -110,83 +125,57 @@ export function useWorkoutHistory(program: WorkoutDay[] = PROGRAM) {
         const currentIndex = program.findIndex(w => w.id === currentWorkoutId);
         if (currentIndex <= 0) return { adaptedReps: programTarget, isAdapted: false };
 
-        const priorWorkouts = program.slice(0, currentIndex).reverse();
         const sessionAverages: number[] = [];
-
-        for (const day of priorWorkouts) {
+        for (const day of program.slice(0, currentIndex).reverse()) {
             if (sessionAverages.length >= 3) break;
-            const dayLog = data.logs[day.id];
-            if (!dayLog?.[exerciseName]) continue;
-            const repNums = dayLog[exerciseName]
+            const repNums = (data.logs[day.id]?.[exerciseName] ?? [])
                 .map(s => parseInt(s.reps))
                 .filter(n => !isNaN(n) && n > 0);
-            if (repNums.length === 0) continue;
-            sessionAverages.push(repNums.reduce((a, b) => a + b, 0) / repNums.length);
+            if (repNums.length > 0)
+                sessionAverages.push(repNums.reduce((a, b) => a + b, 0) / repNums.length);
         }
 
         if (sessionAverages.length === 0)
             return { adaptedReps: programTarget, isAdapted: false };
 
         const overallAvg = sessionAverages.reduce((a, b) => a + b, 0) / sessionAverages.length;
-        const ratio = overallAvg / numericTarget;
-
-        if (ratio < 0.75) {
+        if (overallAvg / numericTarget < 0.75) {
             return {
                 adaptedReps: String(Math.max(1, Math.round(overallAvg))),
                 isAdapted: true,
-                reason: "Adjusted to match your recent performance"
+                reason: 'Adjusted to match your recent performance',
             };
         }
-
         return { adaptedReps: programTarget, isAdapted: false };
     };
 
     const getPerformanceSummary = (): PerformanceSummary => {
-        const completedDays = program.filter(d =>
-            data.completedWorkouts.includes(d.id)
-        );
-
+        const completedDays = program.filter(d => completedWorkoutIds.includes(d.id));
         const performanceTrend = completedDays.flatMap(day => {
             const dayLog = data.logs[day.id];
             if (!dayLog) return [];
-            return day.exercises
-                .filter(ex => !ex.isWarmup)
-                .map(ex => {
-                    const sets = dayLog[ex.name];
-                    let avgReps: number | null = null;
-                    let avgWeight: number | null = null;
-                    if (sets) {
-                        const repNums = sets.map(s => parseInt(s.reps)).filter(n => !isNaN(n) && n > 0);
-                        if (repNums.length > 0)
-                            avgReps = Math.round((repNums.reduce((a, b) => a + b, 0) / repNums.length) * 10) / 10;
-                        const weightNums = sets.map(s => parseFloat(s.weight)).filter(n => !isNaN(n) && n > 0);
-                        if (weightNums.length > 0)
-                            avgWeight = Math.round((weightNums.reduce((a, b) => a + b, 0) / weightNums.length) * 10) / 10;
-                    }
-                    return {
-                        workoutId: day.id,
-                        week: day.week,
-                        exerciseName: ex.name,
-                        programTarget: ex.reps,
-                        avgReps,
-                        avgWeight
-                    };
-                });
+            return day.exercises.filter(ex => !ex.isWarmup).map(ex => {
+                const sets = dayLog[ex.name];
+                let avgReps: number | null = null;
+                let avgWeight: number | null = null;
+                if (sets) {
+                    const repNums = sets.map(s => parseInt(s.reps)).filter(n => !isNaN(n) && n > 0);
+                    if (repNums.length > 0)
+                        avgReps = Math.round((repNums.reduce((a, b) => a + b, 0) / repNums.length) * 10) / 10;
+                    const weightNums = sets.map(s => parseFloat(s.weight)).filter(n => !isNaN(n) && n > 0);
+                    if (weightNums.length > 0)
+                        avgWeight = Math.round((weightNums.reduce((a, b) => a + b, 0) / weightNums.length) * 10) / 10;
+                }
+                return { workoutId: day.id, week: day.week, exerciseName: ex.name, programTarget: ex.reps, avgReps, avgWeight };
+            });
         });
-
-        return {
-            totalCompleted: data.completedWorkouts.length,
-            totalInProgram: program.length,
-            performanceTrend
-        };
+        return { totalCompleted: data.completedWorkouts.length, totalInProgram: program.length, performanceTrend };
     };
 
     const getLastSessions = (limit = 10) => {
-        const completedInOrder = program.filter(d => data.completedWorkouts.includes(d.id));
+        const completedInOrder = program.filter(d => completedWorkoutIds.includes(d.id));
         if (completedInOrder.length === 0) return null;
-
-        const recent = completedInOrder.slice(-limit);
-        return recent.map(day => ({
+        return completedInOrder.slice(-limit).map(day => ({
             id: day.id,
             week: day.week,
             dayLabel: day.dayLabel,
@@ -205,72 +194,69 @@ export function useWorkoutHistory(program: WorkoutDay[] = PROGRAM) {
 
     const getUpcomingSessions = (limit = 10) => {
         const lastCompletedIndex = program.reduce(
-            (last, day, idx) => (data.completedWorkouts.includes(day.id) ? idx : last),
+            (last, day, idx) => (completedWorkoutIds.includes(day.id) ? idx : last),
             -1
         );
-        const upcoming = program.slice(lastCompletedIndex + 1).filter(
-            d => !data.completedWorkouts.includes(d.id)
-        );
-        return upcoming.slice(0, limit).map(day => ({
-            id: day.id,
-            week: day.week,
-            dayLabel: day.dayLabel,
-            title: day.title,
-            exercises: day.exercises.map(ex => ({
-                name: ex.name,
-                programSets: ex.sets,
-                programTarget: ex.reps,
-            })),
-        }));
+        return program
+            .slice(lastCompletedIndex + 1)
+            .filter(d => !completedWorkoutIds.includes(d.id))
+            .slice(0, limit)
+            .map(day => ({
+                id: day.id,
+                week: day.week,
+                dayLabel: day.dayLabel,
+                title: day.title,
+                exercises: day.exercises.map(ex => ({ name: ex.name, programSets: ex.sets, programTarget: ex.reps })),
+            }));
     };
 
-    const getLogForWorkout = (workoutId: string): WorkoutLog | null => {
-        return data.logs[workoutId] || null;
-    };
+    const getLogForWorkout = (workoutId: string): WorkoutLog | null => data.logs[workoutId] || null;
 
-    const getNotesForWorkout = (workoutId: string): { [exerciseName: string]: string } | null => {
-        return data.notes[workoutId] || null;
-    };
+    const getNotesForWorkout = (workoutId: string) => data.notes[workoutId] || null;
 
     const getPreviousNote = (exerciseName: string, currentWorkoutId: string): string | null => {
         const currentIndex = program.findIndex(w => w.id === currentWorkoutId);
         if (currentIndex <= 0) return null;
-        const priorWorkouts = program.slice(0, currentIndex).reverse();
-        for (const day of priorWorkouts) {
+        for (const day of program.slice(0, currentIndex).reverse()) {
             const note = data.notes[day.id]?.[exerciseName];
             if (note) return note;
         }
         return null;
     };
 
-    const isWorkoutCompleted = (workoutId: string) => {
-        return data.completedWorkouts.includes(workoutId);
-    };
+    const isWorkoutCompleted = (workoutId: string) => completedWorkoutIds.includes(workoutId);
 
-    const saveWorkoutLog = (workoutId: string, log: WorkoutLog, markComplete: boolean = true, exerciseNotes?: { [exerciseName: string]: string }) => {
-        const newData = { ...data };
-        newData.logs[workoutId] = log;
+    const saveWorkoutLog = (
+        workoutId: string,
+        log: WorkoutLog,
+        markComplete = true,
+        exerciseNotes?: { [exerciseName: string]: string }
+    ) => {
+        const newData: HistoryData = { ...data, logs: { ...data.logs, [workoutId]: log } };
 
         if (exerciseNotes) {
             newData.notes = { ...newData.notes, [workoutId]: exerciseNotes };
         }
 
-        if (markComplete && !newData.completedWorkouts.includes(workoutId)) {
-            newData.completedWorkouts.push(workoutId);
+        if (markComplete && !completedWorkoutIds.includes(workoutId)) {
+            newData.completedWorkouts = [
+                ...data.completedWorkouts,
+                { id: workoutId, completedAt: new Date().toISOString() },
+            ];
         }
 
         saveHistory(newData);
     };
 
     const getOverallProgress = () => {
-        const total = program.length;
-        const completed = data.completedWorkouts.length;
-        return Math.min(100, Math.round((completed / total) * 100));
+        if (program.length === 0) return 0;
+        return Math.min(100, Math.round((data.completedWorkouts.length / program.length) * 100));
     };
 
     return {
         isLoaded,
-        completedWorkouts: data.completedWorkouts,
+        completedWorkouts: data.completedWorkouts,  // {id, completedAt}[] — full shape with timestamps
+        completedWorkoutIds,                         // string[] — for .includes() checks
         getPreviousStats,
         getPreviousNote,
         getAdaptedTarget,
@@ -281,6 +267,6 @@ export function useWorkoutHistory(program: WorkoutDay[] = PROGRAM) {
         getNotesForWorkout,
         isWorkoutCompleted,
         saveWorkoutLog,
-        getOverallProgress
+        getOverallProgress,
     };
 }

@@ -5,12 +5,13 @@ import { useProgram } from "@/hooks/useProgram";
 import { WeekOverview } from "@/components/WeekOverview";
 import { PerformanceAnalysis } from "@/components/PerformanceAnalysis";
 import { SignOutButton } from "@/components/SignOutButton";
+import { ProgramSwitcher } from "@/components/ProgramSwitcher";
 import { motion } from "framer-motion";
 
 export default function Home() {
-  const { getEffectiveProgram, applyUpdates, isLoaded: programLoaded } = useProgram();
+  const { getEffectiveProgram, applyUpdates, isLoaded: programLoaded, allPrograms, activeProgramId, switchProgram } = useProgram();
   const effectiveProgram = getEffectiveProgram();
-  const { completedWorkouts, isLoaded, getPerformanceSummary, getLastSessions, getUpcomingSessions } = useWorkoutHistory(effectiveProgram);
+  const { completedWorkoutIds, isLoaded, getPerformanceSummary, getLastSessions, getUpcomingSessions } = useWorkoutHistory(effectiveProgram, activeProgramId);
 
   if (!isLoaded || !programLoaded) {
     return (
@@ -25,6 +26,10 @@ export default function Home() {
   const upcomingSessions = getUpcomingSessions();
   const allWeeks = Array.from(new Set(effectiveProgram.map(d => d.week))).sort((a, b) => a - b);
   const totalWeeks = allWeeks.length;
+  const activeProgram = allPrograms.find(p => p.id === activeProgramId);
+  const programName = activeProgram?.name ?? 'Pull-Up Mastery';
+  const programDescription = activeProgram?.description ?? `A definitive ${totalWeeks}-week progression`;
+  const currentProgramWorkoutIds = effectiveProgram.map(d => d.id);
 
   return (
     <div className="container mx-auto px-4 py-16 max-w-5xl">
@@ -33,18 +38,30 @@ export default function Home() {
         animate={{ opacity: 1, y: 0 }}
         className="mb-16 text-left"
       >
-        <div className="inline-flex items-center gap-2 py-1 px-3 rounded-lg bg-pink-500/10 border border-pink-500/20 text-[10px] font-bold tracking-[0.2em] text-[#ff477e] mb-6 uppercase">
-          <span className="w-1.5 h-1.5 rounded-full bg-[#ff477e] animate-pulse" />
-          Zero to Hero
+        <div className="flex items-center justify-between mb-6">
+          <div className="inline-flex items-center gap-2 py-1 px-3 rounded-lg bg-pink-500/10 border border-pink-500/20 text-[10px] font-bold tracking-[0.2em] text-[#ff477e] uppercase">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#ff477e] animate-pulse" />
+            Zero to Hero
+          </div>
+
+          {allPrograms.length > 1 && (
+            <ProgramSwitcher
+              programs={allPrograms}
+              activeProgramId={activeProgramId}
+              completedWorkoutIds={completedWorkoutIds}
+              currentProgramWorkoutIds={currentProgramWorkoutIds}
+              onSwitch={switchProgram}
+            />
+          )}
         </div>
 
         <h1 className="text-5xl md:text-7xl font-black mb-6 tracking-tight leading-none">
-          <span className="title-gradient">Pull-Up</span><br />
-          <span className="text-[#ff477e] pink-glow">Mastery</span>
+          <span className="title-gradient">{programName.split(' ').slice(0, -1).join(' ') || programName}</span><br />
+          <span className="text-[#ff477e] pink-glow">{programName.split(' ').slice(-1)[0]}</span>
         </h1>
 
         <p className="text-[#94a3b8] text-xl max-w-xl leading-relaxed font-medium">
-          A definitive {totalWeeks}-week progression from assisted reps to unassisted dominance.
+          {programDescription}
         </p>
       </motion.header>
 
@@ -60,27 +77,27 @@ export default function Home() {
             <div className="flex items-center justify-between mb-3 px-1">
               <span className="text-[10px] text-slate-500 font-black uppercase tracking-[0.2em]">Overall Program Mastery</span>
               <span className="text-sm font-black text-[#ff477e] pink-glow">
-                {Math.round((completedWorkouts.length / effectiveProgram.length) * 100)}%
+                {Math.round((completedWorkoutIds.length / effectiveProgram.length) * 100)}%
               </span>
             </div>
             <div className="h-2 bg-slate-950/50 rounded-full overflow-hidden border border-slate-800/50">
               <motion.div
                 initial={{ width: 0 }}
-                animate={{ width: `${(completedWorkouts.length / effectiveProgram.length) * 100}%` }}
+                animate={{ width: `${(completedWorkoutIds.length / effectiveProgram.length) * 100}%` }}
                 transition={{ duration: 1, ease: "easeOut" }}
-                className="h-full bg-gradient-to-r from-[#ff477e] to-[#ff9eb5] shadow-[0_0_15px_rgba(255,71,126,0.3)]"
+                className="h-full bg-linear-to-r from-[#ff477e] to-[#ff9eb5] shadow-[0_0_15px_rgba(255,71,126,0.3)]"
               />
             </div>
           </div>
           <div className="flex gap-8 md:pl-8 md:border-l border-slate-800">
             <div>
               <span className="text-[10px] text-slate-500 font-black uppercase tracking-widest block mb-1">Sessions Done</span>
-              <span className="text-3xl font-black text-white">{completedWorkouts.length}</span>
+              <span className="text-3xl font-black text-white">{completedWorkoutIds.length}</span>
             </div>
             <div>
               <span className="text-[10px] text-slate-500 font-black uppercase tracking-widest block mb-1">Weeks Mastered</span>
               <span className="text-3xl font-black text-white">
-                {allWeeks.filter(w => effectiveProgram.filter(d => d.week === w).every(d => completedWorkouts.includes(d.id))).length}
+                {allWeeks.filter(w => effectiveProgram.filter(d => d.week === w).every(d => completedWorkoutIds.includes(d.id))).length}
               </span>
             </div>
           </div>
@@ -105,7 +122,7 @@ export default function Home() {
             <WeekOverview
               weekNumber={weekNum}
               days={effectiveProgram.filter(d => d.week === weekNum)}
-              completedIds={completedWorkouts}
+              completedIds={completedWorkoutIds}
             />
           </motion.div>
         ))}

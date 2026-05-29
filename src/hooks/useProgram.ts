@@ -4,6 +4,14 @@ import { useState, useEffect } from 'react';
 import { PROGRAM, WorkoutDay } from '@/data/program';
 import { ProgramUpdate } from '@/lib/analysisSchema';
 
+export type ProgramMeta = {
+    id: number;
+    name: string;
+    description: string;
+    is_active: boolean;
+    workout_count: number;
+};
+
 type ExerciseOverride = {
     reps?: string;
     sets?: number;
@@ -19,24 +27,31 @@ export function useProgram() {
     const [baseProgram, setBaseProgram] = useState<WorkoutDay[]>(PROGRAM);
     const [storedUpdates, setStoredUpdates] = useState<StoredUpdates>({});
     const [isLoaded, setIsLoaded] = useState(false);
+    const [allPrograms, setAllPrograms] = useState<ProgramMeta[]>([]);
+    const [activeProgramId, setActiveProgramId] = useState<number | null>(null);
 
     useEffect(() => {
         (async () => {
             try {
-                const [programRes, overridesRes] = await Promise.all([
+                const [programRes, overridesRes, programsRes] = await Promise.all([
                     fetch('/api/programs/active'),
                     fetch('/api/program'),
+                    fetch('/api/programs'),
                 ]);
-                const programData: WorkoutDay[] = await programRes.json();
+                const programData = await programRes.json();
                 const overridesData = await overridesRes.json();
+                const programsData: ProgramMeta[] = await programsRes.json();
 
-                if (programData.length > 0) {
-                    setBaseProgram(programData);
+                if (programData.workouts?.length > 0) {
+                    setBaseProgram(programData.workouts);
                 }
-
+                if (programData.id) {
+                    setActiveProgramId(programData.id);
+                }
                 if (overridesData.overrides) {
                     setStoredUpdates(overridesData.overrides);
                 }
+                setAllPrograms(programsData);
             } catch (e) {
                 console.error('Failed to load program updates', e);
             }
@@ -87,8 +102,17 @@ export function useProgram() {
         fetch('/api/program', {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ overrides: newStoredUpdates }),
+            body: JSON.stringify({ programId: activeProgramId, overrides: newStoredUpdates }),
         }).catch(e => console.error('Failed to save program updates', e));
+    };
+
+    const switchProgram = async (programId: number) => {
+        await fetch('/api/programs/active', {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ programId }),
+        });
+        window.location.reload();
     };
 
     const hasStoredUpdates = Object.keys(storedUpdates).length > 0;
@@ -103,5 +127,8 @@ export function useProgram() {
         applyUpdates,
         hasStoredUpdates,
         isAICoachUpdated,
+        allPrograms,
+        activeProgramId,
+        switchProgram,
     };
 }

@@ -2,20 +2,43 @@ import { NextResponse } from 'next/server';
 import { sql, initDb } from '@/lib/db';
 import { auth } from '@/lib/auth/server';
 
-const EMPTY: { completedWorkouts: string[]; logs: Record<string, unknown>; notes: Record<string, unknown> } = {
-    completedWorkouts: [],
-    logs: {},
-    notes: {},
-};
+const EMPTY = { completedWorkouts: [], logs: {}, notes: {} };
 
-export async function GET() {
+export async function GET(request: Request) {
     try {
         const { data: session } = await auth.getSession();
         if (!session?.user?.id) return NextResponse.json(EMPTY, { status: 401 });
         const userId = session.user.id;
 
         await initDb();
-        const rows = await sql`SELECT completed_workouts, logs, notes FROM workout_history WHERE user_id = ${userId}`;
+
+        // Resolve programId from query param or active enrollment
+        const { searchParams } = new URL(request.url);
+        const programIdParam = searchParams.get('programId');
+        let programId: number | null = programIdParam ? parseInt(programIdParam) : null;
+
+        if (!programId) {
+            const enrollment = await sql`
+                SELECT program_id FROM user_program_enrollments
+                WHERE user_id = ${userId} AND status = 'active'
+                LIMIT 1
+            `;
+            if (enrollment.length > 0) {
+                programId = enrollment[0].program_id;
+            } else {
+                const fallback = await sql`SELECT id FROM programs WHERE is_active = TRUE LIMIT 1`;
+                if (fallback.length > 0) programId = fallback[0].id;
+            }
+        }
+
+        if (!programId) return NextResponse.json(EMPTY);
+
+        const rows = await sql`
+            SELECT completed_workouts, logs, notes
+            FROM workout_history
+            WHERE user_id = ${userId} AND program_id = ${programId}
+        `;
+
         if (rows.length === 0) return NextResponse.json(EMPTY);
         const row = rows[0];
         return NextResponse.json({
@@ -37,13 +60,17 @@ export async function PUT(request: Request) {
 
         await initDb();
         const body = await request.json();
+        const programId: number | undefined = body.programId;
+        if (!programId) return NextResponse.json({ ok: false }, { status: 400 });
+
         const completedWorkouts = body.completedWorkouts ?? [];
         const logs = body.logs ?? {};
         const notes = body.notes ?? {};
+
         await sql`
-            INSERT INTO workout_history (user_id, completed_workouts, logs, notes, updated_at)
-            VALUES (${userId}, ${JSON.stringify(completedWorkouts)}, ${JSON.stringify(logs)}, ${JSON.stringify(notes)}, NOW())
-            ON CONFLICT (user_id) DO UPDATE SET
+            INSERT INTO workout_history (user_id, program_id, completed_workouts, logs, notes, updated_at)
+            VALUES (${userId}, ${programId}, ${JSON.stringify(completedWorkouts)}, ${JSON.stringify(logs)}, ${JSON.stringify(notes)}, NOW())
+            ON CONFLICT (user_id, program_id) DO UPDATE SET
                 completed_workouts = EXCLUDED.completed_workouts,
                 logs = EXCLUDED.logs,
                 notes = EXCLUDED.notes,
