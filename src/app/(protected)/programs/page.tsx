@@ -84,6 +84,12 @@ export default function ProgramsPage() {
         </Link>
         <h1 className="text-4xl font-black tracking-tight text-gray-900">Programs</h1>
         <p className="text-gray-500 text-sm mt-2">Select the program you want to train.</p>
+        <Link
+          href="/programs/build"
+          className="inline-flex items-center gap-2 mt-5 px-5 py-2.5 rounded-2xl bg-green-600 text-white text-xs font-black uppercase tracking-widest hover:bg-green-700 transition-colors shadow-sm"
+        >
+          + Build a Program
+        </Link>
       </motion.div>
 
       {/* Search */}

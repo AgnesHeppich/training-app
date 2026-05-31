@@ -1,5 +1,6 @@
 import { Exercise } from "@/data/program";
 import { AdaptedTarget, SetLog } from "@/hooks/useWorkoutHistory";
+import { isCardioExercise } from "@/lib/repsUtils";
 import { useEffect, useState } from "react";
 import clsx from "clsx";
 
@@ -17,6 +18,7 @@ interface ExerciseItemProps {
 
 export const ExerciseItem = ({ exercise, history, onLogChange, initialLogs, adaptation, isAIAdapted, previousNote, initialNote, onNoteChange }: ExerciseItemProps) => {
     const [isCollapsed, setIsCollapsed] = useState(false);
+    const isCardio = isCardioExercise(exercise.name, exercise.reps);
 
     const currentLogs = initialLogs || Array(exercise.sets).fill({ weight: "", reps: "" });
 
@@ -41,7 +43,10 @@ export const ExerciseItem = ({ exercise, history, onLogChange, initialLogs, adap
         onLogChange(newLogs);
     };
 
-    const isSetComplete = (log: SetLog) => log.weight !== "" && log.reps !== "";
+    const isSetComplete = (log: SetLog) => {
+        if (isCardio) return log.weight !== "";
+        return log.weight !== "" && log.reps !== "";
+    };
 
     return (
         <div className="border border-gray-200 shadow-sm rounded-3xl bg-white p-8 mb-8 transition-all">
@@ -65,14 +70,24 @@ export const ExerciseItem = ({ exercise, history, onLogChange, initialLogs, adap
                     </div>
 
                     <div>
-                        <h3 className="text-2xl font-black text-gray-900 mb-2">{exercise.name}</h3>
+                        <div className="flex items-center gap-2 mb-2">
+                            <h3 className="text-2xl font-black text-gray-900">{exercise.name}</h3>
+                            {isCardio && (
+                                <span className="text-[9px] font-black uppercase tracking-widest text-blue-700 bg-blue-500/10 px-2 py-0.5 rounded-full border border-blue-500/20">
+                                    Cardio
+                                </span>
+                            )}
+                        </div>
                         {!isCollapsed && (
                             <div className="flex flex-col gap-1.5">
                                 <div className="flex items-center gap-4 text-xs">
                                     <span className="text-green-700 bg-green-500/10 px-3 py-1 rounded-lg border border-green-500/20 font-bold uppercase tracking-wider">
-                                        {exercise.sets} Sets
+                                        {exercise.sets} {isCardio ? 'Intervals' : 'Sets'}
                                     </span>
-                                    <span className="text-gray-500 font-medium">Target: <span className="text-gray-900">{adaptation?.adaptedReps ?? exercise.reps}</span> reps</span>
+                                    <span className="text-gray-500 font-medium">
+                                        Target: <span className="text-gray-900">{adaptation?.adaptedReps ?? exercise.reps}</span>
+                                        {!isCardio && ' reps'}
+                                    </span>
                                 </div>
                                 {(adaptation?.isAdapted || isAIAdapted) && (
                                     <div className="flex items-center gap-1.5">
@@ -113,44 +128,67 @@ export const ExerciseItem = ({ exercise, history, onLogChange, initialLogs, adap
                                             {idx + 1}
                                         </span>
 
-                                        <div className="flex-1 grid grid-cols-2 gap-4">
-                                            <div className="relative group">
-                                                <input
-                                                    type="text"
-                                                    placeholder={prevSet?.weight || "0"}
-                                                    value={log.weight}
-                                                    onChange={(e) => handleChange(idx, 'weight', e.target.value)}
-                                                    className={clsx(
-                                                        "w-full text-center font-bold bg-gray-50 border border-gray-200 text-gray-900 rounded-2xl p-4 outline-none transition-all placeholder:text-gray-400 focus:border-green-500 focus:ring-4 focus:ring-green-500/10",
-                                                        isSetComplete(log) ? "border-green-300 bg-green-50" : ""
-                                                    )}
-                                                />
-                                                <span className="absolute right-4 top-1/2 -translate-y-1/2 text-[10px] text-gray-400 font-bold uppercase tracking-widest pointer-events-none">
-                                                    kg
-                                                </span>
-                                            </div>
+                                        <div className={clsx("flex-1 grid gap-4", isCardio ? "grid-cols-1" : "grid-cols-2")}>
+                                            {isCardio ? (
+                                                <div className="relative">
+                                                    <input
+                                                        type="text"
+                                                        placeholder={prevSet?.weight || "mm:ss"}
+                                                        value={log.weight}
+                                                        onChange={(e) => handleChange(idx, 'weight', e.target.value)}
+                                                        className={clsx(
+                                                            "w-full text-center font-bold bg-gray-50 border border-gray-200 text-gray-900 rounded-2xl p-4 outline-none transition-all placeholder:text-gray-400 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10",
+                                                            isSetComplete(log) ? "border-blue-300 bg-blue-50" : ""
+                                                        )}
+                                                    />
+                                                    <span className="absolute right-4 top-1/2 -translate-y-1/2 text-[10px] text-gray-400 font-bold uppercase tracking-widest pointer-events-none">
+                                                        time
+                                                    </span>
+                                                </div>
+                                            ) : (
+                                                <>
+                                                    <div className="relative group">
+                                                        <input
+                                                            type="text"
+                                                            placeholder={prevSet?.weight || "0"}
+                                                            value={log.weight}
+                                                            onChange={(e) => handleChange(idx, 'weight', e.target.value)}
+                                                            className={clsx(
+                                                                "w-full text-center font-bold bg-gray-50 border border-gray-200 text-gray-900 rounded-2xl p-4 outline-none transition-all placeholder:text-gray-400 focus:border-green-500 focus:ring-4 focus:ring-green-500/10",
+                                                                isSetComplete(log) ? "border-green-300 bg-green-50" : ""
+                                                            )}
+                                                        />
+                                                        <span className="absolute right-4 top-1/2 -translate-y-1/2 text-[10px] text-gray-400 font-bold uppercase tracking-widest pointer-events-none">
+                                                            kg
+                                                        </span>
+                                                    </div>
 
-                                            <div className="relative group">
-                                                <input
-                                                    type="number"
-                                                    placeholder={prevSet?.reps || "0"}
-                                                    value={log.reps}
-                                                    onChange={(e) => handleChange(idx, 'reps', e.target.value)}
-                                                    className={clsx(
-                                                        "w-full text-center font-bold bg-gray-50 border border-gray-200 text-gray-900 rounded-2xl p-4 outline-none transition-all placeholder:text-gray-400 focus:border-green-500 focus:ring-4 focus:ring-green-500/10",
-                                                        isSetComplete(log) ? "border-green-300 bg-green-50" : ""
-                                                    )}
-                                                />
-                                                <span className="absolute right-4 top-1/2 -translate-y-1/2 text-[10px] text-gray-400 font-bold uppercase tracking-widest pointer-events-none">
-                                                    reps
-                                                </span>
-                                            </div>
+                                                    <div className="relative group">
+                                                        <input
+                                                            type="number"
+                                                            placeholder={prevSet?.reps || "0"}
+                                                            value={log.reps}
+                                                            onChange={(e) => handleChange(idx, 'reps', e.target.value)}
+                                                            className={clsx(
+                                                                "w-full text-center font-bold bg-gray-50 border border-gray-200 text-gray-900 rounded-2xl p-4 outline-none transition-all placeholder:text-gray-400 focus:border-green-500 focus:ring-4 focus:ring-green-500/10",
+                                                                isSetComplete(log) ? "border-green-300 bg-green-50" : ""
+                                                            )}
+                                                        />
+                                                        <span className="absolute right-4 top-1/2 -translate-y-1/2 text-[10px] text-gray-400 font-bold uppercase tracking-widest pointer-events-none">
+                                                            reps
+                                                        </span>
+                                                    </div>
+                                                </>
+                                            )}
                                         </div>
                                     </div>
 
                                     {prevSet && (prevSet.weight || prevSet.reps) && (
                                         <div className="text-[10px] text-gray-400 text-right pr-6 font-bold uppercase tracking-widest">
-                                            Last Time: <span className="text-green-700">{prevSet.weight}kg</span> × <span className="text-green-700">{prevSet.reps}</span>
+                                            {isCardio
+                                                ? <>Last Time: <span className="text-blue-600">{prevSet.weight}</span></>
+                                                : <>Last Time: <span className="text-green-700">{prevSet.weight}kg</span> × <span className="text-green-700">{prevSet.reps}</span></>
+                                            }
                                         </div>
                                     )}
                                 </div>
@@ -174,7 +212,6 @@ export const ExerciseItem = ({ exercise, history, onLogChange, initialLogs, adap
                             className="w-full text-sm bg-gray-50 border border-gray-200 text-gray-900 rounded-2xl px-4 py-3 outline-none transition-all placeholder:text-gray-400 focus:border-gray-300 focus:ring-4 focus:ring-gray-200/50 resize-none"
                         />
                     </div>
-
                 </>
             )}
         </div>
