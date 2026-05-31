@@ -25,6 +25,7 @@ export default function WorkoutPage() {
     const workoutId = params.slug as string;
     const workout = getEffectiveProgram().find(d => d.id === workoutId);
     const isMounted = useRef(false);
+    const saveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
     useEffect(() => {
         if (isLoaded && workoutId) {
@@ -38,8 +39,14 @@ export default function WorkoutPage() {
 
     useEffect(() => {
         if (isMounted.current && workoutId && Object.keys(currentLogs).length > 0) {
-            saveWorkoutLog(workoutId, currentLogs, false, currentNotes);
+            if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
+            saveTimerRef.current = setTimeout(() => {
+                saveWorkoutLog(workoutId, currentLogs, false, currentNotes);
+            }, 2000);
         }
+        return () => {
+            if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
+        };
     }, [currentLogs, currentNotes, workoutId]);
 
     useEffect(() => {
