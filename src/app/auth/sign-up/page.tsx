@@ -13,7 +13,7 @@ export default function SignUpPage() {
                 <div className="mb-10 text-center">
                     <div className="inline-flex items-center gap-2 py-1 px-3 rounded-lg bg-green-500/10 border border-green-500/20 text-[10px] font-bold tracking-[0.2em] text-green-700 mb-6 uppercase">
                         <span className="w-1.5 h-1.5 rounded-full bg-green-600 animate-pulse" />
-                        Antigravity
+                        Workout buddy
                     </div>
                     <h1 className="text-4xl font-black tracking-tight text-gray-900 mb-2">
                         Start your journey

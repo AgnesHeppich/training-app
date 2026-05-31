@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Antigravity",
+  title: "Workout Buddy",
   description: "Your strength training tracker",
   icons: {
     icon: "/icon.png",
@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: "Antigravity",
+    title: "Workout Buddy",
   },
 };
 

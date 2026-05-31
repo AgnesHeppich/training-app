@@ -27,10 +27,10 @@ export default function Home() {
   const allWeeks = Array.from(new Set(effectiveProgram.map(d => d.week))).sort((a, b) => a - b);
   const totalWeeks = allWeeks.length;
   const activeProgram = allPrograms.find(p => p.id === activeProgramId);
-  const programName = activeProgram?.name ?? 'Antigravity';
+  const programName = activeProgram?.name ?? 'Workout Buddy';
   const programDescription = activeProgram?.description ?? `A definitive ${totalWeeks}-week progression`;
   return (
-    <div className="container mx-auto px-4 py-16 max-w-5xl">
+    <div className="container mx-auto px-4 py-14 max-w-5xl">
       <motion.header
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -39,7 +39,7 @@ export default function Home() {
         <div className="flex items-center justify-between mb-6">
           <div className="inline-flex items-center gap-2 py-1 px-3 rounded-lg bg-green-500/10 border border-green-500/20 text-[10px] font-bold tracking-[0.2em] text-green-700 uppercase">
             <span className="w-1.5 h-1.5 rounded-full bg-green-600 animate-pulse" />
-            Zero to Hero
+            Workout buddy
           </div>
 
           <NavMenu />
@@ -120,29 +120,6 @@ export default function Home() {
 
       <footer className="mt-24 text-center text-gray-400 text-[10px] pb-12 font-black uppercase tracking-[0.3em]">
         <p>Your Journey Starts Here</p>
-        <SignOutButton />
-        <button
-          onClick={async () => {
-            const [histRes, progRes] = await Promise.all([fetch('/api/history'), fetch('/api/program')]);
-            const historyData = await histRes.json();
-            const programData = await progRes.json();
-            const exportData = {
-              exportedAt: new Date().toISOString(),
-              workoutHistory: historyData,
-              programCustomizations: programData.overrides,
-            };
-            const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `antigravity-${new Date().toISOString().split('T')[0]}.json`;
-            a.click();
-            URL.revokeObjectURL(url);
-          }}
-          className="mt-6 inline-block text-gray-400 hover:text-gray-600 transition-colors cursor-pointer"
-        >
-          Export Data
-        </button>
       </footer>
     </div>
   );

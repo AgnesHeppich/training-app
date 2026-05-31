@@ -1,6 +1,6 @@
 {
-    "name": "Antigravity",
-    "short_name": "Antigravity",
+    "name": "Workout Buddy",
+    "short_name": "Workout Buddy",
     "description": "Your strength training tracker",
     "start_url": "/",
     "display": "standalone",
