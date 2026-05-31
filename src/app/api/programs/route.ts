@@ -16,11 +16,13 @@ export async function GET() {
                 p.description,
                 p.is_active,
                 p.created_at,
+                (p.created_by IS NOT NULL) AS is_generated,
                 COUNT(DISTINCT wd.id)::int AS workout_count
             FROM programs p
             LEFT JOIN workout_days wd ON wd.program_id = p.id
+            WHERE p.created_by IS NULL OR p.created_by = ${userId}
             GROUP BY p.id
-            ORDER BY p.created_at ASC
+            ORDER BY p.created_by IS NOT NULL ASC, p.created_at ASC
         `;
 
         if (!userId) return NextResponse.json(rows);

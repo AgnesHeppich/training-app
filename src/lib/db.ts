@@ -1,6 +1,11 @@
 import { neon } from '@neondatabase/serverless';
 import { PROGRAM } from '@/data/program';
 import { PUSHUP_PROGRAM, PUSHUP_PROGRAM_NAME, PUSHUP_PROGRAM_DESCRIPTION } from '@/data/program-pushup';
+import {
+    BEGINNER_STRENGTH, BEGINNER_STRENGTH_NAME, BEGINNER_STRENGTH_DESCRIPTION,
+    COUCH_TO_5K, COUCH_TO_5K_NAME, COUCH_TO_5K_DESCRIPTION,
+    CORE_MOBILITY, CORE_MOBILITY_NAME, CORE_MOBILITY_DESCRIPTION,
+} from '@/data/programs-general';
 import type { WorkoutDay } from '@/data/program';
 
 export const sql = neon(process.env.DATABASE_URL!);
@@ -122,6 +127,21 @@ async function seedPrograms() {
     const pushupExists = await sql`SELECT id FROM programs WHERE name = ${PUSHUP_PROGRAM_NAME} LIMIT 1`;
     if (pushupExists.length === 0) {
         await seedProgramData(PUSHUP_PROGRAM_NAME, PUSHUP_PROGRAM_DESCRIPTION, false, PUSHUP_PROGRAM);
+    }
+
+    const fbsExists = await sql`SELECT id FROM programs WHERE name = ${BEGINNER_STRENGTH_NAME} LIMIT 1`;
+    if (fbsExists.length === 0) {
+        await seedProgramData(BEGINNER_STRENGTH_NAME, BEGINNER_STRENGTH_DESCRIPTION, false, BEGINNER_STRENGTH);
+    }
+
+    const c5kExists = await sql`SELECT id FROM programs WHERE name = ${COUCH_TO_5K_NAME} LIMIT 1`;
+    if (c5kExists.length === 0) {
+        await seedProgramData(COUCH_TO_5K_NAME, COUCH_TO_5K_DESCRIPTION, false, COUCH_TO_5K);
+    }
+
+    const mobExists = await sql`SELECT id FROM programs WHERE name = ${CORE_MOBILITY_NAME} LIMIT 1`;
+    if (mobExists.length === 0) {
+        await seedProgramData(CORE_MOBILITY_NAME, CORE_MOBILITY_DESCRIPTION, false, CORE_MOBILITY);
     }
 }
 
