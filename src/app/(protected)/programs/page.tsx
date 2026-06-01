@@ -1,8 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useProgram } from '@/hooks/useProgram';
-import { useWorkoutHistory } from '@/hooks/useWorkoutHistory';
+import { useWorkoutData } from '@/contexts/WorkoutDataContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import type { ProgramMeta } from '@/hooks/useProgram';
@@ -16,20 +15,20 @@ interface ConfirmState {
 export default function ProgramsPage() {
   const {
     getEffectiveProgram,
-    isLoaded: programLoaded,
+    isLoaded,
     allPrograms,
     activeProgramId,
     switchProgram,
-  } = useProgram();
+    completedWorkoutIds,
+  } = useWorkoutData();
 
   const effectiveProgram = getEffectiveProgram();
-  const { completedWorkoutIds, isLoaded: historyLoaded } = useWorkoutHistory(effectiveProgram, activeProgramId);
 
   const [search, setSearch] = useState('');
   const [confirmState, setConfirmState] = useState<ConfirmState | null>(null);
   const [switching, setSwitching] = useState(false);
 
-  if (!programLoaded || !historyLoaded) {
+  if (!isLoaded) {
     return (
       <div className="min-h-screen flex items-center justify-center text-green-600 font-bold text-xl animate-pulse">
         Loading programs...

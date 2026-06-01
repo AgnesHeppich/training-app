@@ -1,7 +1,6 @@
 'use client';
 
-import { useWorkoutHistory } from "@/hooks/useWorkoutHistory";
-import { useProgram } from "@/hooks/useProgram";
+import { useWorkoutData } from "@/contexts/WorkoutDataContext";
 import { WeekOverview } from "@/components/WeekOverview";
 import { PerformanceAnalysis } from "@/components/PerformanceAnalysis";
 import { NavMenu } from "@/components/NavMenu";
@@ -9,11 +8,10 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 
 export default function Home() {
-  const { getEffectiveProgram, applyUpdates, isLoaded: programLoaded, allPrograms, activeProgramId } = useProgram();
+  const { getEffectiveProgram, applyUpdates, isLoaded, allPrograms, activeProgramId, completedWorkoutIds, getPerformanceSummary, getLastSessions, getUpcomingSessions } = useWorkoutData();
   const effectiveProgram = getEffectiveProgram();
-  const { completedWorkoutIds, isLoaded, getPerformanceSummary, getLastSessions, getUpcomingSessions } = useWorkoutHistory(effectiveProgram, activeProgramId);
 
-  if (!isLoaded || !programLoaded) {
+  if (!isLoaded) {
     return (
       <div className="min-h-screen flex items-center justify-center text-green-600 font-bold text-xl animate-pulse">
         Loading your gains...

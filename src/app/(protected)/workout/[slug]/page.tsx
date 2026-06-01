@@ -1,8 +1,8 @@
 'use client';
 
 import { useParams, useRouter } from "next/navigation";
-import { useWorkoutHistory, WorkoutLog } from "@/hooks/useWorkoutHistory";
-import { useProgram } from "@/hooks/useProgram";
+import { WorkoutLog } from "@/hooks/useWorkoutHistory";
+import { useWorkoutData } from "@/contexts/WorkoutDataContext";
 import { ExerciseItem } from "@/components/ExerciseItem";
 import { useState, useEffect, useRef } from "react";
 import confetti from "canvas-confetti";
@@ -12,8 +12,7 @@ import { motion } from "framer-motion";
 export default function WorkoutPage() {
     const params = useParams();
     const router = useRouter();
-    const { getEffectiveProgram, isAICoachUpdated, activeProgramId } = useProgram();
-    const { isLoaded, getPreviousStats, getPreviousNote, getAdaptedTarget, saveWorkoutLog, getLogForWorkout, getNotesForWorkout } = useWorkoutHistory(getEffectiveProgram(), activeProgramId);
+    const { getEffectiveProgram, isAICoachUpdated, isLoaded, getPreviousStats, getPreviousNote, getAdaptedTarget, saveWorkoutLog, getLogForWorkout, getNotesForWorkout } = useWorkoutData();
     const [currentLogs, setCurrentLogs] = useState<WorkoutLog>({});
     const [currentNotes, setCurrentNotes] = useState<{ [exerciseName: string]: string }>({});
     const [sessionNote, setSessionNote] = useState('');
