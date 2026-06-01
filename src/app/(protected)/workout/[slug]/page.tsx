@@ -154,6 +154,7 @@ export default function WorkoutPage() {
                     >
                         <ExerciseItem
                             exercise={exercise}
+                            workoutId={workoutId}
                             history={getPreviousStats(exercise.name, workoutId) || undefined}
                             initialLogs={currentLogs[exercise.name]}
                             adaptation={getAdaptedTarget(exercise.name, exercise.reps, workoutId)}

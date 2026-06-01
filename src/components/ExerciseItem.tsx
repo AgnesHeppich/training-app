@@ -6,6 +6,7 @@ import clsx from "clsx";
 
 interface ExerciseItemProps {
     exercise: Exercise;
+    workoutId: string;
     history?: SetLog[];
     onLogChange: (logs: SetLog[]) => void;
     initialLogs?: SetLog[];
@@ -16,11 +17,31 @@ interface ExerciseItemProps {
     onNoteChange: (note: string) => void;
 }
 
-export const ExerciseItem = ({ exercise, history, onLogChange, initialLogs, adaptation, isAIAdapted, previousNote, initialNote, onNoteChange }: ExerciseItemProps) => {
-    const [isCollapsed, setIsCollapsed] = useState(false);
+export const ExerciseItem = ({ exercise, workoutId, history, onLogChange, initialLogs, adaptation, isAIAdapted, previousNote, initialNote, onNoteChange }: ExerciseItemProps) => {
+    const [isCollapsed, setIsCollapsed] = useState(() => {
+        if (typeof window === 'undefined') return false;
+        try {
+            const stored = localStorage.getItem(`workout-checked-${workoutId}`);
+            if (stored) {
+                const map = JSON.parse(stored);
+                return map[exercise.name] ?? false;
+            }
+        } catch {}
+        return false;
+    });
     const isCardio = isCardioExercise(exercise.name, exercise.reps);
 
     const currentLogs = initialLogs || Array(exercise.sets).fill({ weight: "", reps: "" });
+
+    useEffect(() => {
+        try {
+            const key = `workout-checked-${workoutId}`;
+            const stored = localStorage.getItem(key);
+            const map = stored ? JSON.parse(stored) : {};
+            map[exercise.name] = isCollapsed;
+            localStorage.setItem(key, JSON.stringify(map));
+        } catch {}
+    }, [isCollapsed, workoutId, exercise.name]);
 
     useEffect(() => {
         if (!initialLogs) {
