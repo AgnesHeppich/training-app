@@ -23,12 +23,6 @@ export async function GET() {
             if (enrollment.length > 0) programId = enrollment[0].program_id;
         }
 
-        // Fall back to the globally active program if no enrollment found
-        if (!programId) {
-            const fallback = await sql`SELECT id FROM programs WHERE is_active = TRUE LIMIT 1`;
-            if (fallback.length > 0) programId = fallback[0].id;
-        }
-
         if (!programId) {
             return NextResponse.json({ id: null, name: null, workouts: [] });
         }

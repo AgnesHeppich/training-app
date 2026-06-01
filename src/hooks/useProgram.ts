@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { PROGRAM, WorkoutDay } from '@/data/program';
+import { WorkoutDay } from '@/data/program';
 import { ProgramUpdate } from '@/lib/analysisSchema';
 
 export type ProgramMeta = {
@@ -25,7 +25,7 @@ type StoredUpdates = {
 };
 
 export function useProgram() {
-    const [baseProgram, setBaseProgram] = useState<WorkoutDay[]>(PROGRAM);
+    const [baseProgram, setBaseProgram] = useState<WorkoutDay[]>([]);
     const [storedUpdates, setStoredUpdates] = useState<StoredUpdates>({});
     const [isLoaded, setIsLoaded] = useState(false);
     const [allPrograms, setAllPrograms] = useState<ProgramMeta[]>([]);
@@ -43,9 +43,7 @@ export function useProgram() {
                 const overridesData = await overridesRes.json();
                 const programsData: ProgramMeta[] = await programsRes.json();
 
-                if (programData.workouts?.length > 0) {
-                    setBaseProgram(programData.workouts);
-                }
+                setBaseProgram(programData.workouts ?? []);
                 if (programData.id) {
                     setActiveProgramId(programData.id);
                 }

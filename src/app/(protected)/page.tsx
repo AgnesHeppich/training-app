@@ -4,9 +4,9 @@ import { useWorkoutHistory } from "@/hooks/useWorkoutHistory";
 import { useProgram } from "@/hooks/useProgram";
 import { WeekOverview } from "@/components/WeekOverview";
 import { PerformanceAnalysis } from "@/components/PerformanceAnalysis";
-import { SignOutButton } from "@/components/SignOutButton";
 import { NavMenu } from "@/components/NavMenu";
 import { motion } from "framer-motion";
+import Link from "next/link";
 
 export default function Home() {
   const { getEffectiveProgram, applyUpdates, isLoaded: programLoaded, allPrograms, activeProgramId } = useProgram();
@@ -17,6 +17,22 @@ export default function Home() {
     return (
       <div className="min-h-screen flex items-center justify-center text-green-600 font-bold text-xl animate-pulse">
         Loading your gains...
+      </div>
+    );
+  }
+
+  if (!activeProgramId) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center gap-6 px-4">
+        <NavMenu />
+        <h1 className="text-3xl font-black text-gray-900 tracking-tight">No program selected</h1>
+        <p className="text-gray-500 text-sm">Pick a program to get started.</p>
+        <Link
+          href="/programs"
+          className="px-6 py-3 rounded-2xl bg-green-600 text-white text-xs font-black uppercase tracking-widest hover:bg-green-700 transition-colors"
+        >
+          Browse Programs
+        </Link>
       </div>
     );
   }
