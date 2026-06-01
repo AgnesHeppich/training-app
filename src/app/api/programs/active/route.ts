@@ -10,8 +10,6 @@ export async function GET() {
         const { data: session } = await auth.getSession();
         const userId = session?.user?.id ?? null;
 
-        // Resolve which program this user should see.
-        // Priority: active enrollment → globally is_active fallback.
         let programId: number | null = null;
 
         if (userId) {

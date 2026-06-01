@@ -23,12 +23,7 @@ export async function GET(request: Request) {
                 WHERE user_id = ${userId} AND status = 'active'
                 LIMIT 1
             `;
-            if (enrollment.length > 0) {
-                programId = enrollment[0].program_id;
-            } else {
-                const fallback = await sql`SELECT id FROM programs WHERE is_active = TRUE LIMIT 1`;
-                if (fallback.length > 0) programId = fallback[0].id;
-            }
+            if (enrollment.length > 0) programId = enrollment[0].program_id;
         }
 
         if (!programId) return NextResponse.json(EMPTY);

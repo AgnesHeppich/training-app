@@ -2,10 +2,14 @@ import { openai } from '@ai-sdk/openai';
 import { generateText, Output } from 'ai';
 import { NextRequest } from 'next/server';
 import { AnalysisSchema } from '@/lib/analysisSchema';
+import { auth } from '@/lib/auth/server';
 
 export const maxDuration = 30;
 
 export async function POST(req: NextRequest) {
+    const { data: session } = await auth.getSession();
+    if (!session?.user?.id) return Response.json({ error: 'Unauthorized' }, { status: 401 });
+
     const { summary, lastSessions, upcomingSessions } = await req.json();
 
     const prompt = `You are a personal strength coach analyzing an athlete's performance data.

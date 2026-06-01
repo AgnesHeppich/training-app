@@ -8,7 +8,6 @@ export type ProgramMeta = {
     id: number;
     name: string;
     description: string;
-    is_active: boolean;
     is_generated: boolean;
     workout_count: number;
 };

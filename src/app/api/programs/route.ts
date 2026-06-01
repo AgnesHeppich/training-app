@@ -14,7 +14,6 @@ export async function GET() {
                 p.id,
                 p.name,
                 p.description,
-                p.is_active,
                 p.created_at,
                 (p.created_by IS NOT NULL) AS is_generated,
                 COUNT(DISTINCT wd.id)::int AS workout_count
