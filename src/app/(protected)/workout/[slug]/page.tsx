@@ -4,6 +4,7 @@ import { useParams, useRouter } from "next/navigation";
 import { WorkoutLog } from "@/hooks/useWorkoutHistory";
 import { useWorkoutData } from "@/contexts/WorkoutDataContext";
 import { ExerciseItem } from "@/components/ExerciseItem";
+import { TimerModal } from "@/components/TimerModal";
 import { useState, useEffect, useRef } from "react";
 import confetti from "canvas-confetti";
 import Link from "next/link";
@@ -188,6 +189,8 @@ export default function WorkoutPage() {
                     <p className="text-sm text-gray-700 leading-relaxed">{sessionSummary}</p>
                 </div>
             )}
+
+            <TimerModal />
 
             <div className={`mt-6 mb-24 sticky bottom-8 z-20 transition-all duration-500 ${showButton ? 'translate-y-0 opacity-100' : 'translate-y-24 opacity-0 pointer-events-none'}`}>
                 {!sessionSummary && (
