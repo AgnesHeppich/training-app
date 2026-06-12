@@ -86,12 +86,20 @@ export default function ProgramsPage() {
         </Link>
         <h1 className="text-4xl font-black tracking-tight text-gray-900">Programs</h1>
         <p className="text-gray-500 text-sm mt-2">Select the program you want to train.</p>
-        <Link
-          href="/programs/build"
-          className="inline-flex items-center gap-2 mt-5 px-5 py-2.5 rounded-2xl bg-green-600 text-white text-xs font-black uppercase tracking-widest hover:bg-green-700 transition-colors shadow-sm"
-        >
-          + Build a Program
-        </Link>
+        <div className="flex flex-wrap gap-3 mt-5">
+          <Link
+            href="/programs/build"
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-green-600 text-white text-xs font-black uppercase tracking-widest hover:bg-green-700 transition-colors shadow-sm"
+          >
+            + Build a Program
+          </Link>
+          <Link
+            href="/programs/import"
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-white border border-gray-200 text-gray-700 text-xs font-black uppercase tracking-widest hover:border-gray-300 hover:bg-gray-50 transition-colors shadow-sm"
+          >
+            ↑ Import PDF
+          </Link>
+        </div>
       </motion.div>
 
       {/* Search */}
