@@ -19,6 +19,19 @@ const ITEMS = [
     ),
   },
   {
+    href: '/timer',
+    label: 'Timer',
+    description: 'Stopwatch and interval timer',
+    icon: (
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="12" cy="13" r="8" />
+        <path d="M12 9v4l2 2" />
+        <path d="M9.5 2.5h5" />
+        <path d="M12 2.5v2" />
+      </svg>
+    ),
+  },
+  {
     href: '/profile',
     label: 'Profile',
     description: 'Account details and settings',
