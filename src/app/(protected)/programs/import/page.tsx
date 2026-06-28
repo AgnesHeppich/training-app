@@ -79,12 +79,12 @@ export default function ImportProgramPage() {
                         onDragLeave={() => setDragging(false)}
                         onDrop={handleDrop}
                         onClick={() => !loading && fileInputRef.current?.click()}
-                        className={`relative flex flex-col items-center justify-center gap-3 rounded-2xl border-2 border-dashed px-6 py-12 transition-all cursor-pointer ${
+                        className={`relative flex flex-col items-center justify-center gap-3 rounded-2xl px-6 py-12 transition-all cursor-pointer ${
                             dragging
-                                ? 'border-green-500 bg-green-50'
+                                ? 'ring-2 ring-green-500 bg-green-50'
                                 : file
-                                    ? 'border-green-400 bg-green-50/60'
-                                    : 'border-gray-200 bg-white hover:border-green-400 hover:bg-gray-50'
+                                    ? 'ring-2 ring-green-400 bg-green-50/60'
+                                    : 'bg-white hover:ring-2 hover:ring-green-400 hover:bg-gray-50'
                         } ${loading ? 'pointer-events-none opacity-50' : ''}`}
                     >
                         {file ? (
@@ -132,7 +132,7 @@ export default function ImportProgramPage() {
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.1 }}
-                    className="bg-gray-50 border border-gray-200 rounded-2xl px-5 py-4"
+                    className="bg-gray-50 rounded-2xl px-5 py-4"
                 >
                     <p className="text-xs text-gray-500">
                         Any training plan format works — we'll use AI to interpret the exercises, sets, reps, and schedule. The imported program will become your active program and supports logging, history, and AI coaching.
@@ -154,7 +154,7 @@ export default function ImportProgramPage() {
                     <button
                         onClick={handleImport}
                         disabled={loading || !file}
-                        className="w-full py-4 rounded-2xl bg-green-600 text-white text-sm font-black uppercase tracking-widest hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
+                        className="w-full py-4 rounded-2xl bg-green-600 text-white text-sm font-black uppercase tracking-widest hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                         {loading ? (
                             <span className="flex items-center justify-center gap-3">

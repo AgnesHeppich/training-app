@@ -121,7 +121,7 @@ export function ProgramSwitcher({
                             animate={{ x: 0 }}
                             exit={{ x: '100%' }}
                             transition={{ type: 'spring', damping: 28, stiffness: 280 }}
-                            className="fixed right-0 top-0 h-full w-full max-w-sm bg-[#0a0a0f] border-l border-slate-800/80 z-50 flex flex-col shadow-2xl"
+                            className="fixed right-0 top-0 h-full w-full max-w-sm bg-[#0a0a0f] border-l border-slate-800/80 z-50 flex flex-col"
                         >
                             {/* Header */}
                             <div className="flex items-center justify-between px-6 pt-8 pb-6 border-b border-slate-800/60">
@@ -245,7 +245,7 @@ export function ProgramSwitcher({
                             animate={{ scale: 1, opacity: 1 }}
                             exit={{ scale: 0.92, opacity: 0 }}
                             transition={{ type: 'spring', damping: 24, stiffness: 320 }}
-                            className="relative bg-[#0d0d14] border border-slate-700/60 rounded-3xl p-8 w-full max-w-sm shadow-2xl"
+                            className="relative bg-[#0d0d14] border border-slate-700/60 rounded-3xl p-8 w-full max-w-sm"
                         >
                             <div className="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center mb-6">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-6 h-6 text-amber-400">

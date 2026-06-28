@@ -33,7 +33,7 @@ Design the full ${weeks}-week program and follow these rules:
 
 NAMING AND STRUCTURE:
 - Name the program short and descriptively (e.g. "8-Week Pull-Up Builder")
-- Write 1-2 sentences for the description
+- The description must be at most two sentences — no more. Keep it brief and focused on the program goal.
 - dayLabel must be a day of the week (e.g. "Monday", "Wednesday", "Friday")
 - Distribute sessions evenly across the week
 - Include 4-8 exercises per session (including warmup)

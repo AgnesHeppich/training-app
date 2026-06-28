@@ -101,4 +101,60 @@ describe('useWorkoutHistory', () => {
         const suggestionsFor1 = result.current.getPreviousStats(exerciseName, workout1Id);
         expect(suggestionsFor1).toBeNull();
     });
+
+    it('should not carry forward notes from older sessions when the last session had none', () => {
+        const { result } = renderHook(() => useWorkoutHistory());
+
+        const exerciseName = "Assisted Pull-ups (light band)";
+        const workout1Id = "w1-d4";
+        const workout2Id = "w2-d4";
+        const workout3Id = "w3-d1";
+
+        const log1 = {
+            [exerciseName]: [{ weight: "10", reps: "8" }],
+        };
+        const log2 = {
+            [exerciseName]: [{ weight: "12", reps: "6" }],
+        };
+
+        act(() => {
+            result.current.saveWorkoutLog(workout1Id, log1, true, {
+                [exerciseName]: "it was very hard today",
+            });
+        });
+
+        act(() => {
+            result.current.saveWorkoutLog(workout2Id, log2, true);
+        });
+
+        expect(result.current.getPreviousNote(exerciseName, workout3Id)).toBeNull();
+        expect(result.current.getPreviousStats(exerciseName, workout3Id)).toEqual(log2[exerciseName]);
+    });
+
+    it('should show the note from the most recent prior session when it exists', () => {
+        const { result } = renderHook(() => useWorkoutHistory());
+
+        const exerciseName = "Assisted Pull-ups (light band)";
+        const workout1Id = "w1-d4";
+        const workout2Id = "w2-d4";
+        const workout3Id = "w3-d1";
+
+        const log = {
+            [exerciseName]: [{ weight: "10", reps: "8" }],
+        };
+
+        act(() => {
+            result.current.saveWorkoutLog(workout1Id, log, true, {
+                [exerciseName]: "old note",
+            });
+        });
+
+        act(() => {
+            result.current.saveWorkoutLog(workout2Id, log, true, {
+                [exerciseName]: "recent note",
+            });
+        });
+
+        expect(result.current.getPreviousNote(exerciseName, workout3Id)).toBe("recent note");
+    });
 });

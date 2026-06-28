@@ -64,7 +64,7 @@ export const WeekOverview = ({
 
             {!isCollapsed && (
                 <div
-                    className="h-1.5 bg-gray-200 rounded-full overflow-hidden cursor-pointer mt-1.5 mb-4"
+                    className="h-1.5 bg-app-track rounded-full overflow-hidden cursor-pointer mt-1.5 mb-4"
                     onClick={() => setIsCollapsed(!isCollapsed)}
                 >
                     <div

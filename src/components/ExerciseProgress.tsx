@@ -139,7 +139,7 @@ function LineChart({
 
             {interactive && hovered !== null && (
                 <div
-                    className="pointer-events-none absolute z-10 -translate-x-1/2 rounded-lg bg-gray-900 px-2.5 py-1.5 text-center shadow-lg"
+                    className="pointer-events-none absolute z-10 -translate-x-1/2 rounded-lg bg-gray-900 px-2.5 py-1.5 text-center"
                     style={{ left: `${(x(hovered) / W) * 100}%`, top: -6, transform: 'translate(-50%, -100%)' }}
                 >
                     <p className="whitespace-nowrap text-[11px] font-black text-white tabular-nums">
@@ -170,7 +170,7 @@ function ExerciseCard({ series }: { series: ExerciseProgressSeries }) {
     const delta = latest !== null && first !== null ? latest - first : null;
 
     return (
-        <div className="rounded-2xl bg-white border border-gray-200 shadow-sm overflow-hidden">
+        <div className="rounded-2xl bg-white overflow-hidden">
             <button
                 onClick={() => setExpanded(e => !e)}
                 className="w-full text-left px-5 pt-4 pb-3 cursor-pointer hover:bg-gray-50/60 transition-colors"
@@ -222,7 +222,7 @@ function ExerciseCard({ series }: { series: ExerciseProgressSeries }) {
                         animate={{ height: 'auto', opacity: 1 }}
                         exit={{ height: 0, opacity: 0 }}
                         transition={{ duration: 0.3, ease: [0.23, 1, 0.32, 1] }}
-                        className="overflow-hidden border-t border-gray-100"
+                        className="overflow-hidden"
                     >
                         <div className="px-5 py-4">
                             {options.length > 1 && (
@@ -251,7 +251,7 @@ function ExerciseCard({ series }: { series: ExerciseProgressSeries }) {
                                         {[...data].reverse().map((d, i) => (
                                             <div
                                                 key={i}
-                                                className="flex items-center justify-between text-[11px] py-1 border-b border-gray-50 last:border-0"
+                                                className="flex items-center justify-between text-[11px] py-1"
                                             >
                                                 <span className="text-gray-500 font-medium">
                                                     Week {d.point.week} · {d.point.dayLabel}
@@ -290,7 +290,7 @@ export function ExerciseProgress({ series }: { series: ExerciseProgressSeries[] 
             </div>
 
             {withData.length === 0 ? (
-                <div className="rounded-2xl bg-white border border-gray-200 shadow-sm px-6 py-8 text-center">
+                <div className="rounded-2xl bg-white px-6 py-8 text-center">
                     <p className="text-sm text-gray-500 font-medium">
                         Complete a session and log your sets to start tracking each exercise over time.
                     </p>

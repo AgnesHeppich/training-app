@@ -302,8 +302,10 @@ export function useWorkoutHistory(program: WorkoutDay[] = PROGRAM, programId: nu
         if (currentIndex <= 0) return null;
         for (const day of program.slice(0, currentIndex).reverse()) {
             if (!completedWorkoutIds.includes(day.id)) continue;
-            const note = data.notes[day.id]?.[exerciseName];
-            if (note) return note;
+            if (!day.exercises.some(e => e.name === exerciseName)) continue;
+            // Only show a note from the most recent prior session with this exercise —
+            // don't carry forward older notes when the last session had none.
+            return data.notes[day.id]?.[exerciseName] ?? null;
         }
         return null;
     };

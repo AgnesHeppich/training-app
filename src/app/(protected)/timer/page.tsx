@@ -65,7 +65,7 @@ function TimeInput({ label, value, onChange }: {
             const m = Math.max(0, Math.min(59, Number(e.target.value)));
             onChange(m * 60 + secs);
           }}
-          className="w-16 text-center text-sm bg-gray-50 border border-gray-200 text-gray-900 rounded-xl px-2 py-2.5 outline-none focus:border-gray-400 focus:ring-2 focus:ring-gray-200"
+          className="w-16 text-center text-sm bg-gray-50 border-0 text-gray-900 rounded-xl px-2 py-2.5 outline-none focus:ring-2 focus:ring-gray-200"
         />
         <span className="text-xs text-gray-400 font-medium">m</span>
         <input
@@ -77,7 +77,7 @@ function TimeInput({ label, value, onChange }: {
             const s = Math.max(0, Math.min(59, Number(e.target.value)));
             onChange(mins * 60 + s);
           }}
-          className="w-16 text-center text-sm bg-gray-50 border border-gray-200 text-gray-900 rounded-xl px-2 py-2.5 outline-none focus:border-gray-400 focus:ring-2 focus:ring-gray-200"
+          className="w-16 text-center text-sm bg-gray-50 border-0 text-gray-900 rounded-xl px-2 py-2.5 outline-none focus:ring-2 focus:ring-gray-200"
         />
         <span className="text-xs text-gray-400 font-medium">s</span>
       </div>
@@ -127,7 +127,7 @@ export default function TimerPage() {
               onClick={() => timer.setMode(m)}
               className={`flex-1 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${
                 timer.mode === m
-                  ? 'bg-white text-gray-900 shadow-sm'
+                  ? 'bg-white text-gray-900'
                   : 'text-gray-500 hover:text-gray-700'
               }`}
             >
@@ -150,7 +150,7 @@ export default function TimerPage() {
             <div className="flex gap-3 w-full">
               <button
                 onClick={timer.running ? timer.pause : timer.start}
-                className="flex-1 py-5 rounded-2xl font-black text-sm uppercase tracking-widest transition-all active:scale-[0.97] bg-green-600 text-white hover:bg-green-700 shadow-md"
+                className="flex-1 py-5 rounded-2xl font-black text-sm uppercase tracking-widest transition-all active:scale-[0.97] bg-green-600 text-white hover:bg-green-700"
               >
                 {timer.running ? 'Pause' : timer.elapsed > 0 ? 'Resume' : 'Start'}
               </button>
@@ -174,7 +174,7 @@ export default function TimerPage() {
             {/* Config */}
             {timer.phase === 'idle' && (
               <div className="space-y-6">
-                <div className="bg-gray-50 border border-gray-200 rounded-3xl p-5">
+                <div className="bg-gray-50 rounded-3xl p-5">
                   <TimeInput
                     label="Work time"
                     value={timer.config.workSecs}
@@ -187,7 +187,7 @@ export default function TimerPage() {
                   />
                 </div>
 
-                <div className="bg-gray-50 border border-gray-200 rounded-3xl p-5">
+                <div className="bg-gray-50 rounded-3xl p-5">
                   <TimeInput
                     label="Rest time"
                     value={timer.config.restSecs}
@@ -200,12 +200,12 @@ export default function TimerPage() {
                   />
                 </div>
 
-                <div className="bg-gray-50 border border-gray-200 rounded-3xl p-5">
+                <div className="bg-gray-50 rounded-3xl p-5">
                   <span className="text-[10px] text-gray-500 font-black uppercase tracking-widest block mb-4">Rounds</span>
                   <div className="flex items-center gap-5">
                     <button
                       onClick={() => timer.setConfig({ rounds: Math.max(1, timer.config.rounds - 1) })}
-                      className="w-12 h-12 rounded-full bg-white border border-gray-200 flex items-center justify-center text-2xl text-gray-600 hover:bg-gray-100 active:scale-95 transition-all font-bold shadow-sm"
+                      className="w-12 h-12 rounded-full bg-white flex items-center justify-center text-2xl text-gray-600 hover:bg-gray-100 active:scale-95 transition-all font-bold"
                     >
                       −
                     </button>
@@ -214,7 +214,7 @@ export default function TimerPage() {
                     </span>
                     <button
                       onClick={() => timer.setConfig({ rounds: Math.min(20, timer.config.rounds + 1) })}
-                      className="w-12 h-12 rounded-full bg-white border border-gray-200 flex items-center justify-center text-2xl text-gray-600 hover:bg-gray-100 active:scale-95 transition-all font-bold shadow-sm"
+                      className="w-12 h-12 rounded-full bg-white flex items-center justify-center text-2xl text-gray-600 hover:bg-gray-100 active:scale-95 transition-all font-bold"
                     >
                       +
                     </button>
@@ -236,7 +236,7 @@ export default function TimerPage() {
                       {formatMS(timer.remaining)}
                     </span>
 
-                    <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
+                    <div className="w-full h-2 bg-app-track rounded-full overflow-hidden">
                       <motion.div
                         className={`h-full rounded-full ${phaseColors[timer.phase].bar}`}
                         animate={{ width: `${timer.progress * 100}%` }}
@@ -264,7 +264,7 @@ export default function TimerPage() {
               <div className="flex gap-3">
                 <button
                   onClick={timer.running ? timer.pause : timer.start}
-                  className="flex-1 py-5 rounded-2xl font-black text-sm uppercase tracking-widest transition-all active:scale-[0.97] bg-green-600 text-white hover:bg-green-700 shadow-md"
+                  className="flex-1 py-5 rounded-2xl font-black text-sm uppercase tracking-widest transition-all active:scale-[0.97] bg-green-600 text-white hover:bg-green-700"
                 >
                   {timer.running ? 'Pause' : timer.phase === 'idle' ? 'Start' : 'Resume'}
                 </button>

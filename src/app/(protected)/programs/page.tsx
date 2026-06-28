@@ -89,13 +89,13 @@ export default function ProgramsPage() {
         <div className="flex flex-wrap gap-3 mt-5">
           <Link
             href="/programs/build"
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-green-600 text-white text-xs font-black uppercase tracking-widest hover:bg-green-700 transition-colors shadow-sm"
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-green-600 text-white text-xs font-black uppercase tracking-widest hover:bg-green-700 transition-colors"
           >
             + Build a Program
           </Link>
           <Link
             href="/programs/import"
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-white border border-gray-200 text-gray-700 text-xs font-black uppercase tracking-widest hover:border-gray-300 hover:bg-gray-50 transition-colors shadow-sm"
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-white text-gray-700 text-xs font-black uppercase tracking-widest hover:bg-gray-50 transition-colors"
           >
             ↑ Import PDF
           </Link>
@@ -122,7 +122,7 @@ export default function ProgramsPage() {
             placeholder="Search programs…"
             value={search}
             onChange={e => setSearch(e.target.value)}
-            className="w-full bg-white border border-gray-200 rounded-2xl pl-11 pr-4 py-3 text-sm text-gray-900 placeholder:text-gray-400 outline-none focus:border-green-500 focus:ring-2 focus:ring-green-500/20 shadow-sm"
+            className="w-full bg-white border-0 rounded-2xl pl-11 pr-4 py-3 text-sm text-gray-900 placeholder:text-gray-400 outline-none focus:ring-2 focus:ring-green-500/20"
           />
         </div>
       </motion.div>
@@ -187,9 +187,9 @@ export default function ProgramsPage() {
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.92, opacity: 0 }}
               transition={{ type: 'spring', damping: 24, stiffness: 320 }}
-              className="relative bg-white border border-gray-200 rounded-3xl p-8 w-full max-w-sm shadow-2xl"
+              className="relative bg-white rounded-3xl p-8 w-full max-w-sm"
             >
-              <div className="w-12 h-12 rounded-2xl bg-amber-50 border border-amber-200 flex items-center justify-center mb-6">
+              <div className="w-12 h-12 rounded-2xl bg-amber-50 flex items-center justify-center mb-6">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-6 h-6 text-amber-500">
                   <path d="M12 9v4M12 17h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
@@ -209,7 +209,7 @@ export default function ProgramsPage() {
               <div className="flex gap-3">
                 <button
                   onClick={() => setConfirmState(null)}
-                  className="flex-1 py-3 rounded-2xl border border-gray-200 text-gray-700 text-sm font-bold hover:bg-gray-50 transition-colors"
+                  className="flex-1 py-3 rounded-2xl bg-gray-50 text-gray-700 text-sm font-bold hover:bg-gray-100 transition-colors"
                 >
                   Cancel
                 </button>
@@ -250,10 +250,10 @@ function ProgramCard({
       transition={{ delay: 0.08 + idx * 0.05 }}
       onClick={() => onSelect(program)}
       disabled={isActive || switching}
-      className={`w-full text-left p-5 rounded-2xl border transition-all group ${
+      className={`w-full text-left p-5 rounded-2xl transition-all group ${
         isActive
-          ? 'bg-green-50 border-green-300 cursor-default shadow-sm'
-          : 'bg-white border-gray-200 hover:bg-gray-50 hover:border-gray-300 cursor-pointer shadow-sm'
+          ? 'bg-green-50 cursor-default'
+          : 'bg-white hover:bg-gray-50 cursor-pointer'
       }`}
     >
       <div className="flex items-start justify-between gap-3 mb-1.5">
@@ -285,7 +285,7 @@ function ProgramCard({
             <span className="text-[9px] text-gray-400 font-bold uppercase tracking-widest">Progress</span>
             <span className="text-[9px] text-green-700 font-bold">{pct}%</span>
           </div>
-          <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden">
+          <div className="h-1.5 bg-app-track rounded-full overflow-hidden">
             <div
               className="h-full bg-linear-to-r from-green-600 to-green-400 rounded-full"
               style={{ width: `${pct}%` }}

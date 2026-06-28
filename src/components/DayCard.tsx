@@ -6,10 +6,8 @@ export const DayCard = ({ day, isCompleted }: { day: WorkoutDay; isCompleted: bo
     return (
         <Link href={`/workout/${day.id}`} className="block h-full">
             <div className={clsx(
-                "border rounded-2xl transition-all duration-300 hover:-translate-y-1 p-5 h-full flex flex-col relative overflow-hidden group bg-white",
-                isCompleted
-                    ? "border-green-300 bg-green-50 shadow-sm"
-                    : "border-gray-200 hover:border-green-300 hover:shadow-sm"
+                "rounded-2xl transition-all duration-300 hover:-translate-y-1 p-5 h-full flex flex-col relative overflow-hidden group bg-white",
+                isCompleted && "bg-green-50"
             )}>
                 {isCompleted && (
                     <div className="absolute top-4 right-4 text-green-600">

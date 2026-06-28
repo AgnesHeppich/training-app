@@ -11,7 +11,7 @@ export default function SignUpPage() {
         <div className="min-h-screen flex items-center justify-center px-4">
             <div className="w-full max-w-sm">
                 <div className="mb-10 text-center">
-                    <div className="inline-flex items-center gap-2 py-1 px-3 rounded-lg bg-green-500/10 border border-green-500/20 text-[10px] font-bold tracking-[0.2em] text-green-700 mb-6 uppercase">
+                    <div className="inline-flex items-center gap-2 py-1 px-3 rounded-lg bg-green-500/10 text-[10px] font-bold tracking-[0.2em] text-green-700 mb-6 uppercase">
                         <span className="w-1.5 h-1.5 rounded-full bg-green-600 animate-pulse" />
                         Workout buddy
                     </div>
@@ -22,7 +22,7 @@ export default function SignUpPage() {
                 </div>
 
                 <form action={formAction} className="space-y-4">
-                    <div className="rounded-3xl bg-white border border-gray-200 shadow-sm p-6 space-y-4">
+                    <div className="rounded-3xl bg-white p-6 space-y-4">
                         <div className="space-y-1.5">
                             <label htmlFor="name" className="block text-[10px] font-black uppercase tracking-[0.2em] text-gray-500">
                                 Name
@@ -33,7 +33,7 @@ export default function SignUpPage() {
                                 type="text"
                                 required
                                 placeholder="Your name"
-                                className="block w-full rounded-xl bg-gray-50 border border-gray-200 px-4 py-3 text-gray-900 placeholder:text-gray-400 text-sm focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500/30 transition-colors"
+                                className="block w-full rounded-xl bg-gray-50 border-0 px-4 py-3 text-gray-900 placeholder:text-gray-400 text-sm focus:outline-none focus:ring-2 focus:ring-green-500/30 transition-colors"
                             />
                         </div>
                         <div className="space-y-1.5">
@@ -46,7 +46,7 @@ export default function SignUpPage() {
                                 type="email"
                                 required
                                 placeholder="you@example.com"
-                                className="block w-full rounded-xl bg-gray-50 border border-gray-200 px-4 py-3 text-gray-900 placeholder:text-gray-400 text-sm focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500/30 transition-colors"
+                                className="block w-full rounded-xl bg-gray-50 border-0 px-4 py-3 text-gray-900 placeholder:text-gray-400 text-sm focus:outline-none focus:ring-2 focus:ring-green-500/30 transition-colors"
                             />
                         </div>
                         <div className="space-y-1.5">
@@ -59,12 +59,12 @@ export default function SignUpPage() {
                                 type="password"
                                 required
                                 placeholder="••••••••"
-                                className="block w-full rounded-xl bg-gray-50 border border-gray-200 px-4 py-3 text-gray-900 placeholder:text-gray-400 text-sm focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500/30 transition-colors"
+                                className="block w-full rounded-xl bg-gray-50 border-0 px-4 py-3 text-gray-900 placeholder:text-gray-400 text-sm focus:outline-none focus:ring-2 focus:ring-green-500/30 transition-colors"
                             />
                         </div>
 
                         {state?.error && (
-                            <p className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-xl px-4 py-2">
+                            <p className="text-sm text-red-600 bg-red-50 rounded-xl px-4 py-2">
                                 {state.error}
                             </p>
                         )}
@@ -72,7 +72,7 @@ export default function SignUpPage() {
                         <button
                             type="submit"
                             disabled={isPending}
-                            className="w-full rounded-xl bg-green-600 hover:bg-green-700 disabled:opacity-50 px-4 py-3 text-sm font-black text-white tracking-wide transition-colors shadow-sm"
+                            className="w-full rounded-xl bg-green-600 hover:bg-green-700 disabled:opacity-50 px-4 py-3 text-sm font-black text-white tracking-wide transition-colors"
                         >
                             {isPending ? 'Creating account...' : 'Create Account'}
                         </button>

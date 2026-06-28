@@ -154,7 +154,7 @@ export default function ProfilePage() {
         <button
           onClick={handleExport}
           disabled={isExporting}
-          className="w-full rounded-2xl bg-white border border-gray-200 shadow-sm px-6 py-4 text-left flex items-center justify-between group hover:border-gray-300 transition-colors disabled:opacity-50"
+          className="w-full rounded-2xl bg-white px-6 py-4 text-left flex items-center justify-between group transition-all disabled:opacity-50"
         >
           <div>
             <p className="text-gray-900 font-bold text-sm">Download Data</p>
@@ -166,7 +166,7 @@ export default function ProfilePage() {
         <button
           onClick={handleSignOut}
           disabled={isSigningOut}
-          className="w-full rounded-2xl bg-white border border-gray-200 shadow-sm px-6 py-4 text-left flex items-center justify-between group hover:border-red-200 transition-colors disabled:opacity-50"
+          className="w-full rounded-2xl bg-white px-6 py-4 text-left flex items-center justify-between group transition-all disabled:opacity-50"
         >
           <div>
             <p className="text-red-500 font-bold text-sm">{isSigningOut ? 'Signing out…' : 'Sign Out'}</p>
@@ -188,7 +188,7 @@ function Section({ title, children, delay }: { title: string; children: React.Re
       className="mb-8"
     >
       <h2 className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 mb-3">{title}</h2>
-      <div className="rounded-2xl bg-white border border-gray-200 shadow-sm p-5">
+      <div className="rounded-2xl bg-white p-5">
         {children}
       </div>
     </motion.div>
@@ -208,8 +208,8 @@ function Field({ label, value, mono }: { label: string; value: string; mono?: bo
 
 function ProgramCard({ program, badge, completion }: { program: ProgramWithEnrollment; badge: 'active' | 'completed'; completion?: number }) {
   const badgeStyles = {
-    active: 'bg-green-500/10 border-green-500/20 text-green-700',
-    completed: 'bg-emerald-500/10 border-emerald-500/20 text-emerald-600',
+    active: 'bg-green-500/10 text-green-700',
+    completed: 'bg-emerald-500/10 text-emerald-600',
   };
 
   const startDate = program.enrollment?.started_at
@@ -233,12 +233,12 @@ function ProgramCard({ program, badge, completion }: { program: ProgramWithEnrol
             {completedDate && ` · Completed ${completedDate}`}
           </p>
         </div>
-        <span className={`shrink-0 inline-flex items-center py-0.5 px-2 rounded-md border text-[10px] font-black uppercase tracking-[0.15em] ${badgeStyles[badge]}`}>
+        <span className={`shrink-0 inline-flex items-center py-0.5 px-2 rounded-md text-[10px] font-black uppercase tracking-[0.15em] ${badgeStyles[badge]}`}>
           {badge === 'active' && <span className="w-1 h-1 rounded-full bg-green-600 animate-pulse mr-1.5" />}{badge}
         </span>
       </div>
       <div className="flex items-center gap-3">
-        <div className="flex-1 h-1.5 bg-gray-100 rounded-full overflow-hidden">
+        <div className="flex-1 h-1.5 bg-app-track rounded-full overflow-hidden">
           <div
             className={`h-full rounded-full ${badge === 'completed' ? 'bg-emerald-500' : 'bg-linear-to-r from-green-600 to-green-400'}`}
             style={{ width: `${pct}%` }}

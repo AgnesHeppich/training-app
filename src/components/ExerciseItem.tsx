@@ -85,7 +85,7 @@ export const ExerciseItem = ({ exercise, workoutId, logType, onLogTypeChange, hi
 
     return (
         <div className={clsx(
-            "border border-gray-200 shadow-sm rounded-2xl bg-white mb-6 transition-all",
+            "rounded-2xl bg-white mb-6 transition-all",
             isCollapsed ? "p-5" : "p-6"
         )}>
             <div
@@ -238,7 +238,7 @@ export const ExerciseItem = ({ exercise, workoutId, logType, onLogTypeChange, hi
                     </div>
 
                     {previousNote && (
-                        <div className="mt-5 text-sm text-gray-600 leading-relaxed bg-gray-50 px-4 py-3 rounded-xl border-l-4 border-gray-300">
+                        <div className="mt-5 text-sm text-gray-600 leading-relaxed bg-gray-50 px-4 py-3 rounded-xl">
                             <span className="text-gray-500 font-bold uppercase text-[10px] block mb-1 tracking-wider">Last Session Note</span>
                             <p className="italic">{previousNote}</p>
                         </div>
