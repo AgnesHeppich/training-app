@@ -1,9 +1,9 @@
 @import "tailwindcss";
 
 @theme {
-  --color-app-bg: #f0fdf4;
+  --color-app-bg: var(--app-bg);
   --color-app-card: #ffffff;
-  --color-app-soft: #f0fdf4;
+  --color-app-soft: var(--app-bg);
   --color-app-accent: #16a34a;
   --color-app-accent-hover: #15803d;
   --color-app-accent-light: #4ade80;
@@ -15,8 +15,9 @@
 }
 
 :root {
-  --bg-light: #f0fdf4;
-  --bg-gradient: linear-gradient(180deg, #f0fdf4 0%, #f9fafb 60%, #f0fdf4 100%);
+  --app-bg: rgba(148, 225, 255, 0.1);
+  --bg-light: var(--app-bg);
+  --bg-gradient: linear-gradient(180deg, var(--app-bg) 0%, #ffffff, 60%, var(--app-bg) 100%);
 
   --glass-bg: rgba(255, 255, 255, 0.85);
   --glass-border: rgba(22, 163, 74, 0.15);
@@ -41,7 +42,7 @@
 }
 
 body {
-  background: #f0fdf4;
+  background: var(--bg-light);
   color: var(--text-primary);
   font-family: var(--font-main);
   min-height: 100vh;

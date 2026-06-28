@@ -60,8 +60,8 @@ export default function Home() {
         </div>
 
         <h1 className="text-5xl md:text-7xl font-black mb-6 tracking-tight leading-none">
-          <span className="title-gradient">{programName.split(' ').slice(0, -1).join(' ') || programName}</span><br />
-          <span className="text-green-700 green-glow">{programName.split(' ').slice(-1)[0]}</span>
+          <span className="title-gradient">{programName}</span><br />
+
         </h1>
 
         <p className="text-gray-500 text-xl max-w-xl leading-relaxed font-medium">

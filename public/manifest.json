@@ -4,7 +4,7 @@
     "description": "Your strength training tracker",
     "start_url": "/",
     "display": "standalone",
-    "background_color": "#f0fdf4",
+    "background_color": "#e8ecf2",
     "theme_color": "#16a34a",
     "orientation": "portrait",
     "icons": [
