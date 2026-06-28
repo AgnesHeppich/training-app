@@ -134,9 +134,7 @@ export const ExerciseItem = ({ exercise, workoutId, logType, onLogTypeChange, hi
                             {' · '}
                             target {targetLabel}
                             {!isCardio && ' reps'}
-                            {history && history.length > 0 && (
-                                <span className="text-gray-400"> · past stats</span>
-                            )}
+                
                         </p>
                     )}
                     {!isCollapsed && adaptation?.isAdapted && (

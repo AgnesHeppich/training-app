@@ -2,6 +2,7 @@ import { WorkoutDay } from "@/data/program";
 import { DayCard } from "./DayCard";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
+import clsx from "clsx";
 
 export const WeekOverview = ({
     weekNumber,
@@ -18,27 +19,38 @@ export const WeekOverview = ({
 
     const [isCollapsed, setIsCollapsed] = useState(isFullyCompleted);
 
+    const isCompact = isCollapsed && isFullyCompleted;
+
     return (
-        <div className="mb-12">
+        <div className={clsx(isCompact ? "mb-6" : "mb-12")}>
             <div
-                className="flex items-end justify-between mb-4 px-1 cursor-pointer group"
+                className="flex items-center justify-between gap-3 px-1 cursor-pointer group flex-nowrap"
                 onClick={() => setIsCollapsed(!isCollapsed)}
             >
-                <div className="flex items-center gap-4">
-                    <h2 className="text-3xl font-black text-gray-900 tracking-tight">Week {weekNumber}</h2>
-                    {isFullyCompleted && (
-                        <span className="text-[10px] bg-green-500/10 text-green-700 border border-green-500/20 px-2 py-0.5 rounded-md font-black uppercase tracking-widest">
-                            Completed
+                <h2 className={clsx(
+                    "text-gray-900 tracking-tight whitespace-nowrap",
+                    isCompact ? "text-base font-bold" : "text-3xl font-black"
+                )}>
+                    Week {weekNumber}
+                </h2>
+
+                <div className="flex items-center gap-2 shrink-0">
+                    {!isCompact && (
+                        <>
+                      
+                            <span className="text-xs text-gray-500 font-bold tracking-widest uppercase whitespace-nowrap group-hover:text-gray-900 transition-colors">
+                                {completedCount} / {days.length} Complete
+                            </span>
+                        </>
+                    )}
+                    {isCompact && (
+                        <span className="text-xs text-green-700 font-semibold tabular-nums whitespace-nowrap">
+                            {completedCount}/{days.length}
                         </span>
                     )}
-                </div>
-                <div className="flex items-center gap-3">
-                    <div className="text-xs text-gray-500 font-bold tracking-widest uppercase group-hover:text-gray-900 transition-colors">
-                        {completedCount} / {days.length} Complete
-                    </div>
                     <motion.svg
                         animate={{ rotate: isCollapsed ? 0 : 180 }}
-                        className="w-4 h-4 text-gray-400 group-hover:text-green-600 transition-colors"
+                        className="w-4 h-4 text-gray-400 group-hover:text-green-600 transition-colors shrink-0"
                         fill="none"
                         viewBox="0 0 24 24"
                         stroke="currentColor"
@@ -48,9 +60,11 @@ export const WeekOverview = ({
                 </div>
             </div>
 
-            {/* Progress Bar */}
             <div
-                className="h-1.5 bg-gray-200 rounded-full mb-6 overflow-hidden cursor-pointer"
+                className={clsx(
+                    "bg-gray-200 rounded-full overflow-hidden cursor-pointer",
+                    isCompact ? "h-1 mt-2" : "h-1.5 mt-4 mb-6"
+                )}
                 onClick={() => setIsCollapsed(!isCollapsed)}
             >
                 <div
@@ -80,16 +94,6 @@ export const WeekOverview = ({
                     </motion.div>
                 )}
             </AnimatePresence>
-
-            {isCollapsed && isFullyCompleted && (
-                <motion.p
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    className="text-xs text-gray-400 font-medium italic mt-1 px-1"
-                >
-                    Target matched. Mastery achieved.
-                </motion.p>
-            )}
         </div>
     );
 };
