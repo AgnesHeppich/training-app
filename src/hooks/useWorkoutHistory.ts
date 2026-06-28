@@ -43,6 +43,29 @@ export type PerformanceSummary = {
     }>;
 };
 
+export type ExerciseProgressMetric = 'weight' | 'reps' | 'cardio';
+
+export type ExerciseSessionPoint = {
+    workoutId: string;
+    week: number;
+    dayLabel: string;
+    completedAt: string;
+    totalReps: number | null;
+    maxReps: number | null;
+    avgReps: number | null;
+    maxWeight: number | null;
+    totalVolume: number | null;
+    cardioValue: number | null;
+    sets: SetLog[];
+};
+
+export type ExerciseProgressSeries = {
+    name: string;
+    metric: ExerciseProgressMetric;
+    target: string;
+    points: ExerciseSessionPoint[];
+};
+
 type HistoryData = {
     completedWorkouts: CompletedWorkout[];
     logs: { [workoutId: string]: WorkoutLog };
@@ -314,6 +337,81 @@ export function useWorkoutHistory(program: WorkoutDay[] = PROGRAM, programId: nu
         saveHistory(newData);
     };
 
+    const getExerciseProgress = (): ExerciseProgressSeries[] => {
+        // Unique non-warmup exercises, in the order they first appear in the program.
+        const order: string[] = [];
+        const targetByName: { [name: string]: string } = {};
+        for (const day of program) {
+            for (const ex of day.exercises) {
+                if (ex.isWarmup) continue;
+                if (!(ex.name in targetByName)) order.push(ex.name);
+                targetByName[ex.name] = ex.reps; // keep latest program target
+            }
+        }
+
+        const completedAtById = new Map(data.completedWorkouts.map(w => [w.id, w.completedAt]));
+        // Include every program day that has logged data — not just ones marked
+        // "complete" — so history saved by older app versions still shows up.
+        const loggedDays = program.filter(d => data.logs[d.id]);
+
+        return order.map(name => {
+            const points: ExerciseSessionPoint[] = [];
+            let anyWeight = false;
+            let anyCardio = false;
+
+            for (const day of loggedDays) {
+                const ex = day.exercises.find(e => e.name === name);
+                if (!ex) continue;
+                const sets = data.logs[day.id]?.[name];
+                if (!sets || !sets.some(s => s.weight !== '' || s.reps !== '')) continue;
+
+                const logType =
+                    data.logTypes[day.id]?.[name] ??
+                    (isCardioExercise(name, ex.reps) ? 'cardio' : 'strength');
+
+                const repNums = sets.map(s => parseInt(s.reps)).filter(n => !isNaN(n) && n > 0);
+                const weightNums = sets.map(s => parseFloat(s.weight)).filter(n => !isNaN(n) && n > 0);
+
+                if (weightNums.length > 0) anyWeight = true;
+                if (logType === 'cardio') anyCardio = true;
+
+                const totalReps = repNums.length ? repNums.reduce((a, b) => a + b, 0) : null;
+                const maxReps = repNums.length ? Math.max(...repNums) : null;
+                const avgReps = repNums.length
+                    ? Math.round((repNums.reduce((a, b) => a + b, 0) / repNums.length) * 10) / 10
+                    : null;
+                const maxWeight = weightNums.length ? Math.max(...weightNums) : null;
+
+                let totalVolume: number | null = null;
+                for (const s of sets) {
+                    const w = parseFloat(s.weight);
+                    const r = parseInt(s.reps);
+                    if (!isNaN(w) && !isNaN(r) && w > 0 && r > 0) totalVolume = (totalVolume ?? 0) + w * r;
+                }
+
+                // For cardio the value (time/distance) is entered in the weight field.
+                const cardioValue = weightNums.length ? Math.max(...weightNums) : null;
+
+                points.push({
+                    workoutId: day.id,
+                    week: day.week,
+                    dayLabel: day.dayLabel,
+                    completedAt: completedAtById.get(day.id) ?? '',
+                    totalReps,
+                    maxReps,
+                    avgReps,
+                    maxWeight,
+                    totalVolume,
+                    cardioValue,
+                    sets: sets.map(s => ({ weight: s.weight, reps: s.reps })),
+                });
+            }
+
+            const metric: ExerciseProgressMetric = anyCardio ? 'cardio' : anyWeight ? 'weight' : 'reps';
+            return { name, metric, target: targetByName[name], points };
+        });
+    };
+
     const getOverallProgress = () => {
         if (program.length === 0) return 0;
         return Math.min(100, Math.round((data.completedWorkouts.length / program.length) * 100));
@@ -337,5 +435,6 @@ export function useWorkoutHistory(program: WorkoutDay[] = PROGRAM, programId: nu
         isWorkoutCompleted,
         saveWorkoutLog,
         getOverallProgress,
+        getExerciseProgress,
     };
 }

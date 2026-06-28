@@ -19,10 +19,8 @@ export const WeekOverview = ({
 
     const [isCollapsed, setIsCollapsed] = useState(isFullyCompleted);
 
-    const isCompact = isCollapsed && isFullyCompleted;
-
     return (
-        <div className={clsx(isCompact ? "mb-5" : "mb-8")}>
+        <div className={clsx(isCollapsed ? "mb-5" : "mb-8")}>
             <div
                 className="flex items-center justify-between gap-3 px-1 cursor-pointer group flex-nowrap"
                 onClick={() => setIsCollapsed(!isCollapsed)}
@@ -32,12 +30,26 @@ export const WeekOverview = ({
                 </h2>
 
                 <div className="flex items-center gap-2 shrink-0">
-                    <span className={clsx(
-                        "text-[10px] font-medium tabular-nums whitespace-nowrap",
-                        isFullyCompleted ? "text-green-700" : "text-gray-500"
-                    )}>
-                        {completedCount}/{days.length}
-                    </span>
+                    {isCollapsed && isFullyCompleted ? (
+                        <span className="flex items-center gap-1 rounded-full bg-green-50 pl-1.5 pr-2 py-0.5 text-[10px] font-semibold text-green-700">
+                            <svg
+                                className="w-3 h-3"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                            >
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                            </svg>
+                            Done
+                        </span>
+                    ) : (
+                        <span className={clsx(
+                            "text-[10px] font-medium tabular-nums whitespace-nowrap",
+                            isFullyCompleted ? "text-green-700" : "text-gray-500"
+                        )}>
+                            {completedCount}/{days.length}
+                        </span>
+                    )}
                     <motion.svg
                         animate={{ rotate: isCollapsed ? 0 : 180 }}
                         className="w-4 h-4 text-gray-400 group-hover:text-green-600 transition-colors shrink-0"
@@ -50,18 +62,17 @@ export const WeekOverview = ({
                 </div>
             </div>
 
-            <div
-                className={clsx(
-                    "h-0.5 bg-gray-200 rounded-full overflow-hidden cursor-pointer mt-1.5",
-                    !isCompact && "mb-4"
-                )}
-                onClick={() => setIsCollapsed(!isCollapsed)}
-            >
+            {!isCollapsed && (
                 <div
-                    className="h-full bg-linear-to-r from-green-600 to-green-400 transition-all duration-700 ease-in-out"
-                    style={{ width: `${progress}%` }}
-                />
-            </div>
+                    className="h-1.5 bg-gray-200 rounded-full overflow-hidden cursor-pointer mt-1.5 mb-4"
+                    onClick={() => setIsCollapsed(!isCollapsed)}
+                >
+                    <div
+                        className="h-full bg-linear-to-r from-green-600 to-green-400 transition-all duration-700 ease-in-out"
+                        style={{ width: `${progress}%` }}
+                    />
+                </div>
+            )}
 
             <AnimatePresence initial={false}>
                 {!isCollapsed && (

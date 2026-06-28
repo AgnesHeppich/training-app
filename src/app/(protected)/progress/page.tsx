@@ -4,10 +4,11 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { NavMenu } from '@/components/NavMenu';
 import { ProgramMastery } from '@/components/ProgramMastery';
+import { ExerciseProgress } from '@/components/ExerciseProgress';
 import { useWorkoutData } from '@/contexts/WorkoutDataContext';
 
 export default function ProgressPage() {
-    const { getEffectiveProgram, isLoaded, activeProgramId, completedWorkoutIds, allPrograms } = useWorkoutData();
+    const { getEffectiveProgram, isLoaded, activeProgramId, completedWorkoutIds, allPrograms, getExerciseProgress } = useWorkoutData();
     const effectiveProgram = getEffectiveProgram();
 
     if (!isLoaded) {
@@ -40,6 +41,7 @@ export default function ProgressPage() {
     const weeksMastered = allWeeks.filter(w =>
         effectiveProgram.filter(d => d.week === w).every(d => completedWorkoutIds.includes(d.id))
     ).length;
+    const exerciseProgress = getExerciseProgress();
 
     return (
         <div className="container mx-auto px-4 py-8 max-w-3xl">
@@ -71,6 +73,15 @@ export default function ProgressPage() {
                     totalSessions={effectiveProgram.length}
                     weeksMastered={weeksMastered}
                 />
+            </motion.div>
+
+            <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 }}
+                className="mt-12"
+            >
+                <ExerciseProgress series={exerciseProgress} />
             </motion.div>
         </div>
     );
