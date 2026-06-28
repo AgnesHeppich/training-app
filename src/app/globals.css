@@ -1,5 +1,19 @@
 @import "tailwindcss";
 
+@theme {
+  --color-app-bg: #f0fdf4;
+  --color-app-card: #ffffff;
+  --color-app-soft: #f0fdf4;
+  --color-app-accent: #16a34a;
+  --color-app-accent-hover: #15803d;
+  --color-app-accent-light: #4ade80;
+  --color-app-mint: #16a34a;
+  --color-app-teal: #2563eb;
+  --color-app-input: #f9fafb;
+  --color-app-input-text: #111827;
+  --color-app-unit: #9ca3af;
+}
+
 :root {
   --bg-light: #f0fdf4;
   --bg-gradient: linear-gradient(180deg, #f0fdf4 0%, #f9fafb 60%, #f0fdf4 100%);

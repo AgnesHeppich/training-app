@@ -72,150 +72,154 @@ export const ExerciseItem = ({ exercise, workoutId, logType, onLogTypeChange, hi
         return log.weight !== "" && log.reps !== "";
     };
 
+    const toggleLogType = () => onLogTypeChange(isCardio ? 'strength' : 'cardio');
+
+    const targetLabel = adaptation?.isAdapted && adaptation.adaptedReps !== exercise.reps
+        ? (
+            <>
+                <span className="line-through text-gray-400 mr-1">{exercise.reps}</span>
+                {adaptation.adaptedReps}
+            </>
+        )
+        : (adaptation?.adaptedReps ?? exercise.reps);
+
     return (
-        <div className="border border-gray-200 shadow-sm rounded-3xl bg-white p-8 mb-8 transition-all">
+        <div className={clsx(
+            "border border-gray-200 shadow-sm rounded-2xl bg-white mb-6 transition-all",
+            isCollapsed ? "p-5" : "p-6"
+        )}>
             <div
-                className="flex justify-between items-start mb-6 cursor-pointer select-none"
+                className={clsx(
+                    "flex items-start gap-4 cursor-pointer select-none",
+                    !isCollapsed && "mb-5"
+                )}
                 onClick={() => setIsCollapsed(!isCollapsed)}
             >
-                <div className="flex items-start gap-4 flex-1">
-                    {/* Checkbox */}
-                    <div className={clsx(
-                        "shrink-0 w-7 h-7 rounded-xl border-2 flex items-center justify-center transition-all mt-1",
-                        isCollapsed
-                            ? "bg-green-600 border-green-600 shadow-sm"
-                            : "bg-white border-gray-300 hover:border-green-500"
-                    )}>
-                        {isCollapsed && (
-                            <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
-                            </svg>
-                        )}
-                    </div>
-
-                    <div>
-                        <div className="flex items-center gap-2 mb-2 flex-wrap">
-                            <h3 className="text-2xl font-black text-gray-900">{exercise.name}</h3>
-                            <div
-                                className="flex rounded-full border border-gray-200 bg-gray-50 p-0.5"
-                                onClick={(e) => e.stopPropagation()}
-                            >
-                                {(['strength', 'cardio'] as const).map((type) => (
-                                    <button
-                                        key={type}
-                                        type="button"
-                                        onClick={() => onLogTypeChange(type)}
-                                        className={clsx(
-                                            "px-2.5 py-0.5 rounded-full text-[9px] font-black uppercase tracking-widest transition-all",
-                                            logType === type
-                                                ? type === 'cardio'
-                                                    ? "bg-blue-600 text-white shadow-sm"
-                                                    : "bg-green-600 text-white shadow-sm"
-                                                : "text-gray-500 hover:text-gray-700"
-                                        )}
-                                    >
-                                        {type}
-                                    </button>
-                                ))}
-                            </div>
-                        </div>
-                        {!isCollapsed && (
-                            <div className="flex flex-col gap-1.5">
-                                <div className="flex items-center gap-4 text-xs">
-                                    <span className="text-green-700 bg-green-500/10 px-3 py-1 rounded-lg border border-green-500/20 font-bold uppercase tracking-wider">
-                                        {exercise.sets} {isCardio ? 'Intervals' : 'Sets'}
-                                    </span>
-                                    <span className="text-gray-500 font-medium">
-                                        Target: <span className="text-gray-900">{adaptation?.adaptedReps ?? exercise.reps}</span>
-                                        {!isCardio && ' reps'}
-                                    </span>
-                                </div>
-                                {(adaptation?.isAdapted || isAIAdapted) && (
-                                    <div className="flex items-center gap-1.5">
-                                        <span className="w-1.5 h-1.5 rounded-full bg-amber-500 shrink-0" />
-                                        <span className="text-[10px] text-amber-600 font-bold uppercase tracking-wider">
-                                            Adapted for your progress
-                                        </span>
-                                    </div>
-                                )}
-                            </div>
-                        )}
-                    </div>
+                <div className={clsx(
+                    "shrink-0 w-7 h-7 rounded-full border-2 flex items-center justify-center transition-all mt-1",
+                    isCollapsed
+                        ? "bg-green-600 border-green-600"
+                        : "bg-white border-gray-300 hover:border-green-500"
+                )}>
+                    {isCollapsed && (
+                        <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                        </svg>
+                    )}
                 </div>
-                {!isCollapsed && history && history.length > 0 && (
-                    <div className="text-right text-[10px] text-green-700 font-black tracking-widest uppercase bg-green-500/10 px-3 py-1.5 rounded-full border border-green-500/20">
-                        Past Stats Found
-                    </div>
-                )}
+
+                <div className="min-w-0 flex-1">
+                    <h3 className={clsx(
+                        "text-gray-900 leading-snug",
+                        isCollapsed ? "text-lg font-bold" : "text-xl font-bold"
+                    )}>
+                        {exercise.name}
+                    </h3>
+
+                    {!isCollapsed && (
+                        <p
+                            className="mt-1.5 text-sm text-gray-500"
+                            onClick={(e) => e.stopPropagation()}
+                        >
+                            <button
+                                type="button"
+                                onClick={toggleLogType}
+                                className={clsx(
+                                    "font-semibold capitalize hover:underline",
+                                    isCardio ? "text-blue-600" : "text-green-700"
+                                )}
+                            >
+                                {logType}
+                            </button>
+                            {' · '}
+                            {exercise.sets} {isCardio ? 'intervals' : 'sets'}
+                            {' · '}
+                            target {targetLabel}
+                            {!isCardio && ' reps'}
+                            {history && history.length > 0 && (
+                                <span className="text-gray-400"> · past stats</span>
+                            )}
+                        </p>
+                    )}
+                    {!isCollapsed && adaptation?.isAdapted && (
+                        <p className="mt-1 text-xs text-blue-600">{adaptation.reason}</p>
+                    )}
+                    {!isCollapsed && isAIAdapted && (
+                        <p className="mt-1 text-xs text-amber-600">Updated by AI coach</p>
+                    )}
+                </div>
             </div>
 
             {!isCollapsed && (
                 <>
                     {exercise.note && (
-                        <div className="mb-6 text-sm text-gray-600 leading-relaxed bg-gray-50 p-4 rounded-2xl border-l-2 border-green-500">
-                            <span className="text-green-700 font-bold uppercase text-[10px] block mb-1 tracking-widest">Coach&apos;s Note</span>
-                            {exercise.note}
+                        <div className="mb-5 flex bg-green-50">
+                            <div className="w-1.5 shrink-0 bg-green-600" />
+                            <div className="px-4 py-3">
+                                <span className="text-green-700 font-bold uppercase text-[10px] block mb-1 tracking-wider">Coach&apos;s Note</span>
+                                <p className="text-gray-600 italic text-sm leading-relaxed">{exercise.note}</p>
+                            </div>
                         </div>
                     )}
 
-                    <div className="space-y-4">
+                    <div className="space-y-3">
                         {currentLogs.map((log, idx) => {
                             const prevSet = history?.[idx] || history?.[history.length - 1];
 
                             return (
-                                <div key={idx} className="flex flex-col gap-2">
-                                    <div className="flex items-center gap-4">
-                                        <span className="shrink-0 w-10 h-10 rounded-2xl bg-gray-100 border border-gray-200 flex items-center justify-center text-sm text-gray-500 font-bold">
+                                <div key={idx} className="flex flex-col gap-1">
+                                    <div className="flex items-center gap-3">
+                                        <span className="shrink-0 w-8 h-8 rounded-full bg-green-100 flex items-center justify-center text-sm text-green-700 font-semibold">
                                             {idx + 1}
                                         </span>
 
-                                        <div className={clsx("flex-1 grid gap-4", isCardio ? "grid-cols-1" : "grid-cols-2")}>
+                                        <div className={clsx("flex-1 grid gap-3", isCardio ? "grid-cols-1" : "grid-cols-2")}>
                                             {isCardio ? (
                                                 <div className="relative">
                                                     <input
                                                         type="text"
-                                                        placeholder={prevSet?.weight || "mm:ss"}
+                                                        placeholder={prevSet?.weight || "0"}
                                                         value={log.weight}
                                                         onChange={(e) => handleChange(idx, 'weight', e.target.value)}
                                                         className={clsx(
-                                                            "w-full text-center font-bold bg-gray-50 border border-gray-200 text-gray-900 rounded-2xl p-4 outline-none transition-all placeholder:text-gray-400 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10",
-                                                            isSetComplete(log) ? "border-blue-300 bg-blue-50" : ""
+                                                            "w-full text-center font-semibold bg-gray-50 border-0 text-gray-900 rounded-xl py-3 px-4 outline-none transition-all placeholder:text-gray-400 focus:ring-2 focus:ring-green-500/20",
+                                                            isSetComplete(log) && "bg-green-50 ring-1 ring-green-200"
                                                         )}
                                                     />
-                                                    <span className="absolute right-4 top-1/2 -translate-y-1/2 text-[10px] text-gray-400 font-bold uppercase tracking-widest pointer-events-none">
+                                                    <span className="absolute right-4 top-1/2 -translate-y-1/2 text-sm text-gray-400 pointer-events-none">
                                                         time
                                                     </span>
                                                 </div>
                                             ) : (
                                                 <>
-                                                    <div className="relative group">
+                                                    <div className="relative">
                                                         <input
                                                             type="text"
                                                             placeholder={prevSet?.weight || "0"}
                                                             value={log.weight}
                                                             onChange={(e) => handleChange(idx, 'weight', e.target.value)}
                                                             className={clsx(
-                                                                "w-full text-center font-bold bg-gray-50 border border-gray-200 text-gray-900 rounded-2xl p-4 outline-none transition-all placeholder:text-gray-400 focus:border-green-500 focus:ring-4 focus:ring-green-500/10",
-                                                                isSetComplete(log) ? "border-green-300 bg-green-50" : ""
+                                                                "w-full text-center font-semibold bg-gray-50 border-0 text-gray-900 rounded-xl py-3 px-4 outline-none transition-all placeholder:text-gray-400 focus:ring-2 focus:ring-green-500/20",
+                                                                isSetComplete(log) && "bg-green-50 ring-1 ring-green-200"
                                                             )}
                                                         />
-                                                        <span className="absolute right-4 top-1/2 -translate-y-1/2 text-[10px] text-gray-400 font-bold uppercase tracking-widest pointer-events-none">
+                                                        <span className="absolute right-4 top-1/2 -translate-y-1/2 text-sm text-gray-400 pointer-events-none">
                                                             kg
                                                         </span>
                                                     </div>
 
-                                                    <div className="relative group">
+                                                    <div className="relative">
                                                         <input
                                                             type="number"
                                                             placeholder={prevSet?.reps || "0"}
                                                             value={log.reps}
                                                             onChange={(e) => handleChange(idx, 'reps', e.target.value)}
                                                             className={clsx(
-                                                                "w-full text-center font-bold bg-gray-50 border border-gray-200 text-gray-900 rounded-2xl p-4 outline-none transition-all placeholder:text-gray-400 focus:border-green-500 focus:ring-4 focus:ring-green-500/10",
-                                                                isSetComplete(log) ? "border-green-300 bg-green-50" : ""
+                                                                "w-full text-center font-semibold bg-gray-50 border-0 text-gray-900 rounded-xl py-3 px-4 outline-none transition-all placeholder:text-gray-400 focus:ring-2 focus:ring-green-500/20",
+                                                                isSetComplete(log) && "bg-green-50 ring-1 ring-green-200"
                                                             )}
                                                         />
-                                                        <span className="absolute right-4 top-1/2 -translate-y-1/2 text-[10px] text-gray-400 font-bold uppercase tracking-widest pointer-events-none">
+                                                        <span className="absolute right-4 top-1/2 -translate-y-1/2 text-sm text-gray-400 pointer-events-none">
                                                             reps
                                                         </span>
                                                     </div>
@@ -225,10 +229,10 @@ export const ExerciseItem = ({ exercise, workoutId, logType, onLogTypeChange, hi
                                     </div>
 
                                     {prevSet && (prevSet.weight || prevSet.reps) && (
-                                        <div className="text-[10px] text-gray-400 text-right pr-6 font-bold uppercase tracking-widest">
+                                        <div className="text-xs text-gray-400 text-right pr-2">
                                             {showCardioHistory
-                                                ? <>Last Time: <span className="text-blue-600">{prevSet.weight}</span></>
-                                                : <>Last Time: <span className="text-green-700">{prevSet.weight}kg</span> × <span className="text-green-700">{prevSet.reps}</span></>
+                                                ? <>Last time: <span className="text-blue-600">{prevSet.weight}</span></>
+                                                : <>Last time: <span className="text-green-700">{prevSet.weight}kg</span> × <span className="text-green-700">{prevSet.reps}</span></>
                                             }
                                         </div>
                                     )}
@@ -238,9 +242,9 @@ export const ExerciseItem = ({ exercise, workoutId, logType, onLogTypeChange, hi
                     </div>
 
                     {previousNote && (
-                        <div className="mt-6 text-sm text-gray-600 leading-relaxed bg-gray-50 p-4 rounded-2xl border-l-2 border-gray-300">
-                            <span className="text-gray-500 font-bold uppercase text-[10px] block mb-1 tracking-widest">Last Session Note</span>
-                            {previousNote}
+                        <div className="mt-5 text-sm text-gray-600 leading-relaxed bg-gray-50 px-4 py-3 rounded-xl border-l-4 border-gray-300">
+                            <span className="text-gray-500 font-bold uppercase text-[10px] block mb-1 tracking-wider">Last Session Note</span>
+                            <p className="italic">{previousNote}</p>
                         </div>
                     )}
 
@@ -250,7 +254,7 @@ export const ExerciseItem = ({ exercise, workoutId, logType, onLogTypeChange, hi
                             value={initialNote || ""}
                             onChange={(e) => onNoteChange(e.target.value)}
                             rows={2}
-                            className="w-full text-sm bg-gray-50 border border-gray-200 text-gray-900 rounded-2xl px-4 py-3 outline-none transition-all placeholder:text-gray-400 focus:border-gray-300 focus:ring-4 focus:ring-gray-200/50 resize-none"
+                            className="w-full text-sm bg-gray-50 border-0 text-gray-900 rounded-xl px-4 py-3 outline-none transition-all placeholder:text-gray-400 focus:ring-2 focus:ring-green-500/20 resize-none"
                         />
                     </div>
                 </>

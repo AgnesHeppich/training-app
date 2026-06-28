@@ -105,6 +105,7 @@ export function useWorkoutHistory(program: WorkoutDay[] = PROGRAM, programId: nu
             const currentIndex = program.findIndex(w => w.id === currentWorkoutId);
             if (currentIndex > 0) {
                 for (const day of program.slice(0, currentIndex).reverse()) {
+                    if (!completedWorkoutIds.includes(day.id)) continue;
                     const dayLog = data.logs[day.id];
                     if (dayLog?.[exerciseName]?.some(s => s.weight !== '' || s.reps !== '')) {
                         return dayLog[exerciseName];
@@ -114,6 +115,7 @@ export function useWorkoutHistory(program: WorkoutDay[] = PROGRAM, programId: nu
             return null;
         }
         for (const day of [...program].reverse()) {
+            if (!completedWorkoutIds.includes(day.id)) continue;
             const dayLog = data.logs[day.id];
             if (dayLog?.[exerciseName]?.some(s => s.weight !== '' || s.reps !== '')) {
                 return dayLog[exerciseName];
@@ -140,6 +142,7 @@ export function useWorkoutHistory(program: WorkoutDay[] = PROGRAM, programId: nu
         const sessionAverages: number[] = [];
         for (const day of program.slice(0, currentIndex).reverse()) {
             if (sessionAverages.length >= 3) break;
+            if (!completedWorkoutIds.includes(day.id)) continue;
             const repNums = (data.logs[day.id]?.[exerciseName] ?? [])
                 .map(s => parseInt(s.reps))
                 .filter(n => !isNaN(n) && n > 0);
@@ -152,10 +155,11 @@ export function useWorkoutHistory(program: WorkoutDay[] = PROGRAM, programId: nu
 
         const overallAvg = sessionAverages.reduce((a, b) => a + b, 0) / sessionAverages.length;
         if (overallAvg / numericTarget < 0.75) {
+            const roundedAvg = Math.max(1, Math.round(overallAvg));
             return {
-                adaptedReps: String(Math.max(1, Math.round(overallAvg))),
+                adaptedReps: String(roundedAvg),
                 isAdapted: true,
-                reason: 'Adjusted to match your recent performance',
+                reason: `Lowered from ${programTarget} reps — you averaged ${roundedAvg} in recent sessions`,
             };
         }
         return { adaptedReps: programTarget, isAdapted: false };
@@ -236,6 +240,7 @@ export function useWorkoutHistory(program: WorkoutDay[] = PROGRAM, programId: nu
         const currentIndex = program.findIndex(w => w.id === currentWorkoutId);
         if (currentIndex > 0) {
             for (const day of program.slice(0, currentIndex).reverse()) {
+                if (!completedWorkoutIds.includes(day.id)) continue;
                 const prevType = data.logTypes[day.id]?.[exerciseName];
                 if (prevType) return prevType;
             }
@@ -252,6 +257,7 @@ export function useWorkoutHistory(program: WorkoutDay[] = PROGRAM, programId: nu
         if (currentIndex <= 0) return null;
 
         for (const day of program.slice(0, currentIndex).reverse()) {
+            if (!completedWorkoutIds.includes(day.id)) continue;
             const dayLog = data.logs[day.id]?.[exerciseName];
             if (!dayLog?.some(s => s.weight !== '' || s.reps !== '')) continue;
 
@@ -272,6 +278,7 @@ export function useWorkoutHistory(program: WorkoutDay[] = PROGRAM, programId: nu
         const currentIndex = program.findIndex(w => w.id === currentWorkoutId);
         if (currentIndex <= 0) return null;
         for (const day of program.slice(0, currentIndex).reverse()) {
+            if (!completedWorkoutIds.includes(day.id)) continue;
             const note = data.notes[day.id]?.[exerciseName];
             if (note) return note;
         }
