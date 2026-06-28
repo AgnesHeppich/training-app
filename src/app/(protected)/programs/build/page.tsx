@@ -91,7 +91,7 @@ export default function BuildProgramPage() {
                                 className={`px-4 py-2 rounded-xl text-xs font-black uppercase tracking-widest transition-all disabled:opacity-50 ${
                                     goalType === g.id
                                         ? 'bg-green-600 text-white'
-                                        : 'bg-white text-gray-600 hover:text-green-700'
+                                        : 'bg-white shadow-sm text-gray-600 hover:text-green-700'
                                 }`}
                             >
                                 {g.label}
@@ -111,7 +111,7 @@ export default function BuildProgramPage() {
                         placeholder="e.g. I want to improve my pull-ups. I can currently do 3 and want to get to 5."
                         rows={3}
                         disabled={loading}
-                        className="w-full bg-white border-0 rounded-2xl px-4 py-3 text-sm text-gray-900 placeholder:text-gray-400 outline-none focus:ring-2 focus:ring-green-500/20 resize-none disabled:opacity-50"
+                        className="w-full bg-white border-0 rounded-2xl px-4 py-3 text-sm text-gray-900 placeholder:text-gray-400 outline-none focus:ring-2 focus:ring-green-500/20 shadow-sm resize-none disabled:opacity-50"
                     />
                 </motion.div>
 
@@ -130,7 +130,7 @@ export default function BuildProgramPage() {
                             disabled={loading}
                             className="flex-1 accent-green-600 disabled:opacity-50"
                         />
-                        <span className="w-16 text-right text-sm font-bold text-gray-900 bg-white rounded-xl px-3 py-1.5">
+                        <span className="w-16 text-right text-sm font-bold text-gray-900 bg-white rounded-xl px-3 py-1.5 shadow-sm">
                             {weeks}w
                         </span>
                     </div>
@@ -154,7 +154,7 @@ export default function BuildProgramPage() {
                                 className={`flex-1 py-2.5 rounded-xl text-sm font-black transition-all disabled:opacity-50 ${
                                     sessionsPerWeek === n
                                         ? 'bg-green-600 text-white'
-                                        : 'bg-white text-gray-600 hover:text-green-700'
+                                        : 'bg-white shadow-sm text-gray-600 hover:text-green-700'
                                 }`}
                             >
                                 {n}
@@ -174,7 +174,7 @@ export default function BuildProgramPage() {
                         placeholder="e.g. 40 min cardio spread across 2 sessions per week, one session should be strength focused"
                         rows={2}
                         disabled={loading}
-                        className="w-full bg-white border-0 rounded-2xl px-4 py-3 text-sm text-gray-900 placeholder:text-gray-400 outline-none focus:ring-2 focus:ring-green-500/20 resize-none disabled:opacity-50"
+                        className="w-full bg-white border-0 rounded-2xl px-4 py-3 text-sm text-gray-900 placeholder:text-gray-400 outline-none focus:ring-2 focus:ring-green-500/20 shadow-sm resize-none disabled:opacity-50"
                     />
                 </motion.div>
 
@@ -189,7 +189,7 @@ export default function BuildProgramPage() {
                         placeholder="e.g. my left knee starts hurting after a week of running, shoulder impingement"
                         rows={2}
                         disabled={loading}
-                        className="w-full bg-white border-0 rounded-2xl px-4 py-3 text-sm text-gray-900 placeholder:text-gray-400 outline-none focus:ring-2 focus:ring-green-500/20 resize-none disabled:opacity-50"
+                        className="w-full bg-white border-0 rounded-2xl px-4 py-3 text-sm text-gray-900 placeholder:text-gray-400 outline-none focus:ring-2 focus:ring-green-500/20 shadow-sm resize-none disabled:opacity-50"
                     />
                 </motion.div>
 
@@ -198,7 +198,7 @@ export default function BuildProgramPage() {
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.23 }}
-                    className="bg-gray-50 rounded-2xl px-5 py-4"
+                    className="bg-gray-50 rounded-2xl px-5 py-4 shadow-sm"
                 >
                     <p className="text-xs text-gray-500">
                         Generating a{' '}

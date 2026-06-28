@@ -80,7 +80,7 @@ export function NavMenu() {
       <button
         onClick={() => setOpen(true)}
         aria-label="Open menu"
-        className="w-9 h-9 rounded-full bg-white flex items-center justify-center text-gray-500 hover:text-gray-900 active:scale-95 transition-all"
+        className="w-9 h-9 rounded-full bg-white shadow-sm flex items-center justify-center text-gray-500 hover:text-gray-900 hover:shadow-md active:scale-95 transition-all"
       >
         <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
           <line x1="2" y1="4" x2="14" y2="4" />
@@ -108,7 +108,7 @@ export function NavMenu() {
               animate={{ y: 0 }}
               exit={{ y: '100%' }}
               transition={{ type: 'spring', damping: 30, stiffness: 300 }}
-              className="fixed bottom-0 left-0 right-0 z-50 bg-white rounded-t-3xl pb-safe"
+              className="fixed bottom-0 left-0 right-0 z-50 bg-white rounded-t-3xl shadow-2xl pb-safe"
             >
               {/* Drag handle */}
               <div className="flex justify-center pt-3 pb-2">
@@ -123,7 +123,7 @@ export function NavMenu() {
                     onClick={() => setOpen(false)}
                     className="flex items-center gap-4 px-4 py-4 rounded-2xl bg-gray-50 hover:bg-green-50 active:bg-green-100 transition-colors"
                   >
-                    <div className="w-11 h-11 rounded-xl bg-white flex items-center justify-center text-gray-600 shrink-0">
+                    <div className="w-11 h-11 rounded-xl bg-white shadow-sm flex items-center justify-center text-gray-600 shrink-0">
                       {item.icon}
                     </div>
                     <div>

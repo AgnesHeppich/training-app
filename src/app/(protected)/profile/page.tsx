@@ -154,7 +154,7 @@ export default function ProfilePage() {
         <button
           onClick={handleExport}
           disabled={isExporting}
-          className="w-full rounded-2xl bg-white px-6 py-4 text-left flex items-center justify-between group transition-all disabled:opacity-50"
+          className="w-full rounded-2xl bg-white shadow-sm px-6 py-4 text-left flex items-center justify-between group hover:shadow-md transition-all disabled:opacity-50"
         >
           <div>
             <p className="text-gray-900 font-bold text-sm">Download Data</p>
@@ -166,7 +166,7 @@ export default function ProfilePage() {
         <button
           onClick={handleSignOut}
           disabled={isSigningOut}
-          className="w-full rounded-2xl bg-white px-6 py-4 text-left flex items-center justify-between group transition-all disabled:opacity-50"
+          className="w-full rounded-2xl bg-white shadow-sm px-6 py-4 text-left flex items-center justify-between group hover:shadow-md transition-all disabled:opacity-50"
         >
           <div>
             <p className="text-red-500 font-bold text-sm">{isSigningOut ? 'Signing out…' : 'Sign Out'}</p>
@@ -188,7 +188,7 @@ function Section({ title, children, delay }: { title: string; children: React.Re
       className="mb-8"
     >
       <h2 className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 mb-3">{title}</h2>
-      <div className="rounded-2xl bg-white p-5">
+      <div className="rounded-2xl bg-white shadow-sm p-5">
         {children}
       </div>
     </motion.div>

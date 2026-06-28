@@ -95,7 +95,7 @@ export default function ProgramsPage() {
           </Link>
           <Link
             href="/programs/import"
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-white text-gray-700 text-xs font-black uppercase tracking-widest hover:bg-gray-50 transition-colors"
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-white text-gray-700 text-xs font-black uppercase tracking-widest hover:bg-gray-50 transition-colors shadow-sm"
           >
             ↑ Import PDF
           </Link>
@@ -122,7 +122,7 @@ export default function ProgramsPage() {
             placeholder="Search programs…"
             value={search}
             onChange={e => setSearch(e.target.value)}
-            className="w-full bg-white border-0 rounded-2xl pl-11 pr-4 py-3 text-sm text-gray-900 placeholder:text-gray-400 outline-none focus:ring-2 focus:ring-green-500/20"
+            className="w-full bg-white border-0 rounded-2xl pl-11 pr-4 py-3 text-sm text-gray-900 placeholder:text-gray-400 outline-none focus:ring-2 focus:ring-green-500/20 shadow-sm"
           />
         </div>
       </motion.div>
@@ -187,7 +187,7 @@ export default function ProgramsPage() {
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.92, opacity: 0 }}
               transition={{ type: 'spring', damping: 24, stiffness: 320 }}
-              className="relative bg-white rounded-3xl p-8 w-full max-w-sm"
+              className="relative bg-white rounded-3xl p-8 w-full max-w-sm shadow-2xl"
             >
               <div className="w-12 h-12 rounded-2xl bg-amber-50 flex items-center justify-center mb-6">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-6 h-6 text-amber-500">
@@ -209,7 +209,7 @@ export default function ProgramsPage() {
               <div className="flex gap-3">
                 <button
                   onClick={() => setConfirmState(null)}
-                  className="flex-1 py-3 rounded-2xl bg-gray-50 text-gray-700 text-sm font-bold hover:bg-gray-100 transition-colors"
+                  className="flex-1 py-3 rounded-2xl bg-gray-50 text-gray-700 text-sm font-bold hover:bg-gray-100 transition-colors shadow-sm"
                 >
                   Cancel
                 </button>
@@ -252,8 +252,8 @@ function ProgramCard({
       disabled={isActive || switching}
       className={`w-full text-left p-5 rounded-2xl transition-all group ${
         isActive
-          ? 'bg-green-50 cursor-default'
-          : 'bg-white hover:bg-gray-50 cursor-pointer'
+          ? 'bg-green-50 cursor-default shadow-sm'
+          : 'bg-white hover:bg-gray-50 cursor-pointer shadow-sm hover:shadow-md'
       }`}
     >
       <div className="flex items-start justify-between gap-3 mb-1.5">

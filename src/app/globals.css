@@ -11,7 +11,7 @@
   --color-app-accent-light: #4ade80;
   --color-app-mint: #16a34a;
   --color-app-teal: #2563eb;
-  --color-app-input: #f0f5f2;
+  --color-app-input: #f9fafb;
   --color-app-input-text: #111827;
   --color-app-unit: #9ca3af;
 
@@ -23,16 +23,11 @@
 }
 
 :root {
-  --app-page: #e7ede9;
-  --app-bg: var(--app-page);
-  --app-track: #b4c8bc;
-  --bg-light: var(--app-page);
-  --bg-gradient: linear-gradient(
-    180deg,
-    #dfe9e3 0%,
-    var(--app-page) 42%,
-    #e2ebe6 100%
-  );
+  --app-bg: rgba(148, 225, 255, 0.1);
+  --app-page: var(--app-bg);
+  --app-track: #b5c5d0;
+  --bg-light: var(--app-bg);
+  --bg-gradient: linear-gradient(180deg, var(--app-bg) 0%, #ffffff, 60%, var(--app-bg) 100%);
 
   --glass-bg: rgba(255, 255, 255, 0.85);
   --glass-border: rgba(22, 163, 74, 0.15);
@@ -51,18 +46,22 @@
 
   --font-main: system-ui, -apple-system, sans-serif;
 
-  --coach-fade-edge: var(--app-page);
+  --coach-fade-edge: #f2f7fb;
   --radius-sm: 8px;
   --radius-md: 12px;
   --radius-lg: 16px;
 }
 
 body {
-  background: var(--app-page);
+  background: var(--bg-light);
   color: var(--text-primary);
   font-family: var(--font-main);
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
+  background-attachment: fixed;
+  background-image:
+    radial-gradient(circle, rgba(22, 163, 74, 0.04) 1px, transparent 1px);
+  background-size: 24px 24px;
 }
 
 .app-background {

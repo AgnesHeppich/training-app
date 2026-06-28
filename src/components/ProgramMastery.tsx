@@ -12,7 +12,7 @@ export function ProgramMastery({ completedSessions, totalSessions, weeksMastered
     const percent = totalSessions > 0 ? Math.round((completedSessions / totalSessions) * 100) : 0;
 
     return (
-        <div className="p-8 rounded-3xl bg-white">
+        <div className="p-8 rounded-3xl bg-white shadow-sm">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
                 <div className="flex-1">
                     <div className="flex items-center justify-between mb-3 px-1">

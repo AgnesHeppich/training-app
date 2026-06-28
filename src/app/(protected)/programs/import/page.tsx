@@ -79,7 +79,7 @@ export default function ImportProgramPage() {
                         onDragLeave={() => setDragging(false)}
                         onDrop={handleDrop}
                         onClick={() => !loading && fileInputRef.current?.click()}
-                        className={`relative flex flex-col items-center justify-center gap-3 rounded-2xl px-6 py-12 transition-all cursor-pointer ${
+                        className={`relative flex flex-col items-center justify-center gap-3 rounded-2xl px-6 py-12 transition-all cursor-pointer shadow-sm ${
                             dragging
                                 ? 'ring-2 ring-green-500 bg-green-50'
                                 : file
@@ -132,7 +132,7 @@ export default function ImportProgramPage() {
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.1 }}
-                    className="bg-gray-50 rounded-2xl px-5 py-4"
+                    className="bg-gray-50 rounded-2xl px-5 py-4 shadow-sm"
                 >
                     <p className="text-xs text-gray-500">
                         Any training plan format works — we'll use AI to interpret the exercises, sets, reps, and schedule. The imported program will become your active program and supports logging, history, and AI coaching.

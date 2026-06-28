@@ -139,7 +139,7 @@ export default function WorkoutPage() {
                         <h1 className="text-5xl font-black text-gray-900 leading-tight tracking-tight">{workout.title}</h1>
                     </div>
                 </div>
-                <div className="mt-6 flex items-start gap-4 bg-white p-5 rounded-2xl">
+                <div className="mt-6 flex items-start gap-4 bg-white p-5 rounded-2xl shadow-sm">
                     <div className="w-1 self-stretch bg-green-500 rounded-full" />
                     <div>
                         <span className="text-[10px] text-gray-500 font-black uppercase tracking-widest block mb-1">Workout Focus</span>
@@ -183,7 +183,7 @@ export default function WorkoutPage() {
                 ))}
             </div>
 
-            <div className="mt-16 bg-white rounded-3xl p-6">
+            <div className="mt-16 bg-white rounded-3xl p-6 shadow-sm">
                 <span className="text-[10px] text-gray-500 font-black uppercase tracking-widest block mb-3">Session Notes</span>
                 <textarea
                     placeholder="Any notes on this session overall... (e.g. felt tired, new PR, gym was crowded)"
@@ -195,7 +195,7 @@ export default function WorkoutPage() {
             </div>
 
             {sessionSummary && (
-                <div className="mt-6 bg-white rounded-3xl p-6">
+                <div className="mt-6 bg-white rounded-3xl p-6 shadow-sm">
                     <span className="text-[10px] text-green-700 font-black uppercase tracking-widest block mb-3">AI Coach</span>
                     <p className="text-sm text-gray-700 leading-relaxed">{sessionSummary}</p>
                 </div>
@@ -211,7 +211,7 @@ export default function WorkoutPage() {
                     onClick={handleGetSessionSummary}
                     disabled={loadingSummary}
                     aria-label="Get AI session summary"
-                    className="fixed top-16 right-[calc((100vw-min(100vw,42rem))/2+0.25rem)] z-30 flex items-center gap-2 bg-white rounded-full px-3.5 py-2.5 text-green-700 hover:bg-green-50 active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="fixed top-16 right-[calc((100vw-min(100vw,42rem))/2+0.25rem)] z-30 flex items-center gap-2 bg-white shadow-lg rounded-full px-3.5 py-2.5 text-green-700 hover:bg-green-50 hover:shadow-xl active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                         <path d="M12 3l1.5 4.5L18 9l-4.5 1.5L12 15l-1.5-4.5L6 9l4.5-1.5L12 3z" />

@@ -174,7 +174,7 @@ export default function TimerPage() {
             {/* Config */}
             {timer.phase === 'idle' && (
               <div className="space-y-6">
-                <div className="bg-gray-50 rounded-3xl p-5">
+                <div className="bg-gray-50 rounded-3xl p-5 shadow-sm">
                   <TimeInput
                     label="Work time"
                     value={timer.config.workSecs}
@@ -187,7 +187,7 @@ export default function TimerPage() {
                   />
                 </div>
 
-                <div className="bg-gray-50 rounded-3xl p-5">
+                <div className="bg-gray-50 rounded-3xl p-5 shadow-sm">
                   <TimeInput
                     label="Rest time"
                     value={timer.config.restSecs}
@@ -200,12 +200,12 @@ export default function TimerPage() {
                   />
                 </div>
 
-                <div className="bg-gray-50 rounded-3xl p-5">
+                <div className="bg-gray-50 rounded-3xl p-5 shadow-sm">
                   <span className="text-[10px] text-gray-500 font-black uppercase tracking-widest block mb-4">Rounds</span>
                   <div className="flex items-center gap-5">
                     <button
                       onClick={() => timer.setConfig({ rounds: Math.max(1, timer.config.rounds - 1) })}
-                      className="w-12 h-12 rounded-full bg-white flex items-center justify-center text-2xl text-gray-600 hover:bg-gray-100 active:scale-95 transition-all font-bold"
+                      className="w-12 h-12 rounded-full bg-white shadow-sm flex items-center justify-center text-2xl text-gray-600 hover:bg-gray-100 active:scale-95 transition-all font-bold"
                     >
                       −
                     </button>
@@ -214,7 +214,7 @@ export default function TimerPage() {
                     </span>
                     <button
                       onClick={() => timer.setConfig({ rounds: Math.min(20, timer.config.rounds + 1) })}
-                      className="w-12 h-12 rounded-full bg-white flex items-center justify-center text-2xl text-gray-600 hover:bg-gray-100 active:scale-95 transition-all font-bold"
+                      className="w-12 h-12 rounded-full bg-white shadow-sm flex items-center justify-center text-2xl text-gray-600 hover:bg-gray-100 active:scale-95 transition-all font-bold"
                     >
                       +
                     </button>

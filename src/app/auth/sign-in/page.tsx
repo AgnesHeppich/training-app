@@ -22,7 +22,7 @@ export default function SignInPage() {
                 </div>
 
                 <form action={formAction} className="space-y-4">
-                    <div className="rounded-3xl bg-white p-6 space-y-4">
+                    <div className="rounded-3xl bg-white shadow-sm p-6 space-y-4">
                         <div className="space-y-1.5">
                             <label htmlFor="email" className="block text-[10px] font-black uppercase tracking-[0.2em] text-gray-500">
                                 Email

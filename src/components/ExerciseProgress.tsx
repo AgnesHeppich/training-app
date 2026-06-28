@@ -170,7 +170,7 @@ function ExerciseCard({ series }: { series: ExerciseProgressSeries }) {
     const delta = latest !== null && first !== null ? latest - first : null;
 
     return (
-        <div className="rounded-2xl bg-white overflow-hidden">
+        <div className="rounded-2xl bg-white shadow-sm overflow-hidden">
             <button
                 onClick={() => setExpanded(e => !e)}
                 className="w-full text-left px-5 pt-4 pb-3 cursor-pointer hover:bg-gray-50/60 transition-colors"
@@ -290,7 +290,7 @@ export function ExerciseProgress({ series }: { series: ExerciseProgressSeries[] 
             </div>
 
             {withData.length === 0 ? (
-                <div className="rounded-2xl bg-white px-6 py-8 text-center">
+                <div className="rounded-2xl bg-white shadow-sm px-6 py-8 text-center">
                     <p className="text-sm text-gray-500 font-medium">
                         Complete a session and log your sets to start tracking each exercise over time.
                     </p>

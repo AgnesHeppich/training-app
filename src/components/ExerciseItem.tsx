@@ -85,7 +85,7 @@ export const ExerciseItem = ({ exercise, workoutId, logType, onLogTypeChange, hi
 
     return (
         <div className={clsx(
-            "rounded-2xl bg-white mb-6 transition-all",
+            "rounded-2xl bg-white shadow-sm mb-6 transition-all",
             isCollapsed ? "p-5" : "p-6"
         )}>
             <div
