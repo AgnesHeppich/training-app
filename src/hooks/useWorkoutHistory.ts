@@ -2,7 +2,9 @@
 
 import { useState, useEffect } from 'react';
 import { PROGRAM, WorkoutDay } from '@/data/program';
-import { isPullUpExercise, parseRepTarget } from '@/lib/repsUtils';
+import { isPullUpExercise, isCardioExercise, parseRepTarget, ExerciseLogType } from '@/lib/repsUtils';
+
+export type { ExerciseLogType };
 
 export type SetLog = {
     weight: string;
@@ -11,6 +13,10 @@ export type SetLog = {
 
 export type WorkoutLog = {
     [exerciseName: string]: SetLog[];
+};
+
+export type ExerciseLogTypes = {
+    [exerciseName: string]: ExerciseLogType;
 };
 
 export type CompletedWorkout = {
@@ -41,9 +47,10 @@ type HistoryData = {
     completedWorkouts: CompletedWorkout[];
     logs: { [workoutId: string]: WorkoutLog };
     notes: { [workoutId: string]: { [exerciseName: string]: string } };
+    logTypes: { [workoutId: string]: ExerciseLogTypes };
 };
 
-const EMPTY: HistoryData = { completedWorkouts: [], logs: {}, notes: {} };
+const EMPTY: HistoryData = { completedWorkouts: [], logs: {}, notes: {}, logTypes: {} };
 
 export function useWorkoutHistory(program: WorkoutDay[] = PROGRAM, programId: number | null = null) {
     const [data, setData] = useState<HistoryData>(EMPTY);
@@ -62,7 +69,12 @@ export function useWorkoutHistory(program: WorkoutDay[] = PROGRAM, programId: nu
                         ? { id: entry, completedAt: new Date().toISOString() }
                         : (entry as CompletedWorkout)
                 );
-                setData({ ...dbData, completedWorkouts });
+                setData({
+                    completedWorkouts,
+                    logs: dbData.logs ?? {},
+                    notes: dbData.notes ?? {},
+                    logTypes: dbData.logTypes ?? {},
+                });
             } catch (e) {
                 console.error('Failed to load workout history', e);
             }
@@ -210,6 +222,48 @@ export function useWorkoutHistory(program: WorkoutDay[] = PROGRAM, programId: nu
             }));
     };
 
+    const getLogTypesForWorkout = (workoutId: string): ExerciseLogTypes | null =>
+        data.logTypes[workoutId] || null;
+
+    const getExerciseLogType = (
+        exerciseName: string,
+        programTarget: string,
+        currentWorkoutId: string
+    ): ExerciseLogType => {
+        const saved = data.logTypes[currentWorkoutId]?.[exerciseName];
+        if (saved) return saved;
+
+        const currentIndex = program.findIndex(w => w.id === currentWorkoutId);
+        if (currentIndex > 0) {
+            for (const day of program.slice(0, currentIndex).reverse()) {
+                const prevType = data.logTypes[day.id]?.[exerciseName];
+                if (prevType) return prevType;
+            }
+        }
+
+        return isCardioExercise(exerciseName, programTarget) ? 'cardio' : 'strength';
+    };
+
+    const getPreviousLogType = (
+        exerciseName: string,
+        currentWorkoutId: string
+    ): ExerciseLogType | null => {
+        const currentIndex = program.findIndex(w => w.id === currentWorkoutId);
+        if (currentIndex <= 0) return null;
+
+        for (const day of program.slice(0, currentIndex).reverse()) {
+            const dayLog = data.logs[day.id]?.[exerciseName];
+            if (!dayLog?.some(s => s.weight !== '' || s.reps !== '')) continue;
+
+            const savedType = data.logTypes[day.id]?.[exerciseName];
+            if (savedType) return savedType;
+
+            const ex = day.exercises.find(e => e.name === exerciseName);
+            return isCardioExercise(exerciseName, ex?.reps) ? 'cardio' : 'strength';
+        }
+        return null;
+    };
+
     const getLogForWorkout = (workoutId: string): WorkoutLog | null => data.logs[workoutId] || null;
 
     const getNotesForWorkout = (workoutId: string) => data.notes[workoutId] || null;
@@ -230,12 +284,17 @@ export function useWorkoutHistory(program: WorkoutDay[] = PROGRAM, programId: nu
         workoutId: string,
         log: WorkoutLog,
         markComplete = true,
-        exerciseNotes?: { [exerciseName: string]: string }
+        exerciseNotes?: { [exerciseName: string]: string },
+        exerciseLogTypes?: ExerciseLogTypes
     ) => {
         const newData: HistoryData = { ...data, logs: { ...data.logs, [workoutId]: log } };
 
         if (exerciseNotes) {
             newData.notes = { ...newData.notes, [workoutId]: exerciseNotes };
+        }
+
+        if (exerciseLogTypes) {
+            newData.logTypes = { ...newData.logTypes, [workoutId]: exerciseLogTypes };
         }
 
         if (markComplete && !completedWorkoutIds.includes(workoutId)) {
@@ -264,6 +323,9 @@ export function useWorkoutHistory(program: WorkoutDay[] = PROGRAM, programId: nu
         getLastSessions,
         getUpcomingSessions,
         getLogForWorkout,
+        getLogTypesForWorkout,
+        getExerciseLogType,
+        getPreviousLogType,
         getNotesForWorkout,
         isWorkoutCompleted,
         saveWorkoutLog,

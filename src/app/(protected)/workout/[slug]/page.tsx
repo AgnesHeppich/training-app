@@ -1,7 +1,7 @@
 'use client';
 
 import { useParams, useRouter } from "next/navigation";
-import { WorkoutLog } from "@/hooks/useWorkoutHistory";
+import { ExerciseLogTypes, WorkoutLog } from "@/hooks/useWorkoutHistory";
 import { useWorkoutData } from "@/contexts/WorkoutDataContext";
 import { ExerciseItem } from "@/components/ExerciseItem";
 import { TimerModal } from "@/components/TimerModal";
@@ -13,9 +13,10 @@ import { motion } from "framer-motion";
 export default function WorkoutPage() {
     const params = useParams();
     const router = useRouter();
-    const { getEffectiveProgram, isAICoachUpdated, isLoaded, getPreviousStats, getPreviousNote, getAdaptedTarget, saveWorkoutLog, getLogForWorkout, getNotesForWorkout } = useWorkoutData();
+    const { getEffectiveProgram, isAICoachUpdated, isLoaded, getPreviousStats, getPreviousNote, getAdaptedTarget, saveWorkoutLog, getLogForWorkout, getNotesForWorkout, getExerciseLogType, getPreviousLogType } = useWorkoutData();
     const [currentLogs, setCurrentLogs] = useState<WorkoutLog>({});
     const [currentNotes, setCurrentNotes] = useState<{ [exerciseName: string]: string }>({});
+    const [currentLogTypes, setCurrentLogTypes] = useState<ExerciseLogTypes>({});
     const [sessionNote, setSessionNote] = useState('');
     const [sessionSummary, setSessionSummary] = useState<string | null>(null);
     const [loadingSummary, setLoadingSummary] = useState(false);
@@ -28,26 +29,31 @@ export default function WorkoutPage() {
     const saveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
     useEffect(() => {
-        if (isLoaded && workoutId) {
+        if (isLoaded && workoutId && workout) {
             const existingLog = getLogForWorkout(workoutId);
             if (existingLog) setCurrentLogs(existingLog);
             const existingNotes = getNotesForWorkout(workoutId);
             if (existingNotes) setCurrentNotes(existingNotes);
+            const logTypes: ExerciseLogTypes = {};
+            for (const ex of workout.exercises) {
+                logTypes[ex.name] = getExerciseLogType(ex.name, ex.reps, workoutId);
+            }
+            setCurrentLogTypes(logTypes);
             isMounted.current = true;
         }
     }, [isLoaded, workoutId]);
 
     useEffect(() => {
-        if (isMounted.current && workoutId && Object.keys(currentLogs).length > 0) {
+        if (isMounted.current && workoutId && (Object.keys(currentLogs).length > 0 || Object.keys(currentLogTypes).length > 0)) {
             if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
             saveTimerRef.current = setTimeout(() => {
-                saveWorkoutLog(workoutId, currentLogs, false, currentNotes);
+                saveWorkoutLog(workoutId, currentLogs, false, currentNotes, currentLogTypes);
             }, 2000);
         }
         return () => {
             if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
         };
-    }, [currentLogs, currentNotes, workoutId]);
+    }, [currentLogs, currentNotes, currentLogTypes, workoutId]);
 
     useEffect(() => {
         const handleScroll = () => {
@@ -105,7 +111,7 @@ export default function WorkoutPage() {
     };
 
     const handleFinish = () => {
-        saveWorkoutLog(workoutId, currentLogs, true, currentNotes);
+        saveWorkoutLog(workoutId, currentLogs, true, currentNotes, currentLogTypes);
 
         confetti({
             particleCount: 150,
@@ -155,7 +161,12 @@ export default function WorkoutPage() {
                         <ExerciseItem
                             exercise={exercise}
                             workoutId={workoutId}
+                            logType={currentLogTypes[exercise.name] ?? getExerciseLogType(exercise.name, exercise.reps, workoutId)}
+                            onLogTypeChange={(type) => {
+                                setCurrentLogTypes(prev => ({ ...prev, [exercise.name]: type }));
+                            }}
                             history={getPreviousStats(exercise.name, workoutId) || undefined}
+                            previousLogType={getPreviousLogType(exercise.name, workoutId) || undefined}
                             initialLogs={currentLogs[exercise.name]}
                             adaptation={getAdaptedTarget(exercise.name, exercise.reps, workoutId)}
                             isAIAdapted={isAICoachUpdated(workoutId, exercise.name)}

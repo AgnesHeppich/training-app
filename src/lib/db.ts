@@ -91,10 +91,12 @@ async function runMigrations() {
             completed_workouts JSONB DEFAULT '[]',
             logs               JSONB DEFAULT '{}',
             notes              JSONB DEFAULT '{}',
+            log_types          JSONB DEFAULT '{}',
             updated_at         TIMESTAMPTZ DEFAULT NOW(),
             UNIQUE(user_id, program_id)
         )
     `;
+    await sql`ALTER TABLE workout_history ADD COLUMN IF NOT EXISTS log_types JSONB DEFAULT '{}'`;
     await sql`
         CREATE TABLE IF NOT EXISTS program_overrides (
             id         SERIAL PRIMARY KEY,

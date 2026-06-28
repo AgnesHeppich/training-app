@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { sql, initDb } from '@/lib/db';
 import { auth } from '@/lib/auth/server';
 
-const EMPTY = { completedWorkouts: [], logs: {}, notes: {} };
+const EMPTY = { completedWorkouts: [], logs: {}, notes: {}, logTypes: {} };
 
 export async function GET(request: Request) {
     try {
@@ -29,7 +29,7 @@ export async function GET(request: Request) {
         if (!programId) return NextResponse.json(EMPTY);
 
         const rows = await sql`
-            SELECT completed_workouts, logs, notes
+            SELECT completed_workouts, logs, notes, log_types
             FROM workout_history
             WHERE user_id = ${userId} AND program_id = ${programId}
         `;
@@ -40,6 +40,7 @@ export async function GET(request: Request) {
             completedWorkouts: row.completed_workouts ?? [],
             logs: row.logs ?? {},
             notes: row.notes ?? {},
+            logTypes: row.log_types ?? {},
         });
     } catch (e) {
         console.error('GET /api/history error', e);
@@ -61,14 +62,16 @@ export async function PUT(request: Request) {
         const completedWorkouts = body.completedWorkouts ?? [];
         const logs = body.logs ?? {};
         const notes = body.notes ?? {};
+        const logTypes = body.logTypes ?? {};
 
         await sql`
-            INSERT INTO workout_history (user_id, program_id, completed_workouts, logs, notes, updated_at)
-            VALUES (${userId}, ${programId}, ${JSON.stringify(completedWorkouts)}, ${JSON.stringify(logs)}, ${JSON.stringify(notes)}, NOW())
+            INSERT INTO workout_history (user_id, program_id, completed_workouts, logs, notes, log_types, updated_at)
+            VALUES (${userId}, ${programId}, ${JSON.stringify(completedWorkouts)}, ${JSON.stringify(logs)}, ${JSON.stringify(notes)}, ${JSON.stringify(logTypes)}, NOW())
             ON CONFLICT (user_id, program_id) DO UPDATE SET
                 completed_workouts = EXCLUDED.completed_workouts,
                 logs = EXCLUDED.logs,
                 notes = EXCLUDED.notes,
+                log_types = EXCLUDED.log_types,
                 updated_at = NOW()
         `;
         return NextResponse.json({ ok: true });

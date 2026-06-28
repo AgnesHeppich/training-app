@@ -20,6 +20,8 @@ const CARDIO_NAME_KEYWORDS = [
     'row', 'rowing', 'swim', 'treadmill', 'elliptical', 'stair', 'walk',
 ];
 
+export type ExerciseLogType = 'cardio' | 'strength';
+
 export function isCardioExercise(name: string, reps?: string): boolean {
     const lower = name.toLowerCase();
     if (CARDIO_NAME_KEYWORDS.some(kw => lower.includes(kw))) return true;

@@ -1,13 +1,15 @@
 import { Exercise } from "@/data/program";
-import { AdaptedTarget, SetLog } from "@/hooks/useWorkoutHistory";
-import { isCardioExercise } from "@/lib/repsUtils";
+import { AdaptedTarget, ExerciseLogType, SetLog } from "@/hooks/useWorkoutHistory";
 import { useEffect, useState } from "react";
 import clsx from "clsx";
 
 interface ExerciseItemProps {
     exercise: Exercise;
     workoutId: string;
+    logType: ExerciseLogType;
+    onLogTypeChange: (type: ExerciseLogType) => void;
     history?: SetLog[];
+    previousLogType?: ExerciseLogType;
     onLogChange: (logs: SetLog[]) => void;
     initialLogs?: SetLog[];
     adaptation?: AdaptedTarget;
@@ -17,7 +19,7 @@ interface ExerciseItemProps {
     onNoteChange: (note: string) => void;
 }
 
-export const ExerciseItem = ({ exercise, workoutId, history, onLogChange, initialLogs, adaptation, isAIAdapted, previousNote, initialNote, onNoteChange }: ExerciseItemProps) => {
+export const ExerciseItem = ({ exercise, workoutId, logType, onLogTypeChange, history, previousLogType, onLogChange, initialLogs, adaptation, isAIAdapted, previousNote, initialNote, onNoteChange }: ExerciseItemProps) => {
     const [isCollapsed, setIsCollapsed] = useState(() => {
         if (typeof window === 'undefined') return false;
         try {
@@ -29,7 +31,8 @@ export const ExerciseItem = ({ exercise, workoutId, history, onLogChange, initia
         } catch {}
         return false;
     });
-    const isCardio = isCardioExercise(exercise.name, exercise.reps);
+    const isCardio = logType === 'cardio';
+    const showCardioHistory = previousLogType ? previousLogType === 'cardio' : isCardio;
 
     const currentLogs = initialLogs || Array(exercise.sets).fill({ weight: "", reps: "" });
 
@@ -91,13 +94,30 @@ export const ExerciseItem = ({ exercise, workoutId, history, onLogChange, initia
                     </div>
 
                     <div>
-                        <div className="flex items-center gap-2 mb-2">
+                        <div className="flex items-center gap-2 mb-2 flex-wrap">
                             <h3 className="text-2xl font-black text-gray-900">{exercise.name}</h3>
-                            {isCardio && (
-                                <span className="text-[9px] font-black uppercase tracking-widest text-blue-700 bg-blue-500/10 px-2 py-0.5 rounded-full border border-blue-500/20">
-                                    Cardio
-                                </span>
-                            )}
+                            <div
+                                className="flex rounded-full border border-gray-200 bg-gray-50 p-0.5"
+                                onClick={(e) => e.stopPropagation()}
+                            >
+                                {(['strength', 'cardio'] as const).map((type) => (
+                                    <button
+                                        key={type}
+                                        type="button"
+                                        onClick={() => onLogTypeChange(type)}
+                                        className={clsx(
+                                            "px-2.5 py-0.5 rounded-full text-[9px] font-black uppercase tracking-widest transition-all",
+                                            logType === type
+                                                ? type === 'cardio'
+                                                    ? "bg-blue-600 text-white shadow-sm"
+                                                    : "bg-green-600 text-white shadow-sm"
+                                                : "text-gray-500 hover:text-gray-700"
+                                        )}
+                                    >
+                                        {type}
+                                    </button>
+                                ))}
+                            </div>
                         </div>
                         {!isCollapsed && (
                             <div className="flex flex-col gap-1.5">
@@ -206,7 +226,7 @@ export const ExerciseItem = ({ exercise, workoutId, history, onLogChange, initia
 
                                     {prevSet && (prevSet.weight || prevSet.reps) && (
                                         <div className="text-[10px] text-gray-400 text-right pr-6 font-bold uppercase tracking-widest">
-                                            {isCardio
+                                            {showCardioHistory
                                                 ? <>Last Time: <span className="text-blue-600">{prevSet.weight}</span></>
                                                 : <>Last Time: <span className="text-green-700">{prevSet.weight}kg</span> × <span className="text-green-700">{prevSet.reps}</span></>
                                             }
