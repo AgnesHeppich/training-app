@@ -106,7 +106,7 @@ export default function TimerPage() {
 
   return (
     <div className={`min-h-screen transition-colors duration-300 ${pageBg}`}>
-      <div className="container mx-auto px-4 py-12 max-w-2xl">
+      <div className="container mx-auto px-4 py-8 max-w-2xl">
 
         {/* Header */}
         <header className="mb-10">

@@ -56,7 +56,7 @@ export default function ImportProgramPage() {
     };
 
     return (
-        <div className="container mx-auto px-4 py-16 max-w-2xl">
+        <div className="container mx-auto px-4 py-8 max-w-2xl">
             <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="mb-10">
                 <Link
                     href="/programs"

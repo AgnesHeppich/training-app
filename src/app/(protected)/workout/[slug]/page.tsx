@@ -126,7 +126,7 @@ export default function WorkoutPage() {
     };
 
     return (
-        <div className="container mx-auto px-4 py-12 max-w-2xl">
+        <div className="container mx-auto px-4 py-8 max-w-2xl">
             <header className="mb-12">
                 <Link href="/" className="inline-flex items-center text-xs text-gray-500 hover:text-green-700 transition-colors mb-8 font-bold uppercase tracking-widest">
                     <span className="mr-2 text-lg">←</span> Dashboard
