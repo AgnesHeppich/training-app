@@ -68,7 +68,7 @@ export const PerformanceAnalysis = ({ summary, lastSessions, upcomingSessions, o
     const hasUpdates = (result?.programUpdates?.length ?? 0) > 0;
 
     return (
-        <div className="mb-16 rounded-3xl bg-white border border-gray-200 shadow-sm overflow-hidden">
+        <div className="mt-16 mb-16 rounded-3xl bg-white border border-gray-200 shadow-sm overflow-hidden">
             {/* Header */}
             <div className="px-6 py-5 flex items-center justify-between gap-4 border-b border-gray-200">
                 <div>

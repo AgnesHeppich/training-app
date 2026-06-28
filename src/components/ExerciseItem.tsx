@@ -132,8 +132,6 @@ export const ExerciseItem = ({ exercise, workoutId, logType, onLogTypeChange, hi
                                 {logType}
                             </button>
                             {' · '}
-                            {exercise.sets} {isCardio ? 'intervals' : 'sets'}
-                            {' · '}
                             target {targetLabel}
                             {!isCardio && ' reps'}
                             {history && history.length > 0 && (

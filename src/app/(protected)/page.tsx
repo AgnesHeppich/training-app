@@ -108,13 +108,6 @@ export default function Home() {
         </div>
       </motion.div>
 
-      <PerformanceAnalysis
-        summary={summary}
-        lastSessions={lastSessions}
-        upcomingSessions={upcomingSessions}
-        onApplyUpdates={applyUpdates}
-      />
-
       <div className="space-y-8">
         {allWeeks.map((weekNum, idx) => (
           <motion.div
@@ -131,6 +124,13 @@ export default function Home() {
           </motion.div>
         ))}
       </div>
+
+      <PerformanceAnalysis
+        summary={summary}
+        lastSessions={lastSessions}
+        upcomingSessions={upcomingSessions}
+        onApplyUpdates={applyUpdates}
+      />
 
       <footer className="mt-24 text-center text-gray-400 text-[10px] pb-12 font-black uppercase tracking-[0.3em]">
         <p>Your Journey Starts Here</p>
