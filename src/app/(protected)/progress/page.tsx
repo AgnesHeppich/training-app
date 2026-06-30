@@ -8,7 +8,7 @@ import { ExerciseProgress } from '@/components/ExerciseProgress';
 import { useWorkoutData } from '@/contexts/WorkoutDataContext';
 
 export default function ProgressPage() {
-    const { getEffectiveProgram, isLoaded, activeProgramId, completedWorkoutIds, allPrograms, getExerciseProgress } = useWorkoutData();
+    const { getEffectiveProgram, isLoaded, activeProgramId, completedWorkoutIds, allPrograms, getExerciseProgress, progressPriorities, setProgressPriorities } = useWorkoutData();
     const effectiveProgram = getEffectiveProgram();
 
     if (!isLoaded) {
@@ -81,7 +81,11 @@ export default function ProgressPage() {
                 transition={{ delay: 0.2 }}
                 className="mt-12"
             >
-                <ExerciseProgress series={exerciseProgress} />
+                <ExerciseProgress
+                    series={exerciseProgress}
+                    progressPriorities={progressPriorities}
+                    onProgressPrioritiesChange={setProgressPriorities}
+                />
             </motion.div>
         </div>
     );

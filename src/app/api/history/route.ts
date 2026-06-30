@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { sql, initDb } from '@/lib/db';
 import { auth } from '@/lib/auth/server';
 
-const EMPTY = { completedWorkouts: [], logs: {}, notes: {}, logTypes: {} };
+const EMPTY = { completedWorkouts: [], logs: {}, notes: {}, logTypes: {}, progressPriorities: [] };
 
 export async function GET(request: Request) {
     try {
@@ -29,7 +29,7 @@ export async function GET(request: Request) {
         if (!programId) return NextResponse.json(EMPTY);
 
         const rows = await sql`
-            SELECT completed_workouts, logs, notes, log_types
+            SELECT completed_workouts, logs, notes, log_types, progress_priorities
             FROM workout_history
             WHERE user_id = ${userId} AND program_id = ${programId}
         `;
@@ -41,6 +41,7 @@ export async function GET(request: Request) {
             logs: row.logs ?? {},
             notes: row.notes ?? {},
             logTypes: row.log_types ?? {},
+            progressPriorities: row.progress_priorities ?? [],
         });
     } catch (e) {
         console.error('GET /api/history error', e);
@@ -63,15 +64,17 @@ export async function PUT(request: Request) {
         const logs = body.logs ?? {};
         const notes = body.notes ?? {};
         const logTypes = body.logTypes ?? {};
+        const progressPriorities = body.progressPriorities ?? [];
 
         await sql`
-            INSERT INTO workout_history (user_id, program_id, completed_workouts, logs, notes, log_types, updated_at)
-            VALUES (${userId}, ${programId}, ${JSON.stringify(completedWorkouts)}, ${JSON.stringify(logs)}, ${JSON.stringify(notes)}, ${JSON.stringify(logTypes)}, NOW())
+            INSERT INTO workout_history (user_id, program_id, completed_workouts, logs, notes, log_types, progress_priorities, updated_at)
+            VALUES (${userId}, ${programId}, ${JSON.stringify(completedWorkouts)}, ${JSON.stringify(logs)}, ${JSON.stringify(notes)}, ${JSON.stringify(logTypes)}, ${JSON.stringify(progressPriorities)}, NOW())
             ON CONFLICT (user_id, program_id) DO UPDATE SET
                 completed_workouts = EXCLUDED.completed_workouts,
                 logs = EXCLUDED.logs,
                 notes = EXCLUDED.notes,
                 log_types = EXCLUDED.log_types,
+                progress_priorities = EXCLUDED.progress_priorities,
                 updated_at = NOW()
         `;
         return NextResponse.json({ ok: true });

@@ -71,9 +71,10 @@ type HistoryData = {
     logs: { [workoutId: string]: WorkoutLog };
     notes: { [workoutId: string]: { [exerciseName: string]: string } };
     logTypes: { [workoutId: string]: ExerciseLogTypes };
+    progressPriorities: string[];
 };
 
-const EMPTY: HistoryData = { completedWorkouts: [], logs: {}, notes: {}, logTypes: {} };
+const EMPTY: HistoryData = { completedWorkouts: [], logs: {}, notes: {}, logTypes: {}, progressPriorities: [] };
 
 export function useWorkoutHistory(program: WorkoutDay[] = PROGRAM, programId: number | null = null) {
     const [data, setData] = useState<HistoryData>(EMPTY);
@@ -97,6 +98,7 @@ export function useWorkoutHistory(program: WorkoutDay[] = PROGRAM, programId: nu
                     logs: dbData.logs ?? {},
                     notes: dbData.notes ?? {},
                     logTypes: dbData.logTypes ?? {},
+                    progressPriorities: dbData.progressPriorities ?? [],
                 });
             } catch (e) {
                 console.error('Failed to load workout history', e);
@@ -414,6 +416,10 @@ export function useWorkoutHistory(program: WorkoutDay[] = PROGRAM, programId: nu
         });
     };
 
+    const setProgressPriorities = (names: string[]) => {
+        saveHistory({ ...data, progressPriorities: names });
+    };
+
     const getOverallProgress = () => {
         if (program.length === 0) return 0;
         return Math.min(100, Math.round((data.completedWorkouts.length / program.length) * 100));
@@ -438,5 +444,7 @@ export function useWorkoutHistory(program: WorkoutDay[] = PROGRAM, programId: nu
         saveWorkoutLog,
         getOverallProgress,
         getExerciseProgress,
+        progressPriorities: data.progressPriorities,
+        setProgressPriorities,
     };
 }
