@@ -3,6 +3,7 @@
 import { useWorkoutData } from "@/contexts/WorkoutDataContext";
 import { WeekOverview } from "@/components/WeekOverview";
 import { PerformanceAnalysis } from "@/components/PerformanceAnalysis";
+import { ProgramHero } from "@/components/ProgramHero";
 import { NavMenu } from "@/components/NavMenu";
 import { motion } from "framer-motion";
 import Link from "next/link";
@@ -43,37 +44,21 @@ export default function Home() {
   const activeProgram = allPrograms.find(p => p.id === activeProgramId);
   const programName = activeProgram?.name ?? 'Workout Buddy';
   const programDescription = activeProgram?.description ?? `A definitive ${totalWeeks}-week progression`;
+  const completionPct = effectiveProgram.length > 0
+    ? Math.round((completedWorkoutIds.length / effectiveProgram.length) * 100)
+    : 0;
+
   return (
     <div className="container mx-auto px-4 py-8 max-w-5xl">
-      <motion.header
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="mb-16 text-center"
-      >
-        <div className="flex items-center justify-between mb-6">
+      <ProgramHero
+        name={programName}
+        description={programDescription}
+        totalWeeks={totalWeeks}
+        totalSessions={effectiveProgram.length}
+        completionPct={completionPct}
+      />
 
-          <NavMenu />
-        </div>
-
-        <h1 className="text-5xl md:text-7xl font-black mb-6 tracking-tight leading-none">
-          <span className="title-gradient">{programName}</span><br />
-
-        </h1>
-
-        <div className="mt-8 flex justify-center">
-          <div className="coach-portrait md:w-52 md:h-52">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="/coach.png"
-              alt="Workout coach mascot"
-              width={1254}
-              height={1254}
-            />
-          </div>
-        </div>
-      </motion.header>
-
-      <div className="space-y-8">
+      <div className="space-y-3">
         {allWeeks.map((weekNum, idx) => (
           <motion.div
             key={weekNum}
